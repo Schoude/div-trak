@@ -34,6 +34,40 @@ export interface Database {
   }
   public: {
     Tables: {
+      portfolios: {
+        Row: {
+          created_at: string
+          id: number
+          isins: Json[] | null
+          name: string
+          updated_at: string
+          user_id: number
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          isins?: Json[] | null
+          name: string
+          updated_at?: string
+          user_id: number
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          isins?: Json[] | null
+          name?: string
+          updated_at?: string
+          user_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'portfolios_user_id_fkey'
+            columns: ['user_id']
+            referencedRelation: 'users'
+            referencedColumns: ['id']
+          }
+        ]
+      }
       users: {
         Row: {
           created_at: string
