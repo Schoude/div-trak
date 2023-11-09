@@ -34,6 +34,52 @@ export interface Database {
   }
   public: {
     Tables: {
+      orders: {
+        Row: {
+          amount: number
+          created_at: string
+          day: number
+          executed_at: string
+          id: number
+          isin: string
+          month: number
+          portfolio_id: number
+          updated_at: string
+          year: number
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          day: number
+          executed_at: string
+          id?: number
+          isin: string
+          month: number
+          portfolio_id: number
+          updated_at?: string
+          year: number
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          day?: number
+          executed_at?: string
+          id?: number
+          isin?: string
+          month?: number
+          portfolio_id?: number
+          updated_at?: string
+          year?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'orders_portfolio_id_fkey'
+            columns: ['portfolio_id']
+            referencedRelation: 'portfolios'
+            referencedColumns: ['id']
+          }
+        ]
+      }
       portfolios: {
         Row: {
           created_at: string
