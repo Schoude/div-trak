@@ -12,7 +12,11 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "supabase:start": "supabase start",
     "supabase:stop": "supabase stop",
-    "functions:start": "supabase functions serve"
+    "supabase:db:diff": "supabase db diff --schema public",
+    "supabase:migration:new": "supabase migration new",
+    "supabase:db:reset": "supabase db reset",
+    "supabase:fn:start": "supabase functions serve",
+    "supabase:fn:new": "supabase functions new"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.38.4",
