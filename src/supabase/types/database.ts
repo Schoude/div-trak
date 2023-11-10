@@ -125,7 +125,7 @@ export interface Database {
         Insert: {
           created_at?: string
           id?: number
-          token: string
+          token?: string
           updated_at?: string
           user_id: number
         }
