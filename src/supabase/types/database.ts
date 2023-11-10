@@ -114,6 +114,37 @@ export interface Database {
           }
         ]
       }
+      sessions: {
+        Row: {
+          created_at: string
+          id: number
+          token: string
+          updated_at: string
+          user_id: number
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          token: string
+          updated_at?: string
+          user_id: number
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          token?: string
+          updated_at?: string
+          user_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'sessions_user_id_fkey'
+            columns: ['user_id']
+            referencedRelation: 'users'
+            referencedColumns: ['id']
+          }
+        ]
+      }
       users: {
         Row: {
           created_at: string
