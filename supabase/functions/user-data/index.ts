@@ -13,6 +13,7 @@ Deno.serve(async (req) => {
   const q = supabaseClient
     .from('users')
     .select(`
+      id,
       phone,
       pin,
       portfolios (
@@ -36,7 +37,37 @@ Deno.serve(async (req) => {
 
   if (user.error) throw user.error;
 
-  return new Response(JSON.stringify({ user: user.data }), {
+  const sessionQ = supabaseClient
+    .from('sessions')
+    .select('token')
+    .eq('user_id', user.data.id)
+    .single();
+
+  const session: DbResult<typeof sessionQ> = await sessionQ;
+
+  let token: string;
+  if (session.error) {
+    const newSessionQ = supabaseClient
+      .from('sessions')
+      .insert([{ user_id: user.data.id }])
+      .select('token')
+      .single();
+
+    const newSession: DbResult<typeof newSessionQ> = await newSessionQ;
+
+    if (newSession.data?.token == null) {
+      throw new Error('Session token not generated.');
+    }
+
+    token = newSession.data.token;
+  } else {
+    token = session.data.token;
+  }
+
+  return new Response(JSON.stringify({
+    user: user.data,
+    token,
+  }), {
     headers: { 'Content-Type': 'application/json' },
     status: 200,
   });
