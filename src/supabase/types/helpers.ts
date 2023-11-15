@@ -6,3 +6,10 @@ export type DbResultOk<T> = T extends PromiseLike<{ data: infer U }> ? Exclude<U
 export type DbResultErr = PostgrestError
 
 export type Tables<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Row']
+
+export type Portfolio = Pick<Tables<'portfolios'>, 'name'> & {
+  isins: string[];
+  orders: Order[];
+}
+
+export type Order = Pick<Tables<'orders'>,'isin'| 'amount'| 'year'| 'month'| 'day'| 'executed_at'>;

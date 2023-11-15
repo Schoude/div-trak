@@ -1,8 +1,14 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.38.4';
 import type { Database } from '../../../src/supabase/types/database.ts';
 import type { DbResult } from '../../../src/supabase/types/helpers.ts';
+import { corsHeaders } from '../_shared/cors.ts';
 
 Deno.serve(async (req) => {
+  // This is needed if you're planning to invoke your function from a browser.
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders });
+  }
+
   const { token } = await req.json();
 
   const supabaseClient = createClient<Database>(
@@ -72,7 +78,10 @@ Deno.serve(async (req) => {
       token,
     }),
     {
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        ...corsHeaders,
+        'Content-Type': 'application/json'
+      },
       status: 200,
     },
   );
