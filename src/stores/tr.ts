@@ -1,8 +1,7 @@
 import { defineStore } from 'pinia';
-import { ref } from 'vue';
 
 export const useTRStore = defineStore('tr', () => {
-  const appVersion = ref<null | string>(null);
+  const appVersion = '1.27.5';
 
   return {
     appVersion,

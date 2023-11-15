@@ -10,7 +10,6 @@ function onLogoutClick () {
     authStore.endSession(sessionToken);
   }
 }
-
 </script>
 
 <template>
