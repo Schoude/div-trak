@@ -6,10 +6,8 @@ const authStore = useAuthStore();
 
 const loginData = reactive({ phone: '', pin: '' });
 
-async function onSubmit () {
-  console.log('submit');
-
-  await authStore.login(loginData);
+function onSubmit () {
+  authStore.login(loginData);
 }
 </script>
 

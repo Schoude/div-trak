@@ -21,7 +21,7 @@ export const useAuthStore = defineStore('auth', () => {
       user.value = loginRes.data.user;
       sessionToken.value = loginRes.data.token;
 
-      await router.push({ name: 'dashboard' });
+      router.push({ name: 'dashboard' });
     } else throw new Error('Response has no data: Function: user-data');
   }
 
@@ -35,7 +35,17 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  watchEffect(() => {
+  async function endSession (token: string) {
+    const checkSessionRes = await supabase.functions.invoke('user-logout', { body: { token: token } });
+    if (checkSessionRes.error) throw checkSessionRes.error;
+
+    user.value = null;
+    sessionToken.value = null;
+
+    router.push({ name: 'login' });
+  }
+
+  watchEffect(async () => {
     if (typeof sessionToken.value === 'string') {
       localStorage.setItem('sessionToken', sessionToken.value);
     } else {
@@ -48,5 +58,6 @@ export const useAuthStore = defineStore('auth', () => {
     isAuthenticated,
     login,
     checkSession,
+    endSession,
    };
 });
