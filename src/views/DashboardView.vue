@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/auth';
+import { useTRStore } from '@/stores/tr';
+import { onBeforeMount } from 'vue';
 
 const authStore = useAuthStore();
+const trStore = useTRStore();
 
 function onLogoutClick () {
   const sessionToken = localStorage.getItem('sessionToken');
@@ -10,6 +13,12 @@ function onLogoutClick () {
     authStore.endSession(sessionToken);
   }
 }
+
+onBeforeMount(() => {
+  if (authStore.user) {
+    trStore.login({ phoneNumber: authStore.user.phone, pin: authStore.user.pin.toString() });
+  }
+});
 </script>
 
 <template>
