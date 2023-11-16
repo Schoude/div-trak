@@ -4,6 +4,7 @@ import { useTRStore } from '@/stores/tr';
 import IconTR from '@/components/icons/IconTR.vue';
 import { computed, ref } from 'vue';
 import type { TRLoginError, TRLoginReturnValue } from '@/types/tr';
+import LogoDivTrak from '@/components/logos/LogoDivTrak.vue';
 
 const authStore = useAuthStore();
 const trStore = useTRStore();
@@ -61,6 +62,14 @@ function onRetryClick () {
 </script>
 
 <template>
+  <header>
+    <nav>
+      <RouterLink to="/dashboard">
+        <LogoDivTrak />
+      </RouterLink>
+    </nav>
+  </header>
+
   <main class="dashboard">
     <h1>Dashboard</h1>
     <button type="button" @click="onLogoutClick">Logout</button>

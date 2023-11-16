@@ -2,12 +2,6 @@
 </script>
 
 <template>
-  <header>
-    <nav>
-      <RouterLink to="/dashboard">Dashboard</RouterLink>
-    </nav>
-  </header>
-
   <RouterView />
 </template>
 

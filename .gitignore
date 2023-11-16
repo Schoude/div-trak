@@ -31,3 +31,4 @@ coverage
 # User specific directories and files
 notes/**
 *.http
+assets/**
