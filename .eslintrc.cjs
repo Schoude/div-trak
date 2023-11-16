@@ -31,9 +31,9 @@ module.exports = {
         asyncArrow: 'always',
       },
     ],
-    'max-len': ['error', {
-      'code': 120
-    }]
+    'newline-before-return': 'error'
   },
-  ignorePatterns: ['*.html']
+  ignorePatterns: [
+    '*.html'
+  ]
 };
