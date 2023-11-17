@@ -1,7 +1,11 @@
 <script setup lang='ts'>
 import { computed } from 'vue';
 
-const props = withDefaults(defineProps<{width: number}>(), { width: 50 });
+const props = withDefaults(defineProps<{
+  width?: number
+}>(), {
+  width: 50
+ });
 
 const dropShadowStyle = computed(() => {
   return props.width > 100 ? 'filter: drop-shadow(-4px 4px 8px black)' : '';
