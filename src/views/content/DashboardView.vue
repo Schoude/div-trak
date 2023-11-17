@@ -1,10 +1,10 @@
 <script setup lang="ts">
+import IconTR from '@/components/icons/IconTR.vue';
+import LogoDivTrak from '@/components/logos/LogoDivTrak.vue';
 import { useAuthStore } from '@/stores/auth';
 import { useTRStore } from '@/stores/tr';
-import IconTR from '@/components/icons/IconTR.vue';
-import { computed, ref } from 'vue';
 import type { TRLoginError, TRLoginReturnValue } from '@/types/tr';
-import LogoDivTrak from '@/components/logos/LogoDivTrak.vue';
+import { computed, ref } from 'vue';
 
 const authStore = useAuthStore();
 const trStore = useTRStore();
@@ -70,7 +70,7 @@ function onRetryClick () {
     </nav>
   </header>
 
-  <main class="dashboard">
+  <main class="dashboard-view view">
     <h1>Dashboard</h1>
     <button type="button" @click="onLogoutClick">Logout</button>
     <div class="tr-connection">

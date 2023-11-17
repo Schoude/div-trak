@@ -46,6 +46,11 @@ select {
   font: inherit;
 }
 
+input,
+button {
+  outline: none;
+}
+
 button {
   -webkit-tap-highlight-color: transparent;
   cursor: pointer;
