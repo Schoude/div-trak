@@ -1,10 +1,10 @@
 <script setup lang='ts'>
+import ButtonAction from '@/components/buttons/ButtonAction.vue';
+import InputText from '@/components/inputs/InputText.vue';
 import LabelFormInput from '@/components/inputs/LabelFormInput.vue';
 import LogoDivTrak from '@/components/logos/LogoDivTrak.vue';
 import { useAuthStore } from '@/stores/auth';
 import { reactive } from 'vue';
-import InputText from '../inputs/InputText.vue';
-
 
 const authStore = useAuthStore();
 
@@ -28,7 +28,7 @@ function onSubmit () {
       <InputText v-model="loginData.pin" id="pin" placeholder="8888" />
     </LabelFormInput>
 
-    <button>Einloggen</button>
+    <ButtonAction variant="dawn">Login</ButtonAction>
   </form>
 </div>
 </template>

@@ -25,13 +25,14 @@ function onInput ($event: Event) {
 
 <style lang='scss' scoped>
 .input-text {
-  padding: .5rem .75rem;
+  block-size: 48px;
+  padding-inline:.75rem;
   inline-size: 100%;
   font-size: 1.2rem;
   border: none;
   background-color: rgba(255, 255, 255, 0.075);
-  border-radius: 4px;
-  box-shadow: 0px 5px 6px -4px rgba(0, 0, 0);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
   transition: background-color 150ms ease-out;
 
   &:focus-visible {

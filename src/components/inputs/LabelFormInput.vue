@@ -15,10 +15,10 @@ defineProps<{
 <style lang='scss' scoped>
 .label-form-input {
   display: block;
-  margin-bottom: .45rem;
+  margin-bottom: 1.125rem;
 
   .label {
-    margin-bottom: .45rem;
+    margin-bottom: .5rem;
   }
 }
 </style>
