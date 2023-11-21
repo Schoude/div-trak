@@ -27,12 +27,10 @@ export function useTRSocket () {
       return;
     }
 
-    console.log(eventData);
-
     // 1) Neon Search Results
-    if ('results' in eventData.jsonObject) {
-      if (eventData.jsonObject.results.length > 0 && 'etfDescription' in eventData.jsonObject.results[0]) {
-        console.log('EFT Resuls');
+    if ('results' in eventData.jsonObject && eventData.jsonObject.results.length > 0) {
+      if ('etfDescription' in eventData.jsonObject.results[0]) {
+        console.log('EFT results');
         console.log(eventData.jsonObject.results);
       } else {
         console.log('Stock results');
