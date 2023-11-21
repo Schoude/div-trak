@@ -1,25 +1,12 @@
 <script setup lang="ts">
 import IconTR from '@/components/icons/IconTR.vue';
-import LogoDivTrak from '@/components/logos/LogoDivTrak.vue';
 import { useAuthStore } from '@/stores/auth';
-import { useTRStore } from '@/stores/tr';
-import type { TRLoginError, TRLoginReturnValue } from '@/types/tr';
-import { computed, ref } from 'vue';
 
 const authStore = useAuthStore();
-const trStore = useTRStore();
 
-const loginDataTR = ref<TRLoginReturnValue | TRLoginError | null>(null);
-const needs2FA = computed(() => {
-  if (!loginDataTR.value) return false;
-
-  return '2fa' in loginDataTR.value;
-});
-const loginError = computed(() => {
-  if (!loginDataTR.value) return false;
-
-  return 'errors' in loginDataTR.value;
-});
+const socket = new WebSocket(
+  'wss://api.traderepublic.com/',
+);
 
 function onLogoutClick () {
   const sessionToken = localStorage.getItem('sessionToken');
@@ -29,73 +16,39 @@ function onLogoutClick () {
   }
 }
 
-async function onConnectToTRClick (){
-  if (authStore.user) {
-    loginDataTR.value = await trStore.login({
-       phoneNumber: authStore.user.phone,
-       pin: authStore.user.pin.toString()
-    });
-  }
+function onConnectWSClick () {
+  socket.send('connect 26 {"locale":"de","platformId":"webtrading","platformVersion":"chrome - 119.0.0","clientId":"app.traderepublic.com","clientVersion":"1.27.5"}');
 }
 
-async function onConfirm2FAClick () {
-  if (
-    authStore.user &&
-    needs2FA.value &&
-    loginDataTR.value &&
-    'processId' in loginDataTR.value
-  ) {
-    trStore.trSession = await trStore.confirm2FA({
-      loginCookies: loginDataTR.value.loginCookies.join(),
-      processId: loginDataTR.value.processId,
-      pin: authStore.user?.pin.toString(),
-    });
-  }
+function onSearchChange (event: Event) {
+  const target = event.target as HTMLInputElement;
+
+  console.log(target.value);
+
+  socket.send(`sub 1 {"type":"neonSearch","data":{"q":"${target.value}","page":1,"pageSize":3,"filter":[{"key":"type","value":"stock"},{"key":"jurisdiction","value":"DE"}]}}`);
+  socket.send(`sub 2 {"type":"neonSearch","data":{"q":"${target.value}","page":1,"pageSize":3,"filter":[{"key":"type","value":"fund"},{"key":"jurisdiction","value":"DE"}]}}`);
+
+  socket.onmessage = (event) => {
+    const jsonString = event.data;
+    console.log(jsonString);
+    socket.send('unsub 1');
+    socket.send('unsub 2');
+  };
 }
-
-function onRetryClick () {
-  loginDataTR.value = null;
-
-  onConnectToTRClick();
-}
-
 </script>
 
 <template>
-  <header>
-    <nav>
-      <RouterLink to="/dashboard">
-        <LogoDivTrak />
-      </RouterLink>
-    </nav>
-  </header>
-
   <main class="dashboard-view view">
     <h1>Dashboard</h1>
     <button type="button" @click="onLogoutClick">Logout</button>
     <div class="tr-connection">
-      <div>needs2FA {{ needs2FA }}</div>
-      <div>loginError {{ loginError }}</div>
+      <button @click="onConnectWSClick" type="button">
+        <span>Connect to</span>
+        <IconTR />
+        <span>Websocket</span>
+      </button>
 
-      <template v-if="trStore.trSession === null && loginDataTR == null">
-        <button type="button" @click="onConnectToTRClick">
-          <p>Connect to</p>
-          <IconTR />
-        </button>
-      </template>
-
-      <template v-else-if="needs2FA">
-        <input type="text" :value="authStore.user?.pin">
-        <button type="button" @click="onConfirm2FAClick">Confirm your PIN</button>
-      </template>
-
-      <template v-else-if="loginError && 'errors' in loginDataTR!">
-        <template v-for="(error, index) of loginDataTR.errors" :key="index">
-          <h2>{{ error.errorCode }}</h2>
-          <div>Time to next attempt: {{error.meta.nextAttemptInSeconds }}</div>
-          <button type="button" @click="onRetryClick">RETRY</button>
-        </template>
-      </template>
+      <input type="text" name="search" placeholder="Find stocks of ETFs" id="search" @change="onSearchChange">
     </div>
   </main>
 </template>
