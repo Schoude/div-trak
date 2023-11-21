@@ -1,5 +1,5 @@
-import { createRouter, createWebHistory } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
+import { createRouter, createWebHistory } from 'vue-router';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -19,10 +19,11 @@ const router = createRouter({
       },
     },
     {
-      path: '',
+      path: '/dashboard',
+      component: () => import('../views/ContentView.vue'),
       children: [
         {
-          path: '/dashboard',
+          path: '',
           name: 'dashboard',
           component: () => import('../views/content/DashboardView.vue')
         }
