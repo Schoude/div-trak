@@ -19,13 +19,6 @@ function onSearchChange (event: Event) {
 
   socket.sendMessage(`sub 1 {"type":"neonSearch","data":{"q":"${target.value}","page":1,"pageSize":3,"filter":[{"key":"type","value":"stock"},{"key":"jurisdiction","value":"DE"}]}}`);
   socket.sendMessage(`sub 2 {"type":"neonSearch","data":{"q":"${target.value}","page":1,"pageSize":3,"filter":[{"key":"type","value":"fund"},{"key":"jurisdiction","value":"DE"}]}}`);
-
-  socket.onMessage = (event) => {
-    const jsonString = event.data;
-    console.log(jsonString);
-    socket.sendMessage('unsub 1');
-    socket.sendMessage('unsub 2');
-  };
 }
 </script>
 
