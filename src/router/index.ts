@@ -36,7 +36,7 @@ const router = createRouter({
         {
           path: '',
           name: 'portfolio',
-          component: () => import('../views/content/DashboardView.vue')
+          component: () => import('../views/content/PortfolioView.vue')
         },
       ]
     },
