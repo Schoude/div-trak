@@ -1,21 +1,16 @@
 <script setup lang='ts'>
-import LogoDivTrak from '@/components/logos/LogoDivTrak.vue';
+import AppBar from '@/components/layout/AppBar.vue';
+import BottomBar from '@/components/layout/BottomBar.vue';
 </script>
 
 <template>
-<header>
-  <nav>
-    <RouterLink to="/dashboard">
-      <LogoDivTrak />
-    </RouterLink>
-  </nav>
-</header>
+  <AppBar />
 
-<div class="content-view">
-  <RouterView />
-</div>
+  <div class="content-view">
+    <RouterView />
+  </div>
 
-<!-- BottomBar -->
+  <BottomBar />
 </template>
 
 <style lang='scss' scoped>
