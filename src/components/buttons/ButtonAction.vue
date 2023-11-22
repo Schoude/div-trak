@@ -11,6 +11,8 @@ defineProps<{
 </template>
 
 <style lang='scss' scoped>
+@use '@/styles/mixins';
+
 .button-action {
   block-size: 48px;
   text-transform: uppercase;
@@ -18,18 +20,11 @@ defineProps<{
   inline-size: 100%;
   letter-spacing: 1px;
   font-weight: 700;
-  outline: 1px solid transparent;
-  outline-offset: 2px;
   border-radius: 100px;
   box-shadow: var(--shadow);
   line-height: 1;
   background-repeat: no-repeat;
-  transition: outline 150ms ease-out;
-
-  &:hover,
-  &:focus-visible {
-    outline: 1px solid rgba(255, 255, 255, 0.35);
-  }
+  @include mixins.outline;
 
   &.dawn {
     background-image: var(--gradient-dawn);

@@ -1,0 +1,10 @@
+@mixin outline () {
+  outline: 1px solid transparent;
+  outline-offset: 2px;
+  transition: outline 150ms ease-out;
+
+  &:hover,
+  &:focus-visible {
+    outline: 1px solid rgba(255, 255, 255, 0.35);
+  }
+}

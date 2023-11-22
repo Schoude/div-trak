@@ -1,18 +1,7 @@
 <script setup lang="ts">
 import { useTRSocket } from '@/composables/useTRSocket';
-import { useAuthStore } from '@/stores/auth';
-
-const authStore = useAuthStore();
 
 const socket = useTRSocket();
-
-function onLogoutClick () {
-  const sessionToken = localStorage.getItem('sessionToken');
-
-  if (sessionToken) {
-    authStore.endSession(sessionToken);
-  }
-}
 
 function onSearchChange (event: Event) {
   const target = event.target as HTMLInputElement;
@@ -25,8 +14,6 @@ function onSearchChange (event: Event) {
 <template>
   <main class="dashboard-view view">
     <h1>Dashboard</h1>
-    <button type="button" @click="onLogoutClick">Logout</button>
-
     <input type="text" name="search" placeholder="Find stocks of ETFs" id="search" @change="onSearchChange">
   </main>
 </template>
