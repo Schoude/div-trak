@@ -29,12 +29,13 @@ const authStore = useAuthStore();
 
 .portfolio {
   display: block;
-  background-color: rgba(10, 10, 10, 0.3);
+  background-color: rgba(12, 12, 12, 0.3);
   padding: .35rem .6rem;
   border-radius: 8px;
   text-decoration: none;
   transition: background-color 150ms ease-out;
   outline: none;
+  box-shadow: var(--shadow);
 
   &:visited {
     color: currentColor;
