@@ -4,10 +4,12 @@ export interface ReturnValueNeonSearch {
 }
 
 export interface JSONObject {
-  results: StockSearchResult[] | ETFSearchResult[];
+  results: NeonSearchResults;
   resultCount: number;
   correlationId: string;
 }
+
+export type NeonSearchResults = StockSearchResult[] | ETFSearchResult[];
 
 interface BaseSearchResult {
   isin: string;
@@ -18,7 +20,7 @@ interface BaseSearchResult {
   imageId: string;
 }
 
-type StockSearchResult = BaseSearchResult;
+export type StockSearchResult = BaseSearchResult;
 
 export interface Tag {
   type: string;

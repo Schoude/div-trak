@@ -1,3 +1,4 @@
+import { useNeonSearchStore } from '@/stores/neon-search';
 import type { ReturnValueNeonSearch } from '@/types/tr/neon-search';
 import { extractJsonAndEventId } from '@/utils/ws-events';
 import { ref } from 'vue';
@@ -13,6 +14,8 @@ socket.value.onerror = (error) => {
 };
 
 export function useTRSocket () {
+  const neonSearch = useNeonSearchStore();
+
   function sendMessage (message: string) {
     socket.value?.send(message);
   }
@@ -28,14 +31,8 @@ export function useTRSocket () {
     }
 
     // 1) Neon Search Results
-    if ('results' in eventData.jsonObject && eventData.jsonObject.results.length > 0) {
-      if ('etfDescription' in eventData.jsonObject.results[0]) {
-        console.log('EFT results');
-        console.log(eventData.jsonObject.results);
-      } else {
-        console.log('Stock results');
-        console.log(eventData.jsonObject.results);
-      }
+    if ('results' in eventData.jsonObject) {
+      neonSearch.handleSearchEvent(eventData.jsonObject.results, eventData.eventId);
     }
 
     // 2) Details of instrument
