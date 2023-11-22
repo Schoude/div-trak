@@ -7,7 +7,7 @@ export type DbResultErr = PostgrestError
 
 export type Tables<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Row']
 
-export type Portfolio = Pick<Tables<'portfolios'>, 'name'> & {
+export type Portfolio = Pick<Tables<'portfolios'>, 'id' |'name'> & {
   isins: string[];
   orders: Order[];
 }

@@ -51,8 +51,12 @@ button {
   outline: none;
 }
 
+a,
 button {
   -webkit-tap-highlight-color: transparent;
+}
+
+button {
   cursor: pointer;
   border: none;
   background-color: transparent;

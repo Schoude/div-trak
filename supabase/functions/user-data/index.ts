@@ -23,6 +23,7 @@ Deno.serve(async (req) => {
       phone,
       pin,
       portfolios (
+        id,
         name,
         isins,
         orders (

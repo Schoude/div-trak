@@ -26,7 +26,18 @@ const router = createRouter({
           path: '',
           name: 'dashboard',
           component: () => import('../views/content/DashboardView.vue')
-        }
+        },
+      ]
+    },
+    {
+      path: '/portfolio/:id',
+      component: () => import('../views/ContentView.vue'),
+      children: [
+        {
+          path: '',
+          name: 'portfolio',
+          component: () => import('../views/content/DashboardView.vue')
+        },
       ]
     },
     {
