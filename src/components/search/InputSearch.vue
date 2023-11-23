@@ -4,14 +4,18 @@ import { useTRSocket } from '@/composables/useTRSocket';
 
 const socket = useTRSocket();
 
+const emits = defineEmits([
+  'focus:input',
+]);
+
 function onFirstFocus (event: Event) {
   const target = event.target as HTMLInputElement;
+
+  emits('focus:input');
 
   if (target.value !== '') {
     return;
   }
-
-  console.log('empty search on focus');
 
   socket.sendMessage('sub 1 {"type":"neonSearch","data":{"q":"","page":1,"pageSize":3,"filter":[{"key":"type","value":"stock"},{"key":"jurisdiction","value":"DE"}]}}');
   socket.sendMessage('sub 2 {"type":"neonSearch","data":{"q":"","page":1,"pageSize":3,"filter":[{"key":"type","value":"fund"},{"key":"jurisdiction","value":"DE"}]}}');
