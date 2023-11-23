@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import InputSearch from '@/components/inputs/InputSearch.vue';
+import InputSearch from '@/components/search/InputSearch.vue';
 </script>
 
 <template>

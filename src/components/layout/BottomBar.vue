@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import SearchInstruments from '../inputs/SearchInstruments.vue';
+import SearchInstruments from '@/components/search/SearchInstruments.vue';
 </script>
 
 <template>
