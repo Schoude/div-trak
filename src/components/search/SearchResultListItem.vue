@@ -1,6 +1,6 @@
 <script setup lang='ts'>
+import TRAssetLoader from '@/components/loaders/TRAssetLoader.vue';
 import type { ETFSearchResult, StockSearchResult } from '@/types/tr/neon-search';
-import { createAssetURL } from '@/utils/tr/assets';
 import { computed } from 'vue';
 
 const props = defineProps<{
@@ -13,11 +13,7 @@ const tags = computed(() => props.result.tags.map(t => t.name).join(', '));
 <template>
   <li class="search-result-list-item">
     <button class="result-action" type="button">
-      <img
-        :src="createAssetURL('image', result.imageId)"
-        :alt="`Logo ${result.name}`"
-        loading="lazy"
-      >
+      <TRAssetLoader :image-id="result.imageId" asset-type="image" />
       <div class="details">
         <div class="name">{{ result.name }}</div>
         <div class="tags text-xs">{{ tags }}</div>
