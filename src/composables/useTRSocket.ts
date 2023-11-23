@@ -43,6 +43,6 @@ export function useTRSocket () {
 
   return {
     sendMessage,
-    close: socket.value.close
+    close: socket.value.close,
   };
 }

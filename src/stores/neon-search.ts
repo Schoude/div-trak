@@ -13,13 +13,11 @@ export const useNeonSearchStore = defineStore('neon-search', () => {
   function handleSearchEvent (results: NeonSearchResults, eventId: number) {
     switch (eventId) {
       case 1: {
-        console.log('Stock results');
         searchResultsStocks.value = results;
         break;
       }
 
       case 2: {
-        console.log('EFT results');
         searchResultsETFs.value = results as ETFSearchResult[];
         break;
       }
