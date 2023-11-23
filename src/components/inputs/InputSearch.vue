@@ -1,6 +1,6 @@
 <script setup lang='ts'>
+import IconSearch from '@/components/icons/IconSearch.vue';
 import { useTRSocket } from '@/composables/useTRSocket';
-import IconSearch from '../icons/IconSearch.vue';
 
 const socket = useTRSocket();
 
@@ -26,24 +26,16 @@ function onSearchInput (event: Event) {
 </script>
 
 <template>
-<div class="search-field-instruments">
   <div class="input-field">
     <label for="instrument-name">
       <IconSearch />
-      <input
-        type="text"
-        name="instrument-name"
-        id="instrument-name"
-        placeholder="Find stocks or ETFs"
-        @focus="onFirstFocus"
-        @input="onSearchInput"
-      >
+      <input type="text" name="instrument-name" id="instrument-name" placeholder="Find stocks or ETFs"
+        @focus="onFirstFocus" @input="onSearchInput">
     </label>
   </div>
-</div>
 </template>
 
-<style lang='scss' scoped>
+<style scoped lang="scss">
 .input-field {
   max-inline-size: 420px;
   margin-inline: auto;

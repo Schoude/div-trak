@@ -1,10 +1,10 @@
 <script setup lang='ts'>
-import SearchFieldInstruments from '../inputs/SearchFieldInstruments.vue';
+import SearchInstruments from '../inputs/SearchInstruments.vue';
 </script>
 
 <template>
   <footer class="bottom-bar">
-    <SearchFieldInstruments />
+    <SearchInstruments />
   </footer>
 </template>
 
@@ -16,7 +16,7 @@ import SearchFieldInstruments from '../inputs/SearchFieldInstruments.vue';
   padding-inline: .5rem;
 }
 
-.search-field-instruments {
+.search-instruments {
   flex: 1;
 }
 </style>
