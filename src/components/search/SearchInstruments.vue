@@ -16,8 +16,8 @@ function onFocusInput () {
 
 <template>
 <div class="search-instruments">
-  <SearchResults v-if="resultsVisible" />
   <InputSearch @focus:input="onFocusInput" />
+  <SearchResults v-if="resultsVisible" />
 </div>
 </template>
 
