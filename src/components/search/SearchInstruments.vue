@@ -21,7 +21,7 @@ function onFocusInput () {
 <template>
 <div ref="searchInstruments" class="search-instruments">
   <InputSearch @focus:input="onFocusInput" />
-  <SearchResults v-if="resultsVisible" />
+  <SearchResults v-if="resultsVisible" @hide="resultsVisible = false"/>
 </div>
 </template>
 

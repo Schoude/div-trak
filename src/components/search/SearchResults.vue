@@ -1,8 +1,13 @@
 <script setup lang='ts'>
 import { useNeonSearchStore } from '@/stores/neon-search';
+import IconClose from '../icons/IconClose.vue';
 import SearchResultListItem from './SearchResultListItem.vue';
 
 const search = useNeonSearchStore();
+
+defineEmits([
+  'hide'
+]);
 
 </script>
 
@@ -23,10 +28,16 @@ const search = useNeonSearchStore();
         <SearchResultListItem v-for="etf of search.searchResultsETFs" :result="etf" :key="etf.isin" />
       </ul>
     </article>
+
+    <button class="btn-close" type="button" title="Hide search results" @click="$emit('hide')">
+      <IconClose />
+    </button>
   </section>
 </template>
 
 <style lang='scss' scoped>
+@use '../../styles/mixins';
+
 .search-results {
   position: absolute;
   inset-block-end: 140%;
@@ -59,5 +70,27 @@ const search = useNeonSearchStore();
   margin-block: .75rem;
   height: 1px;
   background-color: grey;
+}
+
+.btn-close {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-end: 0px;
+  padding: .48rem .48rem;
+  transition: scale 150ms ease-out;
+
+  &:hover,
+  &:focus-visible {
+    scale: 1.2;
+
+    .icon-close {
+      fill: white;
+    }
+  }
+
+  .icon-close {
+    transition: fill 250ms ease-out;
+    fill: rgba(255, 255, 255, 0.3);
+  }
 }
 </style>
