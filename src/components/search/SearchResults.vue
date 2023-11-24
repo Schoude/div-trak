@@ -42,23 +42,33 @@ defineEmits([
 <style lang='scss' scoped>
 @use '../../styles/mixins';
 
+// Self positioning
 .search-results {
   position: absolute;
   inset-block-end: 140%;
-
   inline-size: 95vw;
-  // TODO: desktop - should be a bit wider than the input field > 420px
+  inset-inline-start: 50%;
+  translate: -50%;
 
-  block-size: 510px;
-  display: grid;
-  grid-auto-columns: 100%;
-  grid-template-rows: 1fr auto 1fr;
+  @media only screen and (width >=768px) {
+    inline-size: 690px;
+  }
+
+  // Appearance
   border: 1px solid rgb(48, 48, 48);
   border-radius: 8px;
   box-shadow: var(--shadow);
   background-color: rgb(10, 10, 10);
   background-image: var(--gradient-page);
   background-repeat: no-repeat;
+}
+
+// Children positioning
+.search-results {
+  block-size: 510px;
+  display: grid;
+  grid-auto-columns: 100%;
+  grid-template-rows: 1fr auto 1fr;
 }
 
 .title {
@@ -74,6 +84,7 @@ defineEmits([
 
 .results-list {
   padding: 0;
+  list-style: none;
 }
 
 .line {
