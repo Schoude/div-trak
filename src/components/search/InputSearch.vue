@@ -1,31 +1,27 @@
 <script setup lang='ts'>
+import IconClose from '@/components/icons/IconClose.vue';
 import IconSearch from '@/components/icons/IconSearch.vue';
-import { useTRSocket } from '@/composables/useTRSocket';
+import { computed } from 'vue';
 
-const socket = useTRSocket();
+const props = defineProps<{
+  modelValue: string;
+}>();
 
-const emits = defineEmits([
+const emit = defineEmits([
   'focus:input',
+  'update:modelValue',
 ]);
 
-function onFirstFocus (event: Event) {
-  const target = event.target as HTMLInputElement;
+const showClearButton = computed(() => props.modelValue !== '');
 
-  emits('focus:input');
-
-  if (target.value !== '') {
-    return;
-  }
-
-  socket.sendMessage('sub 1 {"type":"neonSearch","data":{"q":"","page":1,"pageSize":3,"filter":[{"key":"type","value":"stock"},{"key":"jurisdiction","value":"DE"}]}}');
-  socket.sendMessage('sub 2 {"type":"neonSearch","data":{"q":"","page":1,"pageSize":3,"filter":[{"key":"type","value":"fund"},{"key":"jurisdiction","value":"DE"}]}}');
+function onFirstFocus () {
+  emit('focus:input');
 }
 
-function onSearchInput (event: Event) {
-  const target = event.target as HTMLInputElement;
-
-  socket.sendMessage(`sub 1 {"type":"neonSearch","data":{"q":"${target.value}","page":1,"pageSize":3,"filter":[{"key":"type","value":"stock"},{"key":"jurisdiction","value":"DE"}]}}`);
-  socket.sendMessage(`sub 2 {"type":"neonSearch","data":{"q":"${target.value}","page":1,"pageSize":3,"filter":[{"key":"type","value":"fund"},{"key":"jurisdiction","value":"DE"}]}}`);
+function onSearchInput ($event: Event) {
+  if ($event.target) {
+    emit('update:modelValue', ($event.target as HTMLInputElement).value);
+  }
 }
 </script>
 
@@ -33,8 +29,14 @@ function onSearchInput (event: Event) {
   <div class="input-field">
     <label for="instrument-name">
       <IconSearch />
-      <input type="text" name="instrument-name" id="instrument-name" placeholder="Find stocks or ETFs" autocomplete="off"
-        @focus="onFirstFocus" @input="onSearchInput">
+      <input :value="modelValue" type="text" name="instrument-name" id="instrument-name" placeholder="Find stocks or ETFs"
+        autocomplete="off" @focus="onFirstFocus" @input="onSearchInput">
+      <div class="action">
+        <button v-if="showClearButton" class="btn-clear" type="button" title="Delete search query"
+          @click="emit('update:modelValue', '')">
+          <IconClose />
+        </button>
+      </div>
     </label>
   </div>
 </template>
@@ -65,10 +67,20 @@ input {
   background: transparent;
   border: none;
   flex: 1;
-  padding-inline-start: .5rem;
+  padding-inline: .5rem;
 }
 
 .icon-search {
   fill: rgb(143, 143, 143);
+}
+
+.action {
+  inline-size: 24px;
+}
+
+.btn-clear {
+  .icon {
+    fill: rgb(143, 143, 143);
+  }
 }
 </style>
