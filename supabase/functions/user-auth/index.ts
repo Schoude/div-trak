@@ -52,7 +52,8 @@ Deno.serve(async (req) => {
           year,
           month,
           day,
-          executed_at
+          executed_at,
+          execution_type
         )
       )
     `)

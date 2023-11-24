@@ -40,6 +40,7 @@ export interface Database {
           created_at: string
           day: number
           executed_at: string
+          execution_type: 'normal' | 'forecast';
           id: number
           isin: string
           month: number
@@ -52,6 +53,7 @@ export interface Database {
           created_at?: string
           day: number
           executed_at: string
+          execution_type: 'normal' | 'forecast';
           id?: number
           isin: string
           month: number
@@ -64,6 +66,7 @@ export interface Database {
           created_at?: string
           day?: number
           executed_at?: string
+          execution_type?: 'normal' | 'forecast';
           id?: number
           isin?: string
           month?: number
@@ -231,18 +234,21 @@ export interface Database {
       migrations: {
         Row: {
           executed_at: string | null
+          execution_type: 'normal' | 'forecast';
           hash: string
           id: number
           name: string
         }
         Insert: {
           executed_at?: string | null
+          execution_type?: 'normal' | 'forecast';
           hash: string
           id: number
           name: string
         }
         Update: {
           executed_at?: string | null
+          execution_type?: 'normal' | 'forecast';
           hash?: string
           id?: number
           name?: string
