@@ -6,9 +6,9 @@ import SearchResultListItem from './SearchResultListItem.vue';
 const search = useNeonSearchStore();
 
 defineEmits([
-  'hide'
+  'hide',
+  'hide:navigation'
 ]);
-
 </script>
 
 <template>
@@ -16,7 +16,8 @@ defineEmits([
     <article class="result results-stocks">
       <h2 class="title text-l">Stocks</h2>
       <ul class="results-list">
-        <SearchResultListItem v-for="stock of search.searchResultsStocks" :result="stock" :key="stock.isin" />
+        <SearchResultListItem v-for="stock of search.searchResultsStocks" :result="stock" :key="stock.isin"
+          @hide:navigation="$emit('hide:navigation')" />
       </ul>
     </article>
 
@@ -25,7 +26,8 @@ defineEmits([
     <article class="result results-etfs">
       <h2 class="title text-l">ETFs</h2>
       <ul class="results-list">
-        <SearchResultListItem v-for="etf of search.searchResultsETFs" :result="etf" :key="etf.isin" />
+        <SearchResultListItem v-for="etf of search.searchResultsETFs" :result="etf" :key="etf.isin"
+          @hide:navigation="$emit('hide:navigation')" />
       </ul>
     </article>
 
@@ -44,8 +46,8 @@ defineEmits([
   inline-size: 95vw;
   // TODO: desktop - should be a bit bitter than the input field > 420px
 
-  // TODO: mobile - could be much higher on desktop
   min-block-size: 400px;
+  // TODO: desktop - could be much higher
   max-block-size: 550px;
   border: 1px solid rgb(48, 48, 48);
   border-radius: 8px;
@@ -81,7 +83,7 @@ defineEmits([
 
   &:hover,
   &:focus-visible {
-    scale: 1.2;
+    scale: 1.08;
 
     .icon-close {
       fill: white;

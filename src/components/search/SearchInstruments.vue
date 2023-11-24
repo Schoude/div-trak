@@ -16,13 +16,17 @@ function onFocusInput () {
 
   resultsVisible.value = true;
 }
+
+function onHideNavigation () {
+  resultsVisible.value = false;
+}
 </script>
 
 <template>
-<div ref="searchInstruments" class="search-instruments">
-  <InputSearch @focus:input="onFocusInput" />
-  <SearchResults v-if="resultsVisible" @hide="resultsVisible = false"/>
-</div>
+  <div ref="searchInstruments" class="search-instruments">
+    <InputSearch @focus:input="onFocusInput" />
+    <SearchResults v-if="resultsVisible" @hide="resultsVisible = false" @hide:navigation="onHideNavigation" />
+  </div>
 </template>
 
 <style lang='scss' scoped>

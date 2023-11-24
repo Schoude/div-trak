@@ -33,7 +33,7 @@ function onSearchInput (event: Event) {
   <div class="input-field">
     <label for="instrument-name">
       <IconSearch />
-      <input type="text" name="instrument-name" id="instrument-name" placeholder="Find stocks or ETFs"
+      <input type="text" name="instrument-name" id="instrument-name" placeholder="Find stocks or ETFs" autocomplete="off"
         @focus="onFirstFocus" @input="onSearchInput">
     </label>
   </div>

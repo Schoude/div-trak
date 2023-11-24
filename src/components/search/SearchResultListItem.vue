@@ -2,17 +2,30 @@
 import TRAssetLoader from '@/components/loaders/TRAssetLoader.vue';
 import type { ETFSearchResult, StockSearchResult } from '@/types/tr/neon-search';
 import { computed } from 'vue';
+import { useRouter } from 'vue-router';
 
 const props = defineProps<{
   result: StockSearchResult | ETFSearchResult;
 }>();
 
+const emit = defineEmits([
+  'hide:navigation'
+]);
+
+const router = useRouter();
+
 const tags = computed(() => props.result.tags.map(t => t.name).join(', '));
+
+async function onNavigateClick (isin: string) {
+  await router.push({ name: 'instrument', params: { isin } });
+  emit('hide:navigation');
+}
 </script>
 
 <template>
   <li class="search-result-list-item">
-    <button class="result-action" type="button">
+    <!-- TODO: handle navigation to instrument detail page -->
+    <button class="result-action" type="button" @click="onNavigateClick(result.isin)">
       <TRAssetLoader :image-id="result.imageId" asset-type="image" />
       <div class="details">
         <div class="name">{{ result.name }}</div>

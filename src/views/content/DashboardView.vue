@@ -9,7 +9,4 @@ import ListPortfolios from '@/components/display/ListPortfolios.vue';
 </template>
 
 <style scoped lang="scss">
-.dashboard-view {
-  padding-inline: .5rem;
-}
 </style>

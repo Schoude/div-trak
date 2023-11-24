@@ -21,7 +21,4 @@ if (!detailPortfolio) {
 </template>
 
 <style scoped lang="scss">
-.portfolio-view {
-  padding-inline: .5rem;
-}
 </style>

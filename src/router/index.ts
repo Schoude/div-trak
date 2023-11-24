@@ -41,6 +41,17 @@ const router = createRouter({
       ]
     },
     {
+      path: '/instrument/:isin',
+      component: () => import('../views/ContentView.vue'),
+      children: [
+        {
+          path: '',
+          name: 'instrument',
+          component: () => import('../views/content/InstrumentView.vue')
+        },
+      ]
+    },
+    {
        path: '/:pathMatch(.*)*',
        name: 'NotFound',
        redirect: 'login'

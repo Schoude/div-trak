@@ -3,7 +3,7 @@ import FormLogin from '@/components/forms/FormLogin.vue';
 </script>
 
 <template>
-  <main class="login-view view">
+  <main class="login-view">
     <FormLogin />
   </main>
 </template>
