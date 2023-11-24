@@ -15,20 +15,22 @@ defineEmits([
   <section class="search-results">
     <article class="result results-stocks">
       <h2 class="title text-l">Stocks</h2>
-      <ul class="results-list">
+      <ul class="results-list" v-if="search.searchResultsStocks.length > 0">
         <SearchResultListItem v-for="stock of search.searchResultsStocks" :result="stock" :key="stock.isin"
           @hide:navigation="$emit('hide:navigation')" />
       </ul>
+      <p v-else class="fallback-no-results text-m"><i>No stocks found</i></p>
     </article>
 
     <div class="line"></div>
 
     <article class="result results-etfs">
       <h2 class="title text-l">ETFs</h2>
-      <ul class="results-list">
+      <ul class="results-list" v-if="search.searchResultsETFs.length > 0">
         <SearchResultListItem v-for="etf of search.searchResultsETFs" :result="etf" :key="etf.isin"
           @hide:navigation="$emit('hide:navigation')" />
       </ul>
+      <p v-else class="fallback-no-results text-m"><i>No ETFs found</i></p>
     </article>
 
     <button class="btn-close" type="button" title="Hide search results" @click="$emit('hide')">
@@ -43,12 +45,14 @@ defineEmits([
 .search-results {
   position: absolute;
   inset-block-end: 140%;
-  inline-size: 95vw;
-  // TODO: desktop - should be a bit bitter than the input field > 420px
 
-  min-block-size: 400px;
-  // TODO: desktop - could be much higher
-  max-block-size: 550px;
+  inline-size: 95vw;
+  // TODO: desktop - should be a bit wider than the input field > 420px
+
+  block-size: 510px;
+  display: grid;
+  grid-auto-columns: 100%;
+  grid-template-rows: 1fr auto 1fr;
   border: 1px solid rgb(48, 48, 48);
   border-radius: 8px;
   box-shadow: var(--shadow);
@@ -60,6 +64,12 @@ defineEmits([
 .title {
   padding-inline: 1rem;
   padding-block-start: 1rem;
+}
+
+.fallback-no-results {
+  padding-inline: 1rem;
+  padding-block: 1rem;
+  text-align: center;
 }
 
 .results-list {
