@@ -6,7 +6,9 @@ import { ref } from 'vue';
 const socket = ref(new WebSocket('wss://api.traderepublic.com/'));
 
 socket.value.onopen = () => {
-  socket.value?.send('connect 29 {"locale":"de","platformId":"webtrading","platformVersion":"chrome - 119.0.0","clientId":"app.traderepublic.com","clientVersion":"1.27.5"}');
+  socket.value?.send(
+    'connect 29 {"locale":"de","platformId":"webtrading","platformVersion":"chrome - 119.0.0","clientId":"app.traderepublic.com","clientVersion":"1.27.5"}',
+  );
 };
 
 socket.value.onerror = (error) => {
@@ -17,13 +19,23 @@ export function useTRSocket () {
   const neonSearch = useNeonSearchStore();
 
   function sendMessage (message: string) {
-    socket.value?.send(message);
+    if (socket.value.readyState === socket.value.OPEN) {
+      socket.value?.send(message);
+
+      return;
+    }
+
+    const interval = setInterval(() => {
+      sendMessage(message);
+      clearInterval(interval);
+    }, 500);
   }
 
   socket.value.onmessage = (event) => {
     // TODO: add more generic values for event data
     // 2) "type":"instrument"
-    // 3) "type":"stockDetailDividends"
+    // 3) "type":"stockDetails"
+    // 3) "type":"ticker"
     const eventData = extractJsonAndEventId<ReturnValueNeonSearch>(event.data);
 
     if (!eventData) {
@@ -32,7 +44,10 @@ export function useTRSocket () {
 
     // 1) Neon Search Results
     if ('results' in eventData.jsonObject) {
-      neonSearch.handleSearchEvent(eventData.jsonObject.results, eventData.eventId);
+      neonSearch.handleSearchEvent(
+        eventData.jsonObject.results,
+        eventData.eventId,
+      );
     }
 
     // 2) Details of instrument

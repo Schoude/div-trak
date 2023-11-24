@@ -1,8 +1,25 @@
 <script setup lang='ts'>
-import { useRouter } from 'vue-router';
+import { useTRSocket } from '@/composables/useTRSocket';
+import { onMounted } from 'vue';
+import { onBeforeRouteUpdate, useRouter } from 'vue-router';
 
+const socket = useTRSocket();
 const router = useRouter();
+const isin = router.currentRoute.value.params.isin as string;
 
+function getInstrumentData (isin: string) {
+  socket.sendMessage(`sub 10 {"type":"instrument","id":"${isin}","jurisdiction":"DE"}`);
+  socket.sendMessage(`sub 11 {"type":"stockDetails","id":"${isin}","jurisdiction":"DE"}`);
+  socket.sendMessage(`sub 12 {"type":"ticker","id":"${isin}.LSX","jurisdiction":"DE"}`);
+}
+
+onBeforeRouteUpdate((guard) => {
+  getInstrumentData(guard.params.isin as string);
+});
+
+onMounted(() => {
+  getInstrumentData(isin);
+});
 </script>
 
 <template>
