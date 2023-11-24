@@ -24,7 +24,6 @@ async function onNavigateClick (isin: string) {
 
 <template>
   <li class="search-result-list-item">
-    <!-- TODO: handle navigation to instrument detail page -->
     <button class="result-action" type="button" @click="onNavigateClick(result.isin)">
       <TRAssetLoader :image-id="result.imageId" asset-type="image" />
       <div class="details">
