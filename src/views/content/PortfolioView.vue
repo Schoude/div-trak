@@ -15,8 +15,7 @@ if (!detailPortfolio) {
 
 <template>
   <main class="portfolio-view view">
-    <h1>Portfolio View</h1>
-    {{ detailPortfolio?.name }}
+    <h1>{{ detailPortfolio?.name }}</h1>
     {{ detailPortfolio?.isins }}
   </main>
 </template>
