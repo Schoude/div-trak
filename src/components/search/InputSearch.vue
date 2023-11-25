@@ -32,7 +32,7 @@ function onSearchInput ($event: Event) {
       <input :value="modelValue" type="text" name="instrument-name" id="instrument-name" placeholder="Find stocks or ETFs"
         autocomplete="off" @focus="onFirstFocus" @input="onSearchInput">
       <div class="action">
-        <button v-if="showClearButton" class="btn-clear" type="button" title="Delete search query"
+        <button v-if="showClearButton" class="btn-clear" type="button" title="Delete search query" tabindex="-1"
           @click="emit('update:modelValue', '')">
           <IconClose />
         </button>

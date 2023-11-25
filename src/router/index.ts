@@ -25,9 +25,9 @@ const router = createRouter({
         {
           path: '',
           name: 'dashboard',
-          component: () => import('../views/content/DashboardView.vue')
+          component: () => import('../views/content/DashboardView.vue'),
         },
-      ]
+      ],
     },
     {
       path: '/portfolio/:id',
@@ -36,9 +36,9 @@ const router = createRouter({
         {
           path: '',
           name: 'portfolio',
-          component: () => import('../views/content/PortfolioView.vue')
+          component: () => import('../views/content/PortfolioView.vue'),
         },
-      ]
+      ],
     },
     {
       path: '/instrument/:isin',
@@ -47,16 +47,16 @@ const router = createRouter({
         {
           path: '',
           name: 'instrument',
-          component: () => import('../views/content/InstrumentView.vue')
+          component: () => import('../views/content/InstrumentView.vue'),
         },
-      ]
+      ],
     },
     {
-       path: '/:pathMatch(.*)*',
-       name: 'NotFound',
-       redirect: 'login'
+      path: '/:pathMatch(.*)*',
+      name: 'NotFound',
+      redirect: 'login',
     },
-  ]
+  ],
 });
 
 router.beforeEach(async (to, _from, next) => {
@@ -73,14 +73,18 @@ router.beforeEach(async (to, _from, next) => {
       to.name !== 'login' ? next({ name: 'login' }) : next();
     } else {
       // Check the session using the stored token
-      await authStore.checkSession(sessionToken);
-      next();
+      try {
+        await authStore.checkSession(sessionToken);
+        next();
+      } catch (error) {
+        localStorage.removeItem('sessionToken');
+        next({ name: 'login' });
+      }
     }
   } else {
     // Allow authenticated users to proceed
     next();
   }
 });
-
 
 export default router;
