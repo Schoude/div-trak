@@ -1,9 +1,4 @@
-export interface ReturnValueNeonSearch {
-  eventId: number;
-  jsonObject: JSONObject;
-}
-
-export interface JSONObject {
+export interface NeonSearchEvent {
   results: NeonSearchResults;
   resultCount: number;
   correlationId: string;

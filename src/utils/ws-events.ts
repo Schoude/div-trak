@@ -1,4 +1,9 @@
-export function extractJsonAndEventId<T = {eventId: number; jsonObject: unknown}> (inputString: string): T | null {
+export interface ExtractedEvent<T> {
+  eventId: number;
+  jsonObject: T;
+}
+
+export function extractJsonAndEventId<T = unknown> (inputString: string): ExtractedEvent<T> | null {
   // Extract the integer at the front of the string
   const eventId = parseInt(inputString, 10);
 
@@ -10,7 +15,7 @@ export function extractJsonAndEventId<T = {eventId: number; jsonObject: unknown}
   try {
     const jsonObject = JSON.parse(jsonString);
 
-    return { eventId, jsonObject } as T;
+    return { eventId, jsonObject };
   } catch (error) {
     return null;
   }

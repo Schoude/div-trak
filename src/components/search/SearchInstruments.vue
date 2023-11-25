@@ -14,8 +14,8 @@ const resultsVisible = ref(false);
 onClickOutside(searchInstruments, () => resultsVisible.value = false);
 
 watch(searchQuery, (query) => {
-  socket.sendMessage(`sub 1 {"type":"neonSearch","data":{"q":"${query}","page":1,"pageSize":3,"filter":[{"key":"type","value":"stock"},{"key":"jurisdiction","value":"DE"}]}}`);
-  socket.sendMessage(`sub 2 {"type":"neonSearch","data":{"q":"${query}","page":1,"pageSize":3,"filter":[{"key":"type","value":"fund"},{"key":"jurisdiction","value":"DE"}]}}`);
+  socket.sendMessage(`sub 1 {"type":"neonSearch","data":{"q":"${query}","page":1,"pageSize":3,"filter":[{"key":"type","value":"stock"},{"key":"jurisdiction","value":"DE"}]}}`, { updateEventId: false });
+  socket.sendMessage(`sub 2 {"type":"neonSearch","data":{"q":"${query}","page":1,"pageSize":3,"filter":[{"key":"type","value":"fund"},{"key":"jurisdiction","value":"DE"}]}}`, { updateEventId: false });
 });
 
 function onHideNavigation () {
@@ -25,8 +25,8 @@ function onHideNavigation () {
 
 function onFocusInput () {
   if (searchQuery.value === '') {
-    socket.sendMessage('sub 1 {"type":"neonSearch","data":{"q":"","page":1,"pageSize":3,"filter":[{"key":"type","value":"stock"},{"key":"jurisdiction","value":"DE"}]}}');
-    socket.sendMessage('sub 2 {"type":"neonSearch","data":{"q":"","page":1,"pageSize":3,"filter":[{"key":"type","value":"fund"},{"key":"jurisdiction","value":"DE"}]}}');
+    socket.sendMessage('sub 1 {"type":"neonSearch","data":{"q":"","page":1,"pageSize":3,"filter":[{"key":"type","value":"stock"},{"key":"jurisdiction","value":"DE"}]}}', { updateEventId: false });
+    socket.sendMessage('sub 2 {"type":"neonSearch","data":{"q":"","page":1,"pageSize":3,"filter":[{"key":"type","value":"fund"},{"key":"jurisdiction","value":"DE"}]}}', { updateEventId: false });
   }
 
   resultsVisible.value = true;

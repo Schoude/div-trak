@@ -1,5 +1,13 @@
+import { useInstrumentsStore } from '@/stores/instruments';
 import { useNeonSearchStore } from '@/stores/neon-search';
-import type { ReturnValueNeonSearch } from '@/types/tr/neon-search';
+import { useTickerStore } from '@/stores/ticker';
+import {
+  isInstrumentEvent,
+  isNeonSearchEvent,
+  isStockDetailsEvent,
+  isTickerEvent,
+  type EventType,
+} from '@/types/tr/events';
 import { extractJsonAndEventId } from '@/utils/ws-events';
 import { ref } from 'vue';
 
@@ -15,10 +23,21 @@ socket.value.onerror = (error) => {
   console.log(error);
 };
 
+const runningEventId = ref(10);
+
 export function useTRSocket () {
   const neonSearch = useNeonSearchStore();
+  const instruments = useInstrumentsStore();
+  const ticker = useTickerStore();
 
-  function sendMessage (message: string) {
+  function sendMessage (
+    message: string,
+    { updateEventId }: { updateEventId: boolean } = { updateEventId: true },
+  ) {
+    if (updateEventId) {
+      runningEventId.value = runningEventId.value + 1;
+    }
+
     if (socket.value.readyState === socket.value.OPEN) {
       socket.value?.send(message);
 
@@ -26,37 +45,52 @@ export function useTRSocket () {
     }
 
     const interval = setInterval(() => {
-      sendMessage(message);
+      sendMessage(message, { updateEventId: false });
       clearInterval(interval);
     }, 500);
   }
 
   socket.value.onmessage = (event) => {
-    // TODO: add more generic values for event data
-    // 2) "type":"instrument"
-    // 3) "type":"stockDetails"
-    // 3) "type":"ticker"
-    const eventData = extractJsonAndEventId<ReturnValueNeonSearch>(event.data);
+    const eventData = extractJsonAndEventId<EventType>(event.data);
 
     if (!eventData) {
       return;
     }
 
     // 1) Neon Search Results
-    if ('results' in eventData.jsonObject) {
+    if (isNeonSearchEvent(eventData)) {
       neonSearch.handleSearchEvent(
         eventData.jsonObject.results,
         eventData.eventId,
       );
     }
 
-    // 2) Details of instrument
-    // 3) Dividend details of stock
+    // 2) Details of instrument | "type":"instrument"
+    if (isInstrumentEvent(eventData)) {
+      instruments.upsertInstrument(eventData.jsonObject.isin, {
+        instrument: eventData.jsonObject,
+        tickerEventId: eventData.eventId + 2,
+      });
+    }
 
-    sendMessage(`unsub ${eventData?.eventId}`);
+    // 3) Details of a stock | "type":"stockDetails"
+    if (isStockDetailsEvent(eventData)) {
+      instruments.upsertInstrument(eventData.jsonObject.isin, {
+        stockDetails: eventData.jsonObject,
+      });
+    }
+
+    // 4) Ticker of an instrument | "type":"ticker"
+    if (isTickerEvent(eventData)) {
+      ticker.setTicker(eventData.eventId, eventData.jsonObject);
+      // TODO: don't unsub for ticker on /instruments/:isin page -> unsub onBeforeUnmount
+    }
+
+    sendMessage(`unsub ${eventData?.eventId}`, { updateEventId: false });
   };
 
   return {
+    runningEventId,
     sendMessage,
     close: socket.value.close,
   };

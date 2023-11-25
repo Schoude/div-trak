@@ -2,7 +2,7 @@ import type {
   ETFSearchResult,
   NeonSearchResults,
   StockSearchResult,
-} from '@/types/tr/neon-search';
+} from '@/types/tr/events/neon-search';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
