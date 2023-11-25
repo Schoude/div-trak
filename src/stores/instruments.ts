@@ -78,7 +78,7 @@ export const useInstrumentsStore = defineStore('instruments', () => {
           .map<InstrumentFilled | undefined>((isin) =>
             fillInstrument(isin, portFolio)
           )
-          .filter((instrument) => instrument);
+          .filter((instrument) => instrument != null) as InstrumentFilled[];
       };
     }),
   };

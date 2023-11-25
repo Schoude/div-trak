@@ -17,7 +17,7 @@ if (!detailPortfolio) {
   router.push({ name: 'dashboard' });
 }
 
-const instruments = computed(() => instrumentStore.getInstrumentsFilled(detailPortfolio!));
+const instruments = computed(() => instrumentStore.getInstrumentsFilled(detailPortfolio!).sort((a, b) => b.value - a.value));
 
 function getInstrumentsData () {
   detailPortfolio?.isins.forEach(isin => {
