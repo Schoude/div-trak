@@ -3,7 +3,7 @@ import { useTRSocket } from '@/composables/useTRSocket';
 import { useInstrumentsStore } from '@/stores/instruments';
 import { useTickerStore } from '@/stores/ticker';
 import { computed, onMounted, ref, watchEffect } from 'vue';
-import { onBeforeRouteUpdate, useRouter } from 'vue-router';
+import { onBeforeRouteLeave, onBeforeRouteUpdate, useRouter } from 'vue-router';
 
 const socket = useTRSocket();
 const instruments = useInstrumentsStore();
@@ -23,12 +23,19 @@ onMounted(() => {
   getInstrumentData(isin.value);
 });
 
+onBeforeRouteLeave(() => {
+  socket.sendMessage(`unsub ${instrumentData.value?.tickerEventId}`, { updateEventId: false });
+});
+
 onBeforeRouteUpdate((guard) => {
   getInstrumentData(guard.params.isin as string);
 });
 
 function getInstrumentData (isin: string) {
   if (instruments.getInstrument(isin)) {
+    // Re-sub for existing ticker of the instrument
+    socket.sendMessage(`sub ${instrumentData.value?.tickerEventId} {"type":"ticker","id":"${isin}.LSX","jurisdiction":"DE"}`, { updateEventId: false });
+
     return;
   }
 

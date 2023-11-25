@@ -83,7 +83,9 @@ export function useTRSocket () {
     // 4) Ticker of an instrument | "type":"ticker"
     if (isTickerEvent(eventData)) {
       ticker.setTicker(eventData.eventId, eventData.jsonObject);
-      // TODO: don't unsub for ticker on /instruments/:isin page -> unsub onBeforeUnmount
+
+      // TODO: check if ticker really keeps sending events
+      return;
     }
 
     sendMessage(`unsub ${eventData?.eventId}`, { updateEventId: false });
