@@ -8,7 +8,7 @@ export interface Instrument {
   tickerEventId: number;
 }
 
-type Sentiment = 'sentiment-bullish' | 'sentiment-bearish';
+export type Sentiment = 'sentiment-bullish' | 'sentiment-bearish';
 
 export interface InstrumentFilled extends Instrument {
   amount: number;

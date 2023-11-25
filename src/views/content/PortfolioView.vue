@@ -3,16 +3,13 @@ import TRAssetLoader from '@/components/loaders/TRAssetLoader.vue';
 import { useTRSocket } from '@/composables/useTRSocket';
 import { useAuthStore } from '@/stores/auth';
 import { useInstrumentsStore } from '@/stores/instruments';
-import { useTickerStore } from '@/stores/ticker';
-import type { InstrumentFilled } from '@/types/tr/instrument';
 import { computed, onMounted } from 'vue';
 import { onBeforeRouteLeave, useRouter } from 'vue-router';
 
 const router = useRouter();
 const authStore = useAuthStore();
 const socket = useTRSocket();
-const instrumentData = useInstrumentsStore();
-const ticker = useTickerStore();
+const instrumentStore = useInstrumentsStore();
 
 const detailPortfolio = authStore.user?.portfolios.find(p => p.id.toString() === router.currentRoute.value.params.id);
 
@@ -20,45 +17,11 @@ if (!detailPortfolio) {
   router.push({ name: 'dashboard' });
 }
 
-// TODO: Move into instrument store -> write a reusable map function that could be reused on the instrument detail page
-const instruments = computed(() => detailPortfolio?.isins.map<InstrumentFilled | undefined>(isin => {
-  const instrument = instrumentData.getInstrument(isin);
-  if (!instrument) {
-    return;
-  }
-  const instrumentTicker = ticker.getTicker(instrument!.tickerEventId!);
-
-  if (!instrumentTicker) {
-    return;
-  }
-
-  const ordersForInstrument = detailPortfolio.orders.filter(order => order.isin === isin);
-  const currentAmount = ordersForInstrument.reduce((acc, value) => {
-    acc += value.amount;
-
-    return acc;
-  }, 0);
-
-  const priceOpen = +instrumentTicker!.open.price;
-  const priceBid = +instrumentTicker!.bid.price;
-  const value = +(currentAmount * priceBid).toFixed(2);
-
-  let sentimentIntraDay = priceBid >= priceOpen
-    ? 'sentiment-bullish'
-    : 'sentiment-bearish';
-
-  return {
-    ...instrument,
-    amount: currentAmount,
-    value,
-    priceBid,
-    sentimentIntraDay,
-  } as InstrumentFilled;
-}));
+const instruments = computed(() => instrumentStore.getInstrumentsFilled(detailPortfolio!));
 
 function getInstrumentsData () {
   detailPortfolio?.isins.forEach(isin => {
-    const existingInsrument = instrumentData.getInstrument(isin);
+    const existingInsrument = instrumentStore.getInstrument(isin);
     if (existingInsrument) {
       // Re-sub for existing ticker of the instrument
       socket.sendMessage(`sub ${existingInsrument.tickerEventId} {"type":"ticker","id":"${isin}.LSX","jurisdiction":"DE"}`, { updateEventId: false });
@@ -77,7 +40,7 @@ onMounted(() => {
 });
 
 onBeforeRouteLeave(() => {
-  instruments.value?.forEach(instrumentData => {
+  instruments.value.forEach(instrumentData => {
     if (!instrumentData) {
       return;
     }
