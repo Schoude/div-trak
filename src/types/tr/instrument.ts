@@ -7,3 +7,12 @@ export interface Instrument {
   stockDetails: StockDetailsEvent;
   tickerEventId: number;
 }
+
+type Sentiment = 'sentiment-bullish' | 'sentiment-bearish';
+
+export interface InstrumentFilled extends Instrument {
+  amount: number;
+  value: number;
+  priceBid: number;
+  sentimentIntraDay: Sentiment;
+}
