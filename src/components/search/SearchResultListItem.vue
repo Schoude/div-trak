@@ -27,8 +27,8 @@ async function onNavigateClick (isin: string) {
     <button class="result-action" type="button" @click="onNavigateClick(result.isin)">
       <TRAssetLoader :image-id="result.imageId" asset-type="image" />
       <div class="details">
-        <div class="name">{{ result.name }}</div>
-        <div class="tags text-xs">{{ tags }}</div>
+        <div class="name" :title="result.name">{{ result.name }}</div>
+        <div class="tags text-xs" :title="tags">{{ tags }}</div>
       </div>
     </button>
   </li>
@@ -52,14 +52,14 @@ async function onNavigateClick (isin: string) {
 .name,
 .tags {
   padding-inline-start: .5rem;
-}
-
-.tags {
-  color: rgb(143, 143, 143);
   white-space: nowrap;
   text-overflow: ellipsis;
   inline-size: 100%;
   overflow: hidden;
+}
+
+.tags {
+  color: rgb(143, 143, 143);
 }
 
 .details {

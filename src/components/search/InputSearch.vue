@@ -81,6 +81,14 @@ input {
 .btn-clear {
   .icon {
     fill: rgb(143, 143, 143);
+    transition: fill 150ms ease-out;
+  }
+
+  &:hover,
+  &:focus-visible {
+    .icon {
+      fill: white;
+    }
   }
 }
 </style>
