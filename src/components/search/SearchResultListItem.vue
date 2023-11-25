@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import TRAssetLoader from '@/components/loaders/TRAssetLoader.vue';
-import type { ETFSearchResult, StockSearchResult } from '@/types/tr/neon-search';
+import type { ETFSearchResult, StockSearchResult } from '@/types/tr/events/neon-search';
 import { computed } from 'vue';
 import { useRouter } from 'vue-router';
 
