@@ -29,5 +29,3 @@ export const useInstrumentsStore = defineStore('instruments', () => {
     },
   };
 });
-
-const a = useInstrumentsStore();
