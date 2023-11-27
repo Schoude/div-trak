@@ -59,7 +59,7 @@ async function onNavigateClick (isin: string) {
 }
 
 .tags {
-  color: rgb(143, 143, 143);
+  color: var(--color-muted);
 }
 
 .details {

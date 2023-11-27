@@ -1,11 +1,11 @@
 interface NumberFormatOptions {
-  style?: string;
+  style?: 'decimal' | 'currency';
   currency?: string;
   maximumFractionDigits: number;
   roundingMode: 'floor';
 }
 
-export function formatNumber (value: number, style: 'currency', currency?: 'EUR' | 'USD') {
+export function formatNumber (value: number, style: 'decimal' | 'currency', currency?: 'EUR' | 'USD') {
   const options: NumberFormatOptions = {
     style,
     maximumFractionDigits: 2,

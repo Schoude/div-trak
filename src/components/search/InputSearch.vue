@@ -71,7 +71,7 @@ input {
 }
 
 .icon-search {
-  fill: rgb(143, 143, 143);
+  fill: var(--color-muted);
 }
 
 .action {
@@ -80,7 +80,7 @@ input {
 
 .btn-clear {
   .icon {
-    fill: rgb(143, 143, 143);
+    fill: var(--color-muted);
     transition: fill 150ms ease-out;
   }
 

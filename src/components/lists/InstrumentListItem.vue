@@ -1,0 +1,68 @@
+<script setup lang="ts">
+import TRAssetLoader from '@/components/loaders/TRAssetLoader.vue';
+import type { InstrumentFilled } from '@/types/tr/instrument';
+import { useRouter } from 'vue-router';
+
+const props = defineProps<{
+  instrument: InstrumentFilled;
+}>();
+
+const router = useRouter();
+
+async function onNavigateClick () {
+  await router.push({ name: 'instrument', params: { isin: props.instrument.instrument.isin } });
+}
+</script>
+
+<template>
+  <li class="instrument-list-item">
+    <button type="button" class="action" @click="onNavigateClick">
+
+      <TRAssetLoader asset-type="image" :image-id="instrument.instrument.imageId!" />
+
+      <div class="meta-data">
+        <div class="name">{{
+          instrument.instrument.shortName }}</div>
+        <div class="values text-xs">
+          <div class="value">{{ instrument.valueFormatted }}</div>
+          <span>-</span>
+          <div class="amount">{{ instrument.amount }} pcs.</div>
+        </div>
+      </div>
+
+      <div class="price text-s" :class="instrument.sentimentIntraDay">{{ instrument.priceBid }}</div>
+    </button>
+  </li>
+</template>
+
+<style scoped lang="scss">
+.instrument-list-item {
+  list-style: none;
+  padding: 1rem;
+  transition: background-color 150ms ease-out;
+  border-radius: 8px;
+
+  &:hover,
+  &:focus-within {
+    background-color: hsl(343, 37%, 2%);
+  }
+}
+
+.action {
+  display: flex;
+  inline-size: 100%;
+  text-align: start;
+  align-items: center;
+}
+
+.meta-data {
+  flex: 1 0 auto;
+  margin-inline: .75rem;
+}
+
+.values {
+  display: flex;
+  gap: .25rem;
+  color: var(--color-muted);
+}
+</style>

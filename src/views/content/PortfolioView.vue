@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import TRAssetLoader from '@/components/loaders/TRAssetLoader.vue';
+import InstrumentListItem from '@/components/lists/InstrumentListItem.vue';
 import { useTRSocket } from '@/composables/useTRSocket';
 import { useAuthStore } from '@/stores/auth';
 import { useInstrumentsStore } from '@/stores/instruments';
@@ -53,20 +53,17 @@ onBeforeRouteLeave(() => {
 <template>
   <main class="portfolio-view view">
     <h1>{{ detailPortfolio?.name }}</h1>
-    <div class="instruments" v-if="instruments && instruments?.length > 0">
-      <!-- TODO: move into component InstrumentFilled -->
-      <div class="instrument" v-for="instrument of instruments" :key="instrument?.instrument?.shortName">
-        <TRAssetLoader asset-type="image" :image-id="instrument?.instrument.imageId!" />
-        <div class="name">{{
-          instrument?.instrument?.shortName }}</div>
-        <div class="amount">Anzahl: {{ instrument?.amount }}</div>
-        <div class="value">Wert: {{ instrument?.valueFormatted }}</div>
-        <div class="price" :class="instrument?.sentimentIntraDay">Preis: {{ instrument?.priceBid }}</div>
-        <hr>
-      </div>
-    </div>
+    <h2>Instruments</h2>
+    <ul class="instruments-list" v-if="instruments && instruments?.length > 0">
+      <InstrumentListItem :instrument="instrument" v-for="instrument of instruments"
+        :key="instrument?.instrument?.shortName" />
+    </ul>
   </main>
 </template>
 
 <style scoped lang="scss">
+.instruments-list {
+  padding: 0;
+  display: grid;
+}
 </style>

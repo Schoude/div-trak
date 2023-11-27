@@ -1,26 +1,32 @@
 :root {
-  --gradient-page: linear-gradient(to left bottom,
-      rgb(251, 146, 79, .075),
-      rgb(218, 6, 105, .075),
-      rgb(201, 54, 111, .075),
-      rgb(109, 41, 142, .075),
-      rgb(54, 51, 153, .075),
-      rgb(25, 59, 144, .075),
-      rgba(2, 17, 44, 0.705));
+    --gradient-page: linear-gradient(to left bottom,
+            rgb(251, 146, 79, .075),
+            rgb(218, 6, 105, .075),
+            rgb(201, 54, 111, .075),
+            rgb(109, 41, 142, .075),
+            rgb(54, 51, 153, .075),
+            rgb(25, 59, 144, .075),
+            rgba(2, 17, 44, 0.705));
 
-  --gradient-dawn: linear-gradient(to left bottom,
-      rgb(252, 193, 72, .65),
-      rgb(251, 150, 82, .65),
-      rgb(248, 111, 84, .65),
-      rgb(209, 59, 109, .65),
-      rgb(192, 47, 116, .65),
-      rgb(156, 41, 133, .65));
+    --gradient-dawn: linear-gradient(to left bottom,
+            rgb(252, 193, 72, .65),
+            rgb(251, 150, 82, .65),
+            rgb(248, 111, 84, .65),
+            rgb(209, 59, 109, .65),
+            rgb(192, 47, 116, .65),
+            rgb(156, 41, 133, .65));
 
-  --gradient-dusk: linear-gradient(to left bottom,
-      rgb(175, 39, 127, .65),
-      rgb(121, 27, 137, .65),
-      rgb(5, 45, 103, .65),
-      rgb(6, 34, 86, .65));
+    --gradient-dusk: linear-gradient(to left bottom,
+            rgb(175, 39, 127, .65),
+            rgb(121, 27, 137, .65),
+            rgb(5, 45, 103, .65),
+            rgb(6, 34, 86, .65));
 
-  --shadow: 0px 5px 6px -4px rgba(0, 0, 0);
+    --shadow: 0px 5px 6px -4px rgba(0, 0, 0);
+
+    --color-bullish: hsl(120deg 67.69% 50.93%);
+    --color-bearish: hsl(0, 96%, 58%);
+
+    // Font
+    --color-muted: rgb(143, 143, 143);
 }
