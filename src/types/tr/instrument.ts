@@ -23,8 +23,6 @@ export type StockFilled = InstrumentFilled;
 export type ETFFilled = Omit<InstrumentFilled, 'stockDetails'>;
 
 export function isStock (instrument: Partial<Instrument>): instrument is Stock {
-  console.log(instrument);
-  
   return instrument.instrument?.typeId == 'stock';
 }
 
