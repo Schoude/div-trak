@@ -12,4 +12,4 @@ export type Portfolio = Pick<Tables<'portfolios'>, 'id' |'name'> & {
   orders: Order[];
 }
 
-export type Order = Pick<Tables<'orders'>,'isin'| 'amount'| 'year'| 'month'| 'day'| 'executed_at' | 'execution_type' >;
+export type Order = Pick<Tables<'orders'>,'isin'| 'amount'| 'year'| 'month'| 'day'| 'executed_at' | 'execution_type'>;

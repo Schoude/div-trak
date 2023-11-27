@@ -40,7 +40,7 @@ export interface Database {
           created_at: string
           day: number
           executed_at: string
-          execution_type: 'normal' | 'forecast';
+          execution_type: Database['public']['Enums']['order_execution_type']
           id: number
           isin: string
           month: number
@@ -53,7 +53,7 @@ export interface Database {
           created_at?: string
           day: number
           executed_at: string
-          execution_type: 'normal' | 'forecast';
+          execution_type: Database['public']['Enums']['order_execution_type']
           id?: number
           isin: string
           month: number
@@ -66,7 +66,7 @@ export interface Database {
           created_at?: string
           day?: number
           executed_at?: string
-          execution_type?: 'normal' | 'forecast';
+          execution_type?: Database['public']['Enums']['order_execution_type']
           id?: number
           isin?: string
           month?: number
@@ -180,7 +180,7 @@ export interface Database {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      order_execution_type: 'normal' | 'forecast'
     }
     CompositeTypes: {
       [_ in never]: never
@@ -197,6 +197,7 @@ export interface Database {
           id: string
           name: string
           owner: string | null
+          owner_id: string | null
           public: boolean | null
           updated_at: string | null
         }
@@ -208,6 +209,7 @@ export interface Database {
           id: string
           name: string
           owner?: string | null
+          owner_id?: string | null
           public?: boolean | null
           updated_at?: string | null
         }
@@ -219,36 +221,27 @@ export interface Database {
           id?: string
           name?: string
           owner?: string | null
+          owner_id?: string | null
           public?: boolean | null
           updated_at?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: 'buckets_owner_fkey'
-            columns: ['owner']
-            referencedRelation: 'users'
-            referencedColumns: ['id']
-          }
-        ]
+        Relationships: []
       }
       migrations: {
         Row: {
           executed_at: string | null
-          execution_type: 'normal' | 'forecast';
           hash: string
           id: number
           name: string
         }
         Insert: {
           executed_at?: string | null
-          execution_type?: 'normal' | 'forecast';
           hash: string
           id: number
           name: string
         }
         Update: {
           executed_at?: string | null
-          execution_type?: 'normal' | 'forecast';
           hash?: string
           id?: number
           name?: string
@@ -264,6 +257,7 @@ export interface Database {
           metadata: Json | null
           name: string | null
           owner: string | null
+          owner_id: string | null
           path_tokens: string[] | null
           updated_at: string | null
           version: string | null
@@ -276,6 +270,7 @@ export interface Database {
           metadata?: Json | null
           name?: string | null
           owner?: string | null
+          owner_id?: string | null
           path_tokens?: string[] | null
           updated_at?: string | null
           version?: string | null
@@ -288,6 +283,7 @@ export interface Database {
           metadata?: Json | null
           name?: string | null
           owner?: string | null
+          owner_id?: string | null
           path_tokens?: string[] | null
           updated_at?: string | null
           version?: string | null
