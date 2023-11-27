@@ -62,7 +62,7 @@ h3 {
   display: flex;
   gap: .35rem;
   flex-wrap: wrap;
-  margin-block: .75rem;
+  margin-block: .35rem;
 }
 
 .tag {
