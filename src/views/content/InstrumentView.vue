@@ -50,7 +50,7 @@ function getInstrumentData (isin: string) {
 <template>
   <main class="instrument-view view">
     <template v-if="!instrumentData">
-      <p>Lade Daten...</p>
+      <p>Loading Data...</p>
     </template>
 
     <template v-else>
