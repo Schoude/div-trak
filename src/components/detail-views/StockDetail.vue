@@ -6,6 +6,7 @@ import EventsList from '@/components/lists/EventsList.vue';
 import TRAssetLoader from '@/components/loaders/TRAssetLoader.vue';
 import type { TickerEvent } from '@/types/tr/events/ticker';
 import type { Stock } from '@/types/tr/instrument';
+import DividendsList from '../lists/DividendsList.vue';
 
 defineProps<{
   stock: Stock;
@@ -22,6 +23,7 @@ defineProps<{
 
     <!-- OrderManager here -->
 
+    <DividendsList :dividends="stock.stockDetails.dividends" />
     <AnalystRating :analyst-rating="stock.stockDetails.analystRating" :current-price="+ticker.bid.price" />
     <EventsList :events="stock.stockDetails.events" />
     <CompanyInfo :company="stock.stockDetails.company" :tags="stock.instrument.tags" />
