@@ -25,7 +25,7 @@ async function onNavigateClick () {
           instrument.instrument.shortName }}</div>
         <div class="values text-xs">
           <div class="value">{{ instrument.valueFormatted }}</div>
-          <span>-</span>
+          <span>•</span>
           <div class="amount">{{ instrument.amount }} pcs.</div>
         </div>
       </div>
@@ -57,12 +57,23 @@ async function onNavigateClick () {
 
 .meta-data {
   flex: 1 0 auto;
-  margin-inline: .75rem;
+  margin-inline: .85rem;
+}
+
+.name {
+  max-inline-size: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .values {
   display: flex;
   gap: .25rem;
   color: var(--color-muted);
+}
+
+.price {
+  font-weight: 700;
 }
 </style>
