@@ -20,7 +20,7 @@ interface AggregatedDividend {
   price: number;
 }
 
-interface AnalystRating {
+export interface AnalystRating {
   targetPrice: TargetPrice;
   recommendations: Recommendations;
 }

@@ -2,6 +2,7 @@
 import type { Tag } from '@/types/tr/events/instruments';
 import type { Company } from '@/types/tr/events/stock-details';
 import { formatNumber } from '@/utils/intl/currency';
+import TagText from '../display/TagText.vue';
 
 defineProps<{
   company: Company;
@@ -10,7 +11,7 @@ defineProps<{
 </script>
 
 <template>
-  <div class="company-info">
+  <div class="company-info text-s">
     <h2 class="text-m">Indicators</h2>
     <div class="indicators">
       <span v-if="company.dividendYieldSnapshot" class="indicator">Yield: {{ formatNumber(company.dividendYieldSnapshot *
@@ -31,7 +32,9 @@ defineProps<{
     <h2 class="text-m">Description</h2>
     <div class="description">
       <div class="tags">
-        <span class="tag text-xs" v-for="(tag, index) of tags" :key="index">{{ tag.name }}</span>
+        <TagText v-for="(tag, index) of tags" :key="index">
+          {{ tag.name }}
+        </TagText>
       </div>
       <p class="text">{{ company.description }}</p>
     </div>
@@ -51,7 +54,6 @@ defineProps<{
 .company-info {
   margin-block-start: 1.35rem;
 }
-
 
 h2 {
   margin-block-end: .35rem;
@@ -76,15 +78,6 @@ h2 {
   gap: .35rem;
   flex-wrap: wrap;
   margin-block: .35rem;
-}
-
-.tag {
-  color: var(--color-muted);
-  background-color: rgba(0, 0, 0, 0.6);
-  border: 1px solid rgb(48, 48, 48);
-  padding: .25rem .45rem;
-  line-height: 1;
-  border-radius: 50px;
 }
 
 .description {
