@@ -1,6 +1,5 @@
 import type { InstrumentEvent } from './events/instruments';
 import type { StockDetailsEvent } from './events/stock-details';
-// import type { TickerEvent } from './events/ticker';
 
 export interface Instrument {
   instrument: InstrumentEvent;
@@ -16,4 +15,19 @@ export interface InstrumentFilled extends Instrument {
   valueFormatted: string;
   priceBid: string;
   sentimentIntraDay: Sentiment;
+}
+
+export type Stock = Instrument;
+export type ETF = Omit<Instrument, 'stockDetails'>;
+export type StockFilled = InstrumentFilled;
+export type ETFFilled = Omit<InstrumentFilled, 'stockDetails'>;
+
+export function isStock (instrument: Partial<Instrument>): instrument is Stock {
+  console.log(instrument);
+  
+  return instrument.instrument?.typeId == 'stock';
+}
+
+export function isETF (instrument: Partial<Instrument>): instrument is ETF {
+  return instrument.instrument?.typeId == 'fund';
 }

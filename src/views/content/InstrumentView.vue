@@ -1,7 +1,10 @@
 <script setup lang='ts'>
+import FundDetail from '@/components/detail-views/FundDetail.vue';
+import StockDetail from '@/components/detail-views/StockDetail.vue';
 import { useTRSocket } from '@/composables/useTRSocket';
 import { useInstrumentsStore } from '@/stores/instruments';
 import { useTickerStore } from '@/stores/ticker';
+import { isETF, isStock } from '@/types/tr/instrument';
 import { computed, onMounted, ref, watchEffect } from 'vue';
 import { onBeforeRouteLeave, onBeforeRouteUpdate, useRouter } from 'vue-router';
 
@@ -12,7 +15,6 @@ const router = useRouter();
 const isin = ref('');
 
 const instrumentData = computed(() => instruments.getInstrument(isin.value));
-const isFund = computed(() => instrumentData.value?.instrument?.typeId === 'fund');
 const tickerData = computed(() => ticker.getTicker(instrumentData.value?.tickerEventId!));
 
 watchEffect(() => {
@@ -52,12 +54,14 @@ function getInstrumentData (isin: string) {
     </template>
 
     <template v-else>
-      <h1 class="text-l">{{ instrumentData?.instrument?.shortName }}</h1>
-      <p>{{ isFund }}</p>
-      <p>{{ tickerData }}</p>
+      <template v-if="isStock(instrumentData) && tickerData">
+        <StockDetail :stock="instrumentData" :ticker="tickerData" />
+      </template>
+      <template v-if="isETF(instrumentData) && tickerData">
+        <FundDetail :etf="instrumentData" :ticker="tickerData" />
+      </template>
     </template>
   </main>
 </template>
 
-<style lang='scss' scoped>
-</style>
+<style lang='scss' scoped></style>
