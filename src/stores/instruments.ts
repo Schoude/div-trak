@@ -52,7 +52,7 @@ export const useInstrumentsStore = defineStore('instruments', () => {
       ...instrument,
       amount: currentAmount,
       value,
-      priceBid,
+      priceBid: +priceBid.toFixed(2),
       sentimentIntraDay,
     } as InstrumentFilled;
   }
