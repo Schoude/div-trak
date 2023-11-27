@@ -14,4 +14,7 @@ import BottomBar from '@/components/layout/BottomBar.vue';
 </template>
 
 <style lang='scss' scoped>
+.content-view {
+  overflow-y: auto;
+}
 </style>

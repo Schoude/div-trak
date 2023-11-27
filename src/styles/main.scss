@@ -5,12 +5,10 @@
 
 body {
   font-family: 'Overlock', sans-serif;
-  min-block-size: 100dvh;
   background-color: rgb(18, 18, 18);
 }
 
 #app {
-  min-block-size: inherit;
   background-image: var(--gradient-page);
   background-repeat: no-repeat;
 }

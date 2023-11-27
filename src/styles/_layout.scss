@@ -1,3 +1,20 @@
+// # START App-style layout
+body {
+  block-size: 100dvh;
+}
+
+#app {
+  block-size: inherit;
+  $bar-block-size: 4.5rem;
+
+  &:has(.content-view) {
+    display: grid;
+    grid-template-rows: $bar-block-size calc(100% - ($bar-block-size * 2)) $bar-block-size;
+  }
+}
+
+// # END App-style layout
+
 // Class for every /content/**.vue content route component
 .view {
   padding-inline: .5rem;

@@ -12,6 +12,6 @@ import FormLogin from '@/components/forms/FormLogin.vue';
 .login-view {
   display: grid;
   place-items: center;
-  min-block-size: inherit;
+  block-size: inherit;
 }
 </style>

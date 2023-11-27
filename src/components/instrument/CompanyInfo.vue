@@ -22,8 +22,10 @@ defineProps<{
       }) }}</span>
       <span v-if="company.eps" class="indicator">EPS: {{ formatNumber(company.eps, { style: 'currency', currency: 'USD' })
       }}</span>
-      <span v-if="company.peRatioSnapshot" class="indicator">Price-to-Earnings: {{ company.peRatioSnapshot }}</span>
-      <span v-if="company.pbRatioSnapshot" class="indicator">Price-to-Book: {{ company.pbRatioSnapshot * 100 }} %</span>
+      <span v-if="company.peRatioSnapshot" class="indicator">Price-to-Earnings: {{ formatNumber(company.peRatioSnapshot,
+        { style: 'decimal', roundingMode: 'floor' }) }}</span>
+      <span v-if="company.pbRatioSnapshot" class="indicator">Price-to-Book: {{ formatNumber(company.pbRatioSnapshot * 100,
+        { style: 'decimal', roundingMode: 'floor' }) }} %</span>
     </div>
 
     <h2 class="text-m">Description</h2>
