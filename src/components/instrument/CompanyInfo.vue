@@ -13,16 +13,20 @@ defineProps<{
   <div class="company-info">
     <h2 class="text-m">Indicators</h2>
     <div class="indicators">
-      <span v-if="company.dividendYieldSnapshot" class="indicator">Yield: {{ company.dividendYieldSnapshot * 100 }}
+      <span v-if="company.dividendYieldSnapshot" class="indicator">Yield: {{ formatNumber(company.dividendYieldSnapshot *
+        100, { style: 'decimal', roundingMode: 'floor' }) }}
         %</span>
-      <span v-if="company.beta" class="indicator">Beta: {{ company.beta }}</span>
+      <span v-if="company.beta" class="indicator">Beta: {{ formatNumber(company.beta, {
+        style: 'decimal', roundingMode:
+          'floor'
+      }) }}</span>
       <span v-if="company.eps" class="indicator">EPS: {{ formatNumber(company.eps, { style: 'currency', currency: 'USD' })
       }}</span>
       <span v-if="company.peRatioSnapshot" class="indicator">Price-to-Earnings: {{ company.peRatioSnapshot }}</span>
       <span v-if="company.pbRatioSnapshot" class="indicator">Price-to-Book: {{ company.pbRatioSnapshot * 100 }} %</span>
     </div>
 
-  <h2 class="text-m">Description</h2>
+    <h2 class="text-m">Description</h2>
     <div class="description">
       <div class="tags">
         <span class="tag text-xs" v-for="(tag, index) of tags" :key="index">{{ tag.name }}</span>

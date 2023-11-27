@@ -38,13 +38,15 @@ async function onNavigateClick () {
 <style scoped lang="scss">
 .instrument-list-item {
   list-style: none;
-  padding: 1rem;
+  padding: .75rem;
   transition: background-color 150ms ease-out;
   border-radius: 8px;
+  background-color: rgba(12, 12, 12, 0.3);
+  box-shadow: var(--shadow);
 
   &:hover,
   &:focus-within {
-    background-color: hsl(343, 37%, 2%);
+    background-color: rgba(10, 10, 10, 0.6);
   }
 }
 

@@ -65,5 +65,6 @@ onBeforeRouteLeave(() => {
 .instruments-list {
   padding: 0;
   display: grid;
+  gap: 1rem;
 }
 </style>
