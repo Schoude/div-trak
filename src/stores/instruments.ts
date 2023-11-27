@@ -53,8 +53,8 @@ export const useInstrumentsStore = defineStore('instruments', () => {
       ...instrument,
       amount: currentAmount,
       value,
-      valueFormatted: formatNumber(value, 'currency', 'EUR'),
-      priceBid: formatNumber(+priceBid, 'currency', 'EUR'),
+      valueFormatted: formatNumber(value, { style: 'currency', currency: 'EUR' }),
+      priceBid: formatNumber(+priceBid, { style: 'currency', currency: 'EUR' }),
       sentimentIntraDay,
     } as InstrumentFilled;
   }

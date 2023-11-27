@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import InstrumentPriceInfo from '@/components/instrument/InstrumentPriceInfo.vue';
+import TRAssetLoader from '@/components/loaders/TRAssetLoader.vue';
 import type { TickerEvent } from '@/types/tr/events/ticker';
 import type { Stock } from '@/types/tr/instrument';
 
@@ -10,7 +12,26 @@ defineProps<{
 
 <template>
   <section class="stock-detail">
+    <TRAssetLoader class="image" asset-type="image" :image-id="stock.instrument.imageId" />
     <h1 class="text-l">{{ stock.instrument.shortName }}</h1>
-    <p>{{ ticker }}</p>
+    
+    <InstrumentPriceInfo :ticker="ticker" />
   </section>
 </template>
+
+<style>
+.image {
+  margin-block-end: .5rem;
+}
+
+.instrument-price-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.price-difference {
+  display: flex;
+  gap: .35rem;
+}
+</style>
