@@ -37,7 +37,7 @@
     "@vue/tsconfig": "^0.4.0",
     "eslint": "^8.54.0",
     "eslint-plugin-vue": "^9.18.1",
-    "jsdom": "^22.1.0",
+    "jsdom": "^23.0.0",
     "npm-run-all2": "^6.1.1",
     "sass": "^1.69.5",
     "supabase": "^1.115.3",
