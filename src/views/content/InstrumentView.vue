@@ -49,7 +49,7 @@ function getInstrumentData (isin: string) {
 
 <template>
   <main class="instrument-view view">
-    <template v-if="!instrumentData">
+    <template v-if="!instrumentData || !tickerData">
       <p>Loading Data...</p>
     </template>
 
@@ -64,4 +64,5 @@ function getInstrumentData (isin: string) {
   </main>
 </template>
 
-<style lang='scss' scoped></style>
+<style lang='scss' scoped>
+</style>

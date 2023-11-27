@@ -5,6 +5,7 @@ export interface StockDetailsEvent {
   dividends: Dividend[];
   totalDivendendCount: number;
   events: Event[];
+  expectedDividend: Dividend | null;
   pastEvents: Event[];
   analystRating: AnalystRating;
   aggregatedDividends: AggregatedDividend[];
