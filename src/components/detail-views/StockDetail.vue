@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import CompanyInfo from '@/components/instrument/CompanyInfo.vue';
 import InstrumentPriceInfo from '@/components/instrument/InstrumentPriceInfo.vue';
 import TRAssetLoader from '@/components/loaders/TRAssetLoader.vue';
 import type { TickerEvent } from '@/types/tr/events/ticker';
@@ -16,6 +17,10 @@ defineProps<{
     <h1 class="text-l">{{ stock.instrument.shortName }}</h1>
     
     <InstrumentPriceInfo :ticker="ticker" />
+
+    <!-- OrderManager here -->
+
+    <CompanyInfo :company="stock.stockDetails.company" />
   </section>
 </template>
 

@@ -39,7 +39,7 @@ interface TargetPrice {
   low: number;
 }
 
-interface Company {
+export interface Company {
   name: string;
   description: string;
   yearFounded: number;
