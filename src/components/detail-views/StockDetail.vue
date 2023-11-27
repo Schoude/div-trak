@@ -20,11 +20,11 @@ defineProps<{
 
     <!-- OrderManager here -->
 
-    <CompanyInfo :company="stock.stockDetails.company" />
+    <CompanyInfo :company="stock.stockDetails.company" :tags="stock.instrument.tags" />
   </section>
 </template>
 
-<style>
+<style lang="scss" scoped>
 .image {
   margin-block-end: .5rem;
 }

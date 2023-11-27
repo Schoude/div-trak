@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import type { Tag } from '@/types/tr/events/instruments';
 import type { Company } from '@/types/tr/events/stock-details';
 import { formatNumber } from '@/utils/intl/currency';
 
 defineProps<{
   company: Company;
+  tags: Tag[];
 }>();
 </script>
 
@@ -29,11 +31,16 @@ defineProps<{
       <span v-if="company.cooName">COO: {{ company.cooName }}</span>
     </div>
 
-    <p class="description">{{ company.description }}</p>
+    <div class="description">
+      <div class="tags">
+        <span class="tag text-xs" v-for="(tag, index) of tags" :key="index">{{ tag.name }}</span>
+      </div>
+      <p class="text">{{ company.description }}</p>
+    </div>
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .company-info {
   margin-block-start: 1.35rem;
 }
@@ -51,8 +58,26 @@ h3 {
   margin-block-end: 1.35rem;
 }
 
+.tags {
+  display: flex;
+  gap: .35rem;
+  flex-wrap: wrap;
+  margin-block: .75rem;
+}
+
+.tag {
+  color: var(--color-muted);
+  background-color: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgb(48, 48, 48);
+  padding: .25rem .45rem;
+  line-height: 1;
+  border-radius: 50px;
+}
+
 .description {
-  block-size: 120px;
-  overflow: auto;
+  .text {
+    block-size: 120px;
+    overflow: auto;
+  }
 }
 </style>

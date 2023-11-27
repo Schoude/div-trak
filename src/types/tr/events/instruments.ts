@@ -34,7 +34,7 @@ interface Split {
   final: number;
 }
 
-interface Tag {
+export interface Tag {
   type: string;
   id: string;
   name: string;
