@@ -13,6 +13,7 @@ export type Sentiment = 'sentiment-bullish' | 'sentiment-bearish';
 export interface InstrumentFilled extends Instrument {
   amount: number;
   value: number;
-  priceBid: number;
+  valueFormatted: string;
+  priceBid: string;
   sentimentIntraDay: Sentiment;
 }

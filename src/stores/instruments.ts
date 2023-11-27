@@ -5,6 +5,7 @@ import type {
   InstrumentFilled,
   Sentiment,
 } from '@/types/tr/instrument';
+import { formatNumber } from '@/utils/intl/currency';
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 
@@ -42,7 +43,7 @@ export const useInstrumentsStore = defineStore('instruments', () => {
 
     const priceOpen = +instrumentTicker!.open.price;
     const priceBid = +instrumentTicker!.bid.price;
-    const value = +(currentAmount * priceBid).toFixed(2);
+    const value = currentAmount * priceBid;
 
     const sentimentIntraDay: Sentiment = priceBid >= priceOpen
       ? 'sentiment-bullish'
@@ -52,7 +53,8 @@ export const useInstrumentsStore = defineStore('instruments', () => {
       ...instrument,
       amount: currentAmount,
       value,
-      priceBid: +priceBid.toFixed(2),
+      valueFormatted: formatNumber(value, 'currency', 'EUR'),
+      priceBid: formatNumber(+priceBid, 'currency', 'EUR'),
       sentimentIntraDay,
     } as InstrumentFilled;
   }

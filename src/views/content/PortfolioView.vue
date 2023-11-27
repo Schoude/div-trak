@@ -60,7 +60,7 @@ onBeforeRouteLeave(() => {
         <div class="name">{{
           instrument?.instrument?.shortName }}</div>
         <div class="amount">Anzahl: {{ instrument?.amount }}</div>
-        <div class="value">Wert: {{ instrument?.value }}</div>
+        <div class="value">Wert: {{ instrument?.valueFormatted }}</div>
         <div class="price" :class="instrument?.sentimentIntraDay">Preis: {{ instrument?.priceBid }}</div>
         <hr>
       </div>
