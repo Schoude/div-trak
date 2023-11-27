@@ -59,7 +59,7 @@ export interface Company {
   eps: number;
 }
 
-interface Dividend {
+export interface Dividend {
   id: string;
   paymentDate: string;
   recordDate: string;
@@ -74,7 +74,7 @@ enum DividendType {
   Unknown = 'unknown',
 }
 
-interface Event {
+export interface Event {
   id: string;
   title: Title;
   timestamp: number;

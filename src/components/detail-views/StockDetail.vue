@@ -1,10 +1,11 @@
 <script setup lang="ts">
+import AnalystRating from '@/components/instrument/AnalystRating.vue';
 import CompanyInfo from '@/components/instrument/CompanyInfo.vue';
 import InstrumentPriceInfo from '@/components/instrument/InstrumentPriceInfo.vue';
+import EventsList from '@/components/lists/EventsList.vue';
 import TRAssetLoader from '@/components/loaders/TRAssetLoader.vue';
 import type { TickerEvent } from '@/types/tr/events/ticker';
 import type { Stock } from '@/types/tr/instrument';
-import AnalystRating from '../instrument/AnalystRating.vue';
 
 defineProps<{
   stock: Stock;
@@ -22,6 +23,7 @@ defineProps<{
     <!-- OrderManager here -->
 
     <AnalystRating :analyst-rating="stock.stockDetails.analystRating" :current-price="+ticker.bid.price" />
+    <EventsList :events="stock.stockDetails.events" />
     <CompanyInfo :company="stock.stockDetails.company" :tags="stock.instrument.tags" />
   </section>
 </template>

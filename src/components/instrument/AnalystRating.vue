@@ -61,6 +61,10 @@ const downwardsMobility = computed(() => formatNumber((1 - props.currentPrice / 
   }
 }
 
+h2 {
+  margin-block-end: 0.35rem;
+}
+
 .grid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
