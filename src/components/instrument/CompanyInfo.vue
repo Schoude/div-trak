@@ -11,7 +11,7 @@ defineProps<{
 
 <template>
   <div class="company-info">
-    <h3>Indicators</h3>
+    <h2 class="text-m">Indicators</h2>
     <div class="indicators">
       <span v-if="company.dividendYieldSnapshot" class="indicator">Yield: {{ company.dividendYieldSnapshot * 100 }}
         %</span>
@@ -22,20 +22,21 @@ defineProps<{
       <span v-if="company.pbRatioSnapshot" class="indicator">Price-to-Book: {{ company.pbRatioSnapshot * 100 }} %</span>
     </div>
 
-    <h3>Company & People</h3>
+  <h2 class="text-m">Description</h2>
+    <div class="description">
+      <div class="tags">
+        <span class="tag text-xs" v-for="(tag, index) of tags" :key="index">{{ tag.name }}</span>
+      </div>
+      <p class="text">{{ company.description }}</p>
+    </div>
+
+    <h2 class="text-m">Company & People</h2>
     <div class="people">
       <span v-if="company.employeeCount">Employees: {{ company.employeeCount }}</span>
       <span v-if="company.yearFounded">Founding Year: {{ company.yearFounded }}</span>
       <span v-if="company.ceoName">CEO: {{ company.ceoName }}</span>
       <span v-if="company.cfoName">CFO: {{ company.cfoName }}</span>
       <span v-if="company.cooName">COO: {{ company.cooName }}</span>
-    </div>
-
-    <div class="description">
-      <div class="tags">
-        <span class="tag text-xs" v-for="(tag, index) of tags" :key="index">{{ tag.name }}</span>
-      </div>
-      <p class="text">{{ company.description }}</p>
     </div>
   </div>
 </template>
@@ -46,7 +47,7 @@ defineProps<{
 }
 
 
-h3 {
+h2 {
   margin-block-end: .35rem;
 }
 
@@ -55,6 +56,12 @@ h3 {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: .35rem;
+  margin-block-end: 1.35rem;
+}
+
+.indicators,
+.description,
+.people {
   margin-block-end: 1.35rem;
 }
 

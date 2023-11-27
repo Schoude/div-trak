@@ -25,3 +25,10 @@ const priceDifferenceSentiment = computed(() => priceDifferenceAbsolute.value >=
     </div>
   </div>
 </template>
+
+<style lang="scss" scoped>
+.price-difference {
+  display: flex;
+  gap: .35rem;
+}
+</style>
