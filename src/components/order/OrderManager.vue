@@ -1,76 +1,127 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import ButtonAction from '../buttons/ButtonAction.vue';
+import ButtonAction from '@/components/buttons/ButtonAction.vue';
+import ModalBase from '@/components/modals/ModalBase.vue';
+import type { Instrument } from '@/types/tr/instrument';
+import { computed, ref } from 'vue';
 
 const props = defineProps<{
   amountOwned: number;
+  instrument: Instrument;
+  portfolioName: string;
 }>();
 
-const dialog = ref<HTMLDialogElement | null>(null);
+const dialogOrder = ref<typeof ModalBase | null>(null);
 
 const amountOrder = ref(0);
 
 function onDialogOpenClick () {
-  dialog.value?.showModal();
+  dialogOrder.value?.$el.showModal();
 }
 
-function onDialogCloseClick () {
-  dialog.value?.close();
+function onDialogClose () {
+  amountOrder.value = 0;
 }
+
+const canSell = computed(() => props.amountOwned > 0 && amountOrder.value <= props.amountOwned);
 </script>
 
 <template>
-  <ButtonAction variant="dawn" @click="onDialogOpenClick">Place Order</ButtonAction>
+  <ButtonAction class="button-order-modal" variant="dawn" @click="onDialogOpenClick">Place Order</ButtonAction>
 
-  <template>
-    <div class="span">asdasd</div>
-  </template>
+  <ModalBase ref="dialogOrder" @close="onDialogClose">
+    <template #title>
+      Place an order
+    </template>
 
-  <dialog ref="dialog">
-    Content here {{ amountOrder }}
-    <ButtonAction variant="dusk" @click="onDialogCloseClick">Close</ButtonAction>
-  </dialog>
+    <template #content>
+      <section class="content">
+
+        <p class="text-s">You currenty own {{ amountOwned }} pcs. of <b>{{ instrument.instrument.shortName }}</b> in
+          portfolio <b>
+            {{
+              portfolioName }}
+          </b>.</p>
+
+        <form class="order-form">
+          <div class="wrapper">
+            <button type="button" class="button-sell" :disabled="!canSell">Sell</button>
+            <input v-model.number="amountOrder" type="number" name="amount" id="amount">
+            <button type="button" class="button-buy">Buy</button>
+          </div>
+        </form>
+
+      </section>
+    </template>
+  </ModalBase>
 </template>
 
 <style scoped lang="scss">
-$duration: .35s;
-$movementY: 20px;
-
-dialog[open] {
-  opacity: 1;
-  translate: 0 0;
+.button-order-modal {
+  inline-size: 60%;
+  margin-inline: auto;
+  block-size: 2.5rem;
 }
 
-dialog {
-  opacity: 0;
-  translate: 0 -#{$movementY};
-  max-block-size: 90dvh;
-  inline-size: 95%;
-  margin: auto;
-  transition: all $duration allow-discrete;
-}
+.content {
+  padding-inline: .5rem;
 
-@starting-style {
-  dialog[open] {
-    opacity: 0;
-    translate: 0 $movementY;
+  p {
+    margin-block: .5rem 1rem;
   }
 }
 
-dialog::backdrop {
-  background-color: rgb(0 0 0 / 0);
-  transition: all $duration allow-discrete;
-}
+.order-form {
+  margin-block: 1rem;
 
-dialog[open]::backdrop {
-  background-color: rgb(0 0 0 / 0.35);
-  backdrop-filter: blur(2px);
-}
+  .wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-@starting-style {
-  dialog[open]::backdrop {
-    background-color: rgb(0 0 0 / 0);
-    backdrop-filter: blur(0);
+    .button-sell,
+    .button-buy {
+      text-transform: uppercase;
+      text-align: center;
+      padding-block: .5rem;
+      inline-size: 70px;
+      letter-spacing: 1px;
+      filter: saturate(.35);
+
+      &:hover,
+      &:focus-visible {
+        filter: saturate(.85);
+      }
+    }
+
+    .button-sell {
+      border-start-start-radius: 50px;
+      border-end-start-radius: 50px;
+      background-color: var(--color-bearish);
+      transition: filter .35s ease-out;
+
+      &:disabled {
+        filter: grayscale(1);
+        cursor: not-allowed;
+      }
+    }
+
+    .button-buy {
+      border-start-end-radius: 50px;
+      border-end-end-radius: 50px;
+      background-color: var(--color-bullish);
+    }
+  }
+
+  input[type="number"] {
+    text-align: center;
+    border: none;
+    background: transparent;
+    inline-size: 36px;
+    block-size: 40px;
+
+    &:focus {
+      border-block: 1px solid rgb(48, 48, 48);
+    }
   }
 }
 </style>

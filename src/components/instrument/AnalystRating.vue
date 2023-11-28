@@ -19,7 +19,7 @@ const downwardsMobility = computed(() => formatNumber((1 - props.currentPrice / 
       <h2 class="text-m">Recommendations</h2>
 
       <div class="grid">
-        <div v-if="analystRating.recommendations.outperform > 0" class="outperform recommendation">
+        <div v-if="analystRating?.recommendations.outperform > 0" class="outperform recommendation">
           Outperform: {{ analystRating.recommendations.outperform }}
         </div>
         <div v-if="analystRating.recommendations.buy > 0" class="buy recommendation">
