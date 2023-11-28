@@ -4,7 +4,6 @@ import { usePortfolioStore } from '@/stores/portfolio-store';
 import type { Instrument } from '@/types/tr/instrument';
 import { computed } from 'vue';
 
-
 const props = defineProps<{
   isInDetailPortfolio: boolean;
   instrument: Instrument;
@@ -24,8 +23,8 @@ const amountOwned = computed(() => portfolioStore.detailPortfolio
 
 <template>
   <div class="instrument-portfolio-info">
-    <OrderManager :amount-owned="amountOwned" :instrument="instrument"
-      :portfolio-name="portfolioStore.detailPortfolio?.name ?? ''" />
+    <OrderManager :amount-owned="amountOwned" :instrument="instrument" :portfolio="portfolioStore.detailPortfolio!"
+      :is-in-detail-portfolio="isInDetailPortfolio" />
 
     <template v-if="isInDetailPortfolio">
       <slot name="dividends" />

@@ -1,8 +1,8 @@
-import { ref, computed, watchEffect } from 'vue';
-import { defineStore } from 'pinia';
 import { supabase } from '@/supabase/client';
-import type { User } from '@/types/auth';
 import type { UserDataReturnType } from '@/supabase/types/functions';
+import type { User } from '@/types/auth';
+import { defineStore } from 'pinia';
+import { computed, ref, watchEffect } from 'vue';
 import { useRouter } from 'vue-router';
 
 export const useAuthStore = defineStore('auth', () => {
@@ -59,5 +59,6 @@ export const useAuthStore = defineStore('auth', () => {
     login,
     checkSession,
     endSession,
+    sessionToken,
    };
 });
