@@ -7,6 +7,7 @@ import TRAssetLoader from '@/components/loaders/TRAssetLoader.vue';
 import type { Dividend } from '@/types/tr/events/stock-details';
 import type { TickerEvent } from '@/types/tr/events/ticker';
 import type { Stock } from '@/types/tr/instrument';
+import { formatNumber } from '@/utils/intl/currency';
 import { computed } from 'vue';
 import DividendsList from '../lists/DividendsList.vue';
 
@@ -14,6 +15,8 @@ const props = defineProps<{
   stock: Stock;
   ticker: TickerEvent;
 }>();
+
+const dividendYield = computed(() => `${formatNumber(props.stock.stockDetails.company.dividendYieldSnapshot * 100, { style: 'decimal', roundingMode: 'floor' })} %`);
 
 const aggregatedDividends = computed(() => {
   const pastDividends = props.stock.stockDetails?.dividends;
@@ -36,7 +39,8 @@ const aggregatedDividends = computed(() => {
   // Then add already past dividends
   pastDividends.forEach(dividend => dividendMap.set(dividend.id, dividend));
 
-  return [...dividendMap.values()];
+  // Sort newest to oldest
+  return [...dividendMap.values()].sort((a, b) => new Date(b.paymentDate).getTime() - new Date(a.paymentDate).getTime());
 });
 
 const paymentMonths = computed(() => {
@@ -49,7 +53,7 @@ const paymentMonths = computed(() => {
     monthsWithPayments.add(paymentDate.getMonth() + 1);
   });
 
-  return `${frequency ?? ''} (${([...monthsWithPayments.values()] as number[]).sort((a, b) => a - b).join('/')})`;
+  return `${frequency ?? 'n. a.'} (${([...monthsWithPayments.values()] as number[]).sort((a, b) => a - b).join('|')})`;
 });
 </script>
 
@@ -62,7 +66,8 @@ const paymentMonths = computed(() => {
 
     <!-- OrderManager here -->
 
-    <DividendsList :dividends="aggregatedDividends" :frequency="paymentMonths" />
+    <DividendsList v-if="aggregatedDividends.length > 0" :dividends="aggregatedDividends" :frequency="paymentMonths"
+      :yield="dividendYield" />
 
     <AnalystRating :analyst-rating="stock.stockDetails.analystRating" :current-price="+ticker.bid.price" />
 

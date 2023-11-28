@@ -16,5 +16,10 @@ import BottomBar from '@/components/layout/BottomBar.vue';
 <style lang='scss' scoped>
 .content-view {
   overflow-y: auto;
+
+  @media only screen and (width >=1440px) {
+    inline-size: 1280px;
+    margin-inline: auto;
+  }
 }
 </style>

@@ -1,17 +1,21 @@
 <script setup lang='ts'>
 import type { Dividend } from '@/types/tr/events/stock-details';
+import TagText from '../display/TagText.vue';
 import DividendListItem from './DividendListItem.vue';
 
 defineProps<{
   dividends: Dividend[];
   frequency: string;
+  yield: string;
 }>();
 </script>
 
 <template>
   <div class="dividends-list">
     <h2 class="text-m">Dividends</h2>
-    <div class="frequency text-s">{{ frequency }}</div>
+    <TagText class="frequency">
+      {{ frequency }} • {{ yield }}
+    </TagText>
     <ul>
       <DividendListItem v-for="dividend of dividends" :key="dividend.id" :dividend="dividend" />
     </ul>
@@ -26,6 +30,10 @@ defineProps<{
 h2,
 .frequency {
   margin-block-end: 0.35rem;
+}
+
+.frequency {
+  display: inline-block;
 }
 
 ul {
