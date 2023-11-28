@@ -12,7 +12,9 @@ defineProps<{
 
 <template>
   <div class="dividends-list">
-    <h2 class="text-m">Dividends</h2>
+    <h2 class="text-m">
+      <slot name="title" />
+    </h2>
     <TagText class="frequency">
       {{ frequency }} • {{ yield }}
     </TagText>

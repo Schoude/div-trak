@@ -37,12 +37,12 @@ const aggregatedDividends = computed(() => {
       }
     });
 
-  if (props.stock.stockDetails.expectedDividend) {
+  if (props.stock.stockDetails?.expectedDividend) {
     dividendMap.set(props.stock.stockDetails.expectedDividend.id, props.stock.stockDetails.expectedDividend);
   }
 
   // Then add already past dividends
-  pastDividends.forEach(dividend => dividendMap.set(dividend.id, dividend));
+  pastDividends?.forEach(dividend => dividendMap.set(dividend.id, dividend));
 
   // Sort newest to oldest
   return [...dividendMap.values()].sort((a, b) => new Date(b.paymentDate).getTime() - new Date(a.paymentDate).getTime());
@@ -76,7 +76,6 @@ const calculatedDividendPayments = computed<DividendWithPayment[]>(() => aggrega
 
   return {
     ...dividend,
-    amount: formatNumber(dividend.amount, { style: 'currency', currency: 'EUR' }),
     amountAtExDate: orderAmountExDate,
     paymentAmount: formatNumber(dividend.amount * orderAmountExDate, { style: 'currency', currency: 'EUR' }),
   };
@@ -90,15 +89,27 @@ const calculatedDividendPayments = computed<DividendWithPayment[]>(() => aggrega
 
     <InstrumentPriceInfo :ticker="ticker" />
 
-    <InstrumentPortfolioInfo :dividends-with-payment="calculatedDividendPayments"
-      :is-in-detail-portfolio="isInDetailPortfolio" />
+    <InstrumentPortfolioInfo :is-in-detail-portfolio="isInDetailPortfolio">
+      <template #dividends v-if="calculatedDividendPayments.length > 0">
+        <DividendsList :dividends="calculatedDividendPayments" :frequency="paymentMonths" :yield="dividendYield">
+          <template #title>
+            Dividends in Portfolio <small>({{ portfolioStore.detailPortfolio?.name }})</small>
+          </template>
+        </DividendsList>
+      </template>
+    </InstrumentPortfolioInfo>
 
-    <DividendsList v-if="aggregatedDividends.length > 0" :dividends="aggregatedDividends" :frequency="paymentMonths"
-      :yield="dividendYield" />
+    <!-- Only show if the instrument is NOT in the detail portfolio -->
+    <DividendsList v-if="aggregatedDividends.length > 0 && !isInDetailPortfolio" :dividends="aggregatedDividends"
+      :frequency="paymentMonths" :yield="dividendYield">
+      <template #title>
+        Dividends
+      </template>
+    </DividendsList>
 
-    <AnalystRating :analyst-rating="stock.stockDetails.analystRating" :current-price="+ticker.bid.price" />
+    <AnalystRating :analyst-rating="stock.stockDetails?.analystRating" :current-price="+ticker.bid.price" />
 
-    <EventsList :events="stock.stockDetails.events" />
+    <EventsList :events="stock.stockDetails?.events" />
 
     <CompanyInfo :company="stock.stockDetails.company" :tags="stock.instrument.tags" />
   </section>

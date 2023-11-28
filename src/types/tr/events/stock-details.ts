@@ -70,8 +70,7 @@ export interface Dividend {
   type: DividendType;
 }
 
-export type DividendWithPayment = Omit<Dividend, 'amount'> & {
-  amount: string;
+export type DividendWithPayment = Dividend & {
   amountAtExDate: number;
   paymentAmount: string;
 }

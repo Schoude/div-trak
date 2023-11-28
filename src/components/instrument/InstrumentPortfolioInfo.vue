@@ -1,14 +1,19 @@
 <script setup lang="ts">
-import type { DividendWithPayment } from '@/types/tr/events/stock-details';
-
 defineProps<{
-  dividendsWithPayment: DividendWithPayment[];
   isInDetailPortfolio: boolean;
 }>();
 </script>
 
 <template>
   <div class="instrument-portfolio-info">
-    <p v-if="isInDetailPortfolio" class="text-xs">{{ dividendsWithPayment }}</p>
+    <template v-if="isInDetailPortfolio">
+      <slot name="dividends" />
+    </template>
   </div>
 </template>
+
+<style lang="scss" scoped>
+.instrument-portfolio-info {
+  margin-block: 1.35rem;
+}
+</style>

@@ -1,10 +1,10 @@
 <script setup lang='ts'>
-import type { Dividend } from '@/types/tr/events/stock-details';
+import type { Dividend, DividendWithPayment } from '@/types/tr/events/stock-details';
 import { computed } from 'vue';
 import DividendInfo from '../instrument/DividendInfo.vue';
 
 const props = defineProps<{
-  dividend: Dividend;
+  dividend: Dividend | DividendWithPayment;
 }>();
 
 const isPastDividend = computed(() => {
@@ -18,6 +18,10 @@ const isPastDividend = computed(() => {
 <template>
   <li class="dividend-list-item" :class="isPastDividend">
     <div class="inner">
+      <template v-if="'paymentAmount' in dividend">
+        <div><b>{{ dividend.paymentAmount }}</b> • <small>({{ dividend.amountAtExDate }})</small></div>
+      </template>
+
       <DividendInfo v-if="dividend" :dividend="dividend" />
     </div>
   </li>

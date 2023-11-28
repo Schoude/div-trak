@@ -1,16 +1,18 @@
 <script setup lang='ts'>
-import type { Dividend } from '@/types/tr/events/stock-details';
+import type { Dividend, DividendWithPayment } from '@/types/tr/events/stock-details';
 import { formatNumber } from '@/utils/intl/currency';
 
 defineProps<{
-  dividend: Dividend;
+  dividend: Dividend | DividendWithPayment;
 }>();
 </script>
 
 <template>
   <div class="dividend-info text-xs">
     <div class="grid">
-      <div class="text-s"><b>{{ formatNumber(dividend.amount, { style: 'currency', currency: 'EUR', roundingMode: 'ceil' }) }}</b></div>
+      <div class="text-s"><b>{{ formatNumber(dividend.amount, {
+        style: 'currency', currency: 'EUR', roundingMode: 'ceil'
+      }) }}</b></div>
       <div>Type: {{ dividend.type }}</div>
     </div>
     <div class="text-s">Ex Date: {{ new Date(dividend.exDate).toLocaleDateString() }}</div>
