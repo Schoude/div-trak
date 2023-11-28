@@ -12,7 +12,8 @@ const props = defineProps<{
 
 const dialogOrder = ref<typeof ModalBase | null>(null);
 
-const amountOrder = ref(0);
+const amountOrder = ref<number | null>(null);
+const isSending = ref(false);
 
 function onDialogOpenClick () {
   dialogOrder.value?.$el.showModal();
@@ -22,7 +23,41 @@ function onDialogClose () {
   amountOrder.value = 0;
 }
 
-const canSell = computed(() => props.amountOwned > 0 && amountOrder.value <= props.amountOwned);
+const canSell = computed(() => props.amountOwned > 0 && amountOrder.value! <= props.amountOwned);
+const canSend = computed(() => amountOrder.value! > 0 && !isSending.value);
+
+async function onSellClick () {
+  isSending.value = true;
+
+  try {
+    // const res = '';
+    await new Promise<void>((resolve) => {
+      setTimeout(resolve, 2000);
+    });
+  } catch (error) {
+    console.log((error as Error).message);
+  } finally {
+    isSending.value = false;
+    dialogOrder.value?.$el.close();
+    onDialogClose();
+  }
+}
+async function onBuyClick () {
+  isSending.value = true;
+
+  try {
+    // const res = '';
+    await new Promise<void>((resolve) => {
+      setTimeout(resolve, 2000);
+    });
+  } catch (error) {
+    console.log((error as Error).message);
+  } finally {
+    isSending.value = false;
+    dialogOrder.value?.$el.close();
+    onDialogClose();
+  }
+}
 </script>
 
 <template>
@@ -44,12 +79,11 @@ const canSell = computed(() => props.amountOwned > 0 && amountOrder.value <= pro
 
         <form class="order-form">
           <div class="wrapper">
-            <button type="button" class="button-sell" :disabled="!canSell">Sell</button>
-            <input v-model.number="amountOrder" type="number" name="amount" id="amount">
-            <button type="button" class="button-buy">Buy</button>
+            <button @click="onSellClick" type="button" class="button-sell" :disabled="!canSell || !canSend">Sell</button>
+            <input v-model.number="amountOrder" placeholder="0" type="number" name="amount" id="amount" min="0">
+            <button @click="onBuyClick" type="button" class="button-buy" :disabled="!canSend">Buy</button>
           </div>
         </form>
-
       </section>
     </template>
   </ModalBase>
@@ -85,11 +119,16 @@ const canSell = computed(() => props.amountOwned > 0 && amountOrder.value <= pro
       padding-block: .5rem;
       inline-size: 70px;
       letter-spacing: 1px;
-      filter: saturate(.35);
+      filter: saturate(.5);
 
       &:hover,
       &:focus-visible {
         filter: saturate(.85);
+      }
+
+      &:disabled {
+        filter: grayscale(1);
+        cursor: not-allowed;
       }
     }
 
@@ -98,11 +137,6 @@ const canSell = computed(() => props.amountOwned > 0 && amountOrder.value <= pro
       border-end-start-radius: 50px;
       background-color: var(--color-bearish);
       transition: filter .35s ease-out;
-
-      &:disabled {
-        filter: grayscale(1);
-        cursor: not-allowed;
-      }
     }
 
     .button-buy {

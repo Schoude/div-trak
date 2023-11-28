@@ -22,16 +22,16 @@ const downwardsMobility = computed(() => formatNumber((1 - props.currentPrice / 
         <div v-if="analystRating?.recommendations.outperform > 0" class="outperform recommendation">
           Outperform: {{ analystRating.recommendations.outperform }}
         </div>
-        <div v-if="analystRating.recommendations.buy > 0" class="buy recommendation">
+        <div v-if="analystRating?.recommendations.buy > 0" class="buy recommendation">
           Buy: {{ analystRating.recommendations.buy }}
         </div>
-        <div v-if="analystRating.recommendations.hold > 0" class="hold recommendation">
+        <div v-if="analystRating?.recommendations.hold > 0" class="hold recommendation">
           Hold: {{ analystRating.recommendations.hold }}
         </div>
-        <div v-if="analystRating.recommendations.sell > 0" class="sell recommendation">
+        <div v-if="analystRating?.recommendations.sell > 0" class="sell recommendation">
           Sell: {{ analystRating.recommendations.sell }}
         </div>
-        <div v-if="analystRating.recommendations.underperform > 0" class="underperform recommendation">
+        <div v-if="analystRating?.recommendations.underperform > 0" class="underperform recommendation">
           Underperform: {{ analystRating.recommendations.underperform }}
         </div>
       </div>
@@ -40,9 +40,10 @@ const downwardsMobility = computed(() => formatNumber((1 - props.currentPrice / 
     <div class="target-price">
       <h2 class="text-m">Target Prices</h2>
       <div class="grid">
-        <div>High: {{ formatNumber(analystRating.targetPrice.high, { style: 'currency', currency: 'EUR' }) }} </div>
-        <div>Average: {{ formatNumber(analystRating.targetPrice.average, { style: 'currency', currency: 'EUR' }) }} </div>
-        <div>Low: {{ formatNumber(analystRating.targetPrice.low, { style: 'currency', currency: 'EUR' }) }} </div>
+        <div>High: {{ formatNumber(analystRating.targetPrice?.high, { style: 'currency', currency: 'EUR' }) }} </div>
+        <div>Average: {{ formatNumber(analystRating.targetPrice?.average, { style: 'currency', currency: 'EUR' }) }}
+        </div>
+        <div>Low: {{ formatNumber(analystRating.targetPrice?.low, { style: 'currency', currency: 'EUR' }) }} </div>
       </div>
       <div class="mobility text-s" style="color: var(--color-muted)">
         <TagText>To High: {{ upwardsMobility }} %</TagText>
