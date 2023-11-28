@@ -76,7 +76,7 @@ export const useInstrumentsStore = defineStore('instruments', () => {
     },
     getInstrumentsFilled: computed(() => {
       return (portFolio: Portfolio) => {
-        return portFolio.isins
+        return portFolio?.isins
           .map<InstrumentFilled | undefined>((isin) =>
             fillInstrument(isin, portFolio)
           )

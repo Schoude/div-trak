@@ -5,6 +5,7 @@ import type { Instrument } from '@/types/tr/instrument';
 import { computed, ref } from 'vue';
 
 const props = defineProps<{
+  isInDetailPortfolio: boolean;
   amountOwned: number;
   instrument: Instrument;
   portfolioName: string;
@@ -71,11 +72,15 @@ async function onBuyClick () {
     <template #content>
       <section class="content">
 
-        <p class="text-s">You currenty own {{ amountOwned }} pcs. of <b>{{ instrument.instrument.shortName }}</b> in
-          portfolio <b>
-            {{
-              portfolioName }}
-          </b>.</p>
+        <template v-if="isInDetailPortfolio">
+          <p class="text-s">You currenty own {{ amountOwned }} pcs. of <b>{{ instrument.instrument.shortName }}</b> in
+            portfolio <b>{{ portfolioName }}</b>.
+          </p>
+        </template>
+
+        <template v-else>
+          <p class="text-s">You currenty own {{ amountOwned }} pcs. of <b>{{ instrument.instrument.shortName }}</b></p>
+        </template>
 
         <form class="order-form">
           <div class="wrapper">
@@ -120,6 +125,7 @@ async function onBuyClick () {
       inline-size: 70px;
       letter-spacing: 1px;
       filter: saturate(.5);
+      transition: background-color .35s ease-out;
 
       &:hover,
       &:focus-visible {
@@ -127,7 +133,7 @@ async function onBuyClick () {
       }
 
       &:disabled {
-        filter: grayscale(1);
+        background-color: #484848;
         cursor: not-allowed;
       }
     }

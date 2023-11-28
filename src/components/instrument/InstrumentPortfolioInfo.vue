@@ -25,7 +25,7 @@ const amountOwned = computed(() => portfolioStore.detailPortfolio
 <template>
   <div class="instrument-portfolio-info">
     <OrderManager :amount-owned="amountOwned" :instrument="instrument"
-      :portfolio-name="portfolioStore.detailPortfolio?.name ?? ''" />
+      :portfolio-name="portfolioStore.detailPortfolio?.name ?? ''" :is-in-detail-portfolio="isInDetailPortfolio" />
 
     <template v-if="isInDetailPortfolio">
       <slot name="dividends" />
