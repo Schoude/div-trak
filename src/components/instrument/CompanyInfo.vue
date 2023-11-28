@@ -14,18 +14,18 @@ defineProps<{
   <div class="company-info text-s">
     <h2 class="text-m">Indicators</h2>
     <div class="indicators">
-      <span v-if="company.dividendYieldSnapshot" class="indicator">Yield: {{ formatNumber(company.dividendYieldSnapshot *
+      <span v-if="company?.dividendYieldSnapshot" class="indicator">Yield: {{ formatNumber(company.dividendYieldSnapshot *
         100, { style: 'decimal', roundingMode: 'floor' }) }}
         %</span>
-      <span v-if="company.beta" class="indicator">Beta: {{ formatNumber(company.beta, {
+      <span v-if="company?.beta" class="indicator">Beta: {{ formatNumber(company.beta, {
         style: 'decimal', roundingMode:
           'floor'
       }) }}</span>
-      <span v-if="company.eps" class="indicator">EPS: {{ formatNumber(company.eps, { style: 'currency', currency: 'USD' })
+      <span v-if="company?.eps" class="indicator">EPS: {{ formatNumber(company.eps, { style: 'currency', currency: 'USD' })
       }}</span>
-      <span v-if="company.peRatioSnapshot" class="indicator">Price-to-Earnings: {{ formatNumber(company.peRatioSnapshot,
+      <span v-if="company?.peRatioSnapshot" class="indicator">Price-to-Earnings: {{ formatNumber(company.peRatioSnapshot,
         { style: 'decimal', roundingMode: 'floor' }) }}</span>
-      <span v-if="company.pbRatioSnapshot" class="indicator">Price-to-Book: {{ formatNumber(company.pbRatioSnapshot * 100,
+      <span v-if="company?.pbRatioSnapshot" class="indicator">Price-to-Book: {{ formatNumber(company.pbRatioSnapshot * 100,
         { style: 'decimal', roundingMode: 'floor' }) }} %</span>
     </div>
 
@@ -36,16 +36,16 @@ defineProps<{
           {{ tag.name }}
         </TagText>
       </div>
-      <p class="text">{{ company.description }}</p>
+      <p class="text">{{ company?.description }}</p>
     </div>
 
     <h2 class="text-m">Company & People</h2>
     <div class="people">
-      <span v-if="company.employeeCount">Employees: {{ company.employeeCount }}</span>
-      <span v-if="company.yearFounded">Founding Year: {{ company.yearFounded }}</span>
-      <span v-if="company.ceoName">CEO: {{ company.ceoName }}</span>
-      <span v-if="company.cfoName">CFO: {{ company.cfoName }}</span>
-      <span v-if="company.cooName">COO: {{ company.cooName }}</span>
+      <span v-if="company?.employeeCount">Employees: {{ company.employeeCount }}</span>
+      <span v-if="company?.yearFounded">Founding Year: {{ company.yearFounded }}</span>
+      <span v-if="company?.ceoName">CEO: {{ company.ceoName }}</span>
+      <span v-if="company?.cfoName">CFO: {{ company.cfoName }}</span>
+      <span v-if="company?.cooName">COO: {{ company.cooName }}</span>
     </div>
   </div>
 </template>
