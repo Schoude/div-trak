@@ -1,26 +1,24 @@
 <script setup lang="ts">
 import InstrumentListItem from '@/components/lists/InstrumentListItem.vue';
 import { useTRSocket } from '@/composables/useTRSocket';
-import { useAuthStore } from '@/stores/auth';
 import { useInstrumentsStore } from '@/stores/instruments';
-import { computed, onMounted } from 'vue';
+import { usePortfolioStore } from '@/stores/portfolio-store';
+import { onMounted } from 'vue';
 import { onBeforeRouteLeave, useRouter } from 'vue-router';
 
 const router = useRouter();
-const authStore = useAuthStore();
 const socket = useTRSocket();
 const instrumentStore = useInstrumentsStore();
+const portfolioStore = usePortfolioStore();
 
-const detailPortfolio = authStore.user?.portfolios.find(p => p.id.toString() === router.currentRoute.value.params.id);
+portfolioStore.selectPortfolio(+router.currentRoute.value.params.id);
 
-if (!detailPortfolio) {
+if (!portfolioStore.detailPortfolio) {
   router.push({ name: 'dashboard' });
 }
 
-const instruments = computed(() => instrumentStore.getInstrumentsFilled(detailPortfolio!).sort((a, b) => b.value - a.value));
-
 function getInstrumentsData () {
-  detailPortfolio?.isins.forEach(isin => {
+  portfolioStore.detailPortfolio?.isins.forEach(isin => {
     const existingInsrument = instrumentStore.getInstrument(isin);
     if (existingInsrument) {
       // Re-sub for existing ticker of the instrument
@@ -40,7 +38,7 @@ onMounted(() => {
 });
 
 onBeforeRouteLeave(() => {
-  instruments.value.forEach(instrumentData => {
+  portfolioStore.instruments.forEach(instrumentData => {
     if (!instrumentData) {
       return;
     }
@@ -52,10 +50,10 @@ onBeforeRouteLeave(() => {
 
 <template>
   <main class="portfolio-view view">
-    <h1>{{ detailPortfolio?.name }}</h1>
+    <h1>{{ portfolioStore.detailPortfolio?.name }}</h1>
     <h2>Instruments</h2>
-    <ul class="instruments-list" v-if="instruments && instruments?.length > 0">
-      <InstrumentListItem :instrument="instrument" v-for="instrument of instruments"
+    <ul class="instruments-list" v-if="portfolioStore.instruments && portfolioStore.instruments?.length > 0">
+      <InstrumentListItem :instrument="instrument" v-for="instrument of portfolioStore.instruments"
         :key="instrument?.instrument?.shortName" />
     </ul>
   </main>
