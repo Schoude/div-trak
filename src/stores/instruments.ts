@@ -41,7 +41,7 @@ export const useInstrumentsStore = defineStore('instruments', () => {
       return acc;
     }, 0);
 
-    const priceOpen = +instrumentTicker!.open.price;
+    const priceOpen = +instrumentTicker!.pre.price;
     const priceBid = +instrumentTicker!.bid.price;
     const value = currentAmount * priceBid;
 
