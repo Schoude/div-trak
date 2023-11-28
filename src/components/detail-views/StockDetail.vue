@@ -89,7 +89,7 @@ const calculatedDividendPayments = computed<DividendWithPayment[]>(() => aggrega
 
     <InstrumentPriceInfo :ticker="ticker" />
 
-    <InstrumentPortfolioInfo :is-in-detail-portfolio="isInDetailPortfolio">
+    <InstrumentPortfolioInfo :is-in-detail-portfolio="isInDetailPortfolio" :instrument="stock">
       <template #dividends v-if="calculatedDividendPayments.length > 0">
         <DividendsList :dividends="calculatedDividendPayments" :frequency="paymentMonths" :yield="dividendYield">
           <template #title>

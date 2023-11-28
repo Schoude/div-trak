@@ -19,7 +19,7 @@ const isPastDividend = computed(() => {
   <li class="dividend-list-item" :class="isPastDividend">
     <div class="inner">
       <template v-if="'paymentAmount' in dividend">
-        <div><b>{{ dividend.paymentAmount }}</b> • <small>({{ dividend.amountAtExDate }})</small></div>
+        <div><b>{{ dividend.paymentAmount }}</b> • <small>({{ dividend.amountAtExDate }} pcs.)</small></div>
       </template>
 
       <DividendInfo v-if="dividend" :dividend="dividend" />
