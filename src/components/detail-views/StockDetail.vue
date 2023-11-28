@@ -111,7 +111,7 @@ const calculatedDividendPayments = computed<DividendWithPayment[]>(() => aggrega
 
     <EventsList :events="stock.stockDetails?.events" />
 
-    <CompanyInfo :company="stock.stockDetails.company" :tags="stock.instrument.tags" />
+    <CompanyInfo :company="stock.stockDetails?.company" :tags="stock.instrument.tags" />
   </section>
 </template>
 
