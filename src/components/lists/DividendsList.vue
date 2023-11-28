@@ -38,6 +38,7 @@ h2,
 
 ul {
   padding: 0;
+  padding-block-end: .85rem;
   list-style: none;
   display: flex;
   gap: .5rem;

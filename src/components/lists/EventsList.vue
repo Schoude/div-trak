@@ -27,5 +27,6 @@ ul {
   display: flex;
   gap: .5rem;
   overflow-x: auto;
+  padding-block-end: .85rem;
 }
 </style>

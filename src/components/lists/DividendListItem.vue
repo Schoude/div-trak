@@ -29,6 +29,7 @@ const isPastDividend = computed(() => {
   border: 1px solid rgb(48, 48, 48);
   padding: 0.35rem 0.55rem;
   border-radius: 8px;
+  box-shadow: var(--shadow);
 
   &.past {
     border: 1px solid var(--color-bullish);
