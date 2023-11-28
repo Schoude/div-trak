@@ -9,8 +9,8 @@ const props = defineProps<{
   currentPrice: number;
 }>();
 
-const upwardsMobility = computed(() => formatNumber((1 - props.currentPrice / props.analystRating.targetPrice.high) * 100, { style: 'decimal', roundingMode: 'floor' }));
-const downwardsMobility = computed(() => formatNumber((1 - props.currentPrice / props.analystRating.targetPrice.low) * 100, { style: 'decimal', roundingMode: 'floor' }));
+const upwardsMobility = computed(() => formatNumber((1 - props.currentPrice / props.analystRating?.targetPrice.high) * 100, { style: 'decimal', roundingMode: 'floor' }));
+const downwardsMobility = computed(() => formatNumber((1 - props.currentPrice / props.analystRating?.targetPrice.low) * 100, { style: 'decimal', roundingMode: 'floor' }));
 </script>
 
 <template>
@@ -40,10 +40,10 @@ const downwardsMobility = computed(() => formatNumber((1 - props.currentPrice / 
     <div class="target-price">
       <h2 class="text-m">Target Prices</h2>
       <div class="grid">
-        <div>High: {{ formatNumber(analystRating.targetPrice?.high, { style: 'currency', currency: 'EUR' }) }} </div>
-        <div>Average: {{ formatNumber(analystRating.targetPrice?.average, { style: 'currency', currency: 'EUR' }) }}
+        <div>High: {{ formatNumber(analystRating?.targetPrice?.high, { style: 'currency', currency: 'EUR' }) }} </div>
+        <div>Average: {{ formatNumber(analystRating?.targetPrice?.average, { style: 'currency', currency: 'EUR' }) }}
         </div>
-        <div>Low: {{ formatNumber(analystRating.targetPrice?.low, { style: 'currency', currency: 'EUR' }) }} </div>
+        <div>Low: {{ formatNumber(analystRating?.targetPrice?.low, { style: 'currency', currency: 'EUR' }) }} </div>
       </div>
       <div class="mobility text-s" style="color: var(--color-muted)">
         <TagText>To High: {{ upwardsMobility }} %</TagText>

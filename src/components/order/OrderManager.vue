@@ -5,7 +5,6 @@ import type { Instrument } from '@/types/tr/instrument';
 import { computed, ref } from 'vue';
 
 const props = defineProps<{
-  isInDetailPortfolio: boolean;
   amountOwned: number;
   instrument: Instrument;
   portfolioName: string;
@@ -72,15 +71,9 @@ async function onBuyClick () {
     <template #content>
       <section class="content">
 
-        <template v-if="isInDetailPortfolio">
-          <p class="text-s">You currenty own {{ amountOwned }} pcs. of <b>{{ instrument.instrument.shortName }}</b> in
-            portfolio <b>{{ portfolioName }}</b>.
-          </p>
-        </template>
-
-        <template v-else>
-          <p class="text-s">You currenty own {{ amountOwned }} pcs. of <b>{{ instrument.instrument.shortName }}</b></p>
-        </template>
+        <p class="text-s">You currenty own {{ amountOwned }} pcs. of <b>{{ instrument.instrument.shortName }}</b> in
+          portfolio <b>{{ portfolioName }}</b>.
+        </p>
 
         <form class="order-form">
           <div class="wrapper">

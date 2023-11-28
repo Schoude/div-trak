@@ -2,7 +2,6 @@
 import FundDetail from '@/components/detail-views/FundDetail.vue';
 import StockDetail from '@/components/detail-views/StockDetail.vue';
 import { useTRSocket } from '@/composables/useTRSocket';
-import { useAuthStore } from '@/stores/auth';
 import { useInstrumentsStore } from '@/stores/instruments';
 import { usePortfolioStore } from '@/stores/portfolio-store';
 import { useTickerStore } from '@/stores/ticker';
@@ -11,7 +10,6 @@ import { computed, onMounted, ref, watchEffect } from 'vue';
 import { onBeforeRouteLeave, onBeforeRouteUpdate, useRouter } from 'vue-router';
 
 const socket = useTRSocket();
-const authStore = useAuthStore();
 const portfolioStore = usePortfolioStore();
 const instruments = useInstrumentsStore();
 const ticker = useTickerStore();
@@ -24,14 +22,6 @@ const isInDetailPortfolio = computed(() => portfolioStore.detailPortfolio?.isins
 
 watchEffect(() => {
   isin.value = router.currentRoute.value.params.isin as string;
-
-  if (portfolioStore.detailPortfolio == null) {
-    const firstPortfolioOfInstrument = authStore.user?.portfolios.find(p => p.isins.includes(isin.value));
-
-    if (firstPortfolioOfInstrument) {
-      portfolioStore.selectPortfolio(firstPortfolioOfInstrument?.id);
-    }
-  }
 });
 
 onMounted(() => {
@@ -77,4 +67,5 @@ function getInstrumentData (isin: string) {
   </main>
 </template>
 
-<style lang='scss' scoped></style>
+<style lang='scss' scoped>
+</style>
