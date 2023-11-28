@@ -27,6 +27,12 @@ const priceDifferenceSentiment = computed(() => priceDifferenceAbsolute.value >=
 </template>
 
 <style lang="scss" scoped>
+.instrument-price-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
 .price-difference {
   display: flex;
   gap: .35rem;

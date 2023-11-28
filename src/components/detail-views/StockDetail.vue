@@ -4,17 +4,22 @@ import CompanyInfo from '@/components/instrument/CompanyInfo.vue';
 import InstrumentPriceInfo from '@/components/instrument/InstrumentPriceInfo.vue';
 import EventsList from '@/components/lists/EventsList.vue';
 import TRAssetLoader from '@/components/loaders/TRAssetLoader.vue';
-import type { Dividend } from '@/types/tr/events/stock-details';
+import { usePortfolioStore } from '@/stores/portfolio-store';
+import type { Dividend, DividendWithPayment } from '@/types/tr/events/stock-details';
 import type { TickerEvent } from '@/types/tr/events/ticker';
 import type { Stock } from '@/types/tr/instrument';
 import { formatNumber } from '@/utils/intl/currency';
 import { computed } from 'vue';
+import InstrumentPortfolioInfo from '../instrument/InstrumentPortfolioInfo.vue';
 import DividendsList from '../lists/DividendsList.vue';
 
 const props = defineProps<{
   stock: Stock;
   ticker: TickerEvent;
+  isInDetailPortfolio: boolean;
 }>();
+
+const portfolioStore = usePortfolioStore();
 
 const dividendYield = computed(() => `${formatNumber(props.stock.stockDetails.company.dividendYieldSnapshot * 100, { style: 'decimal', roundingMode: 'floor' })} %`);
 
@@ -25,7 +30,7 @@ const aggregatedDividends = computed(() => {
 
   // Add newer dividends first
   eventDividends
-    .filter(event => event.dividend != null)
+    ?.filter(event => event.dividend != null)
     .forEach(event => {
       if (event.dividend) {
         dividendMap.set(event.dividend.id, event.dividend);
@@ -55,6 +60,27 @@ const paymentMonths = computed(() => {
 
   return `${frequency ?? 'n. a.'} (${([...monthsWithPayments.values()] as number[]).sort((a, b) => a - b).join('|')})`;
 });
+
+const calculatedDividendPayments = computed<DividendWithPayment[]>(() => aggregatedDividends.value?.map(dividend => {
+  const orders = portfolioStore.detailPortfolio?.orders;
+
+  let orderAmountExDate = 0;
+
+  orders
+    ?.filter(order => order.isin === props.stock.instrument.isin)
+    .forEach(order => {
+      if (new Date(order.executed_at).getTime() <= new Date(dividend.exDate).getTime()) {
+        orderAmountExDate += order.amount;
+      }
+    });
+
+  return {
+    ...dividend,
+    amount: formatNumber(dividend.amount, { style: 'currency', currency: 'EUR' }),
+    amountAtExDate: orderAmountExDate,
+    paymentAmount: formatNumber(dividend.amount * orderAmountExDate, { style: 'currency', currency: 'EUR' }),
+  };
+}));
 </script>
 
 <template>
@@ -64,7 +90,8 @@ const paymentMonths = computed(() => {
 
     <InstrumentPriceInfo :ticker="ticker" />
 
-    <!-- OrderManager here -->
+    <InstrumentPortfolioInfo :dividends-with-payment="calculatedDividendPayments"
+      :is-in-detail-portfolio="isInDetailPortfolio" />
 
     <DividendsList v-if="aggregatedDividends.length > 0" :dividends="aggregatedDividends" :frequency="paymentMonths"
       :yield="dividendYield" />
@@ -80,16 +107,5 @@ const paymentMonths = computed(() => {
 <style lang="scss" scoped>
 .image {
   margin-block-end: .5rem;
-}
-
-.instrument-price-info {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.price-difference {
-  display: flex;
-  gap: .35rem;
 }
 </style>

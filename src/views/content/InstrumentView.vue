@@ -2,13 +2,17 @@
 import FundDetail from '@/components/detail-views/FundDetail.vue';
 import StockDetail from '@/components/detail-views/StockDetail.vue';
 import { useTRSocket } from '@/composables/useTRSocket';
+import { useAuthStore } from '@/stores/auth';
 import { useInstrumentsStore } from '@/stores/instruments';
+import { usePortfolioStore } from '@/stores/portfolio-store';
 import { useTickerStore } from '@/stores/ticker';
 import { isETF, isStock } from '@/types/tr/instrument';
 import { computed, onMounted, ref, watchEffect } from 'vue';
 import { onBeforeRouteLeave, onBeforeRouteUpdate, useRouter } from 'vue-router';
 
 const socket = useTRSocket();
+const authStore = useAuthStore();
+const portfolioStore = usePortfolioStore();
 const instruments = useInstrumentsStore();
 const ticker = useTickerStore();
 const router = useRouter();
@@ -16,9 +20,18 @@ const isin = ref('');
 
 const instrumentData = computed(() => instruments.getInstrument(isin.value));
 const tickerData = computed(() => ticker.getTicker(instrumentData.value?.tickerEventId!));
+const isInDetailPortfolio = computed(() => portfolioStore.detailPortfolio?.isins.includes(isin.value) ?? false);
 
 watchEffect(() => {
   isin.value = router.currentRoute.value.params.isin as string;
+
+  if (portfolioStore.detailPortfolio == null) {
+    const firstPortfolioOfInstrument = authStore.user?.portfolios.find(p => p.isins.includes(isin.value));
+
+    if (firstPortfolioOfInstrument) {
+      portfolioStore.selectPortfolio(firstPortfolioOfInstrument?.id);
+    }
+  }
 });
 
 onMounted(() => {
@@ -55,7 +68,7 @@ function getInstrumentData (isin: string) {
 
     <template v-else>
       <template v-if="isStock(instrumentData) && tickerData">
-        <StockDetail :stock="instrumentData" :ticker="tickerData" />
+        <StockDetail :stock="instrumentData" :ticker="tickerData" :is-in-detail-portfolio="isInDetailPortfolio" />
       </template>
       <template v-if="isETF(instrumentData) && tickerData">
         <FundDetail :etf="instrumentData" :ticker="tickerData" />
@@ -64,5 +77,4 @@ function getInstrumentData (isin: string) {
   </main>
 </template>
 
-<style lang='scss' scoped>
-</style>
+<style lang='scss' scoped></style>

@@ -70,6 +70,12 @@ export interface Dividend {
   type: DividendType;
 }
 
+export type DividendWithPayment = Omit<Dividend, 'amount'> & {
+  amount: string;
+  amountAtExDate: number;
+  paymentAmount: string;
+}
+
 enum DividendType {
   Cash = 'cash',
   Unknown = 'unknown',
