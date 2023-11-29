@@ -66,6 +66,10 @@ onBeforeRouteLeave(() => {
   display: grid;
   gap: 1rem;
 
+  @media only screen and (width >=768px) {
+    grid-template-columns: 1fr 1fr;
+  }
+
   @media only screen and (width >=1280px) {
     grid-template-columns: 1fr 1fr 1fr;
   }
