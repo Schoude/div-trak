@@ -2,7 +2,7 @@
 import { useAuthStore } from '@/stores/auth';
 import { useInstrumentsStore } from '@/stores/instruments';
 import { supabase } from '@/supabase/client';
-import type { Order } from '@/supabase/types/helpers';
+import type { Order, Portfolio } from '@/supabase/types/helpers';
 import type { User } from '@/types/auth';
 import { computed, ref } from 'vue';
 import ButtonAction from '../buttons/ButtonAction.vue';
@@ -11,7 +11,7 @@ import OrderListItem from './OrderListItem.vue';
 
 const props = defineProps<{
   orders: Order[];
-  portfolioName: string;
+  portfolio: Portfolio;
 }>();
 
 const authStore = useAuthStore();
@@ -48,12 +48,18 @@ async function onDeletionConfirmClick () {
     return;
   }
 
+  isSending.value = true;
+
   try {
     const deleteOrderResponse = await supabase.functions.invoke<{ user: User }>('order-delete', {
       body: {
         token: authStore.sessionToken,
         isLastOrderInPortfolio: isLastOrderInPortfolio.value,
-        orderDeleteId: orderToDelete.value!.id,
+        orderToDelete: {
+          id: orderToDelete.value?.id,
+          portfolioId: props.portfolio.id,
+          isin: orderToDelete.value?.isin
+        },
       }
     });
 
@@ -64,7 +70,7 @@ async function onDeletionConfirmClick () {
       authStore.user!.portfolios = deleteOrderResponse.data.user.portfolios;
 
       clearAndClose();
-
+      isSending.value = false;
     } else throw new Error('Response has no data: Function: order-delete');
 
   } catch (error) {
@@ -75,7 +81,7 @@ async function onDeletionConfirmClick () {
 
 <template>
   <div class="orders-list">
-    <h2 class="text-m">Orders in Portfolio <small>({{ portfolioName }})</small></h2>
+    <h2 class="text-m">Orders in Portfolio <small>({{ portfolio.name }})</small></h2>
     <ul>
       <OrderListItem v-for="(order, index) of orders" :key="index" :order="order" @delete="onOrderDeleteClick" />
     </ul>

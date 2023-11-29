@@ -35,7 +35,7 @@ const ordersOfInstrument = computed(() => portfolioStore.detailPortfolio
     <template v-if="isInDetailPortfolio">
       <slot name="dividends" />
 
-      <OrdersList v-if="ordersOfInstrument" :orders="ordersOfInstrument" :portfolio-name="portfolioStore.detailPortfolio?.name ?? ''" />
+      <OrdersList v-if="ordersOfInstrument" :orders="ordersOfInstrument" :portfolio="portfolioStore.detailPortfolio!" />
     </template>
 
   </div>
