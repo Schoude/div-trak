@@ -71,7 +71,7 @@ async function onOrderClick (type: 'sell' | 'buy') {
       onSuccess();
       emit('success');
 
-      isSending.value = true;
+      isSending.value = false;
     } else throw new Error('Response has no data: Function: order-add');
 
   } catch (error) {
