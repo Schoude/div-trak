@@ -21,7 +21,7 @@ export const useInstrumentsStore = defineStore('instruments', () => {
     return instruments.value.get(isin);
   }
 
-  function fillInstrument (isin: string, portFolio: Portfolio) {
+  function fillInstrument (isin: string, portfolio: Portfolio) {
     const instrument = getInstrument(isin);
     if (!instrument) {
       return;
@@ -32,7 +32,7 @@ export const useInstrumentsStore = defineStore('instruments', () => {
       return;
     }
 
-    const ordersForInstrument = portFolio.orders.filter((order) =>
+    const ordersForInstrument = portfolio.orders.filter((order) =>
       order.isin === isin
     );
     const currentAmount = ordersForInstrument.reduce((acc, value) => {
