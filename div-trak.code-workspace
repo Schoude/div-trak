@@ -12,6 +12,7 @@
   "settings": {
     "files.exclude": {
       "supabase/functions/": true
-    }
+    },
+    "typescript.tsdk": "node_modules/typescript/lib"
   }
 }
