@@ -97,9 +97,8 @@ defineEmits([
 
 .btn-close {
   position: absolute;
-  inset-block-start: 0;
-  inset-inline-end: 0px;
-  padding: .48rem .48rem;
+  inset-block-start: .48rem;
+  inset-inline-end: .48rem;
   transition: scale 150ms ease-out;
 
   &:hover,
