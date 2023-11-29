@@ -37,12 +37,12 @@ function onClose () {
 $duration: .35s;
 $movementY: 8px;
 
-dialog[open] {
+.modal-base[open] {
   opacity: 1;
   translate: 0 0;
 }
 
-dialog {
+.modal-base {
   opacity: 0;
   translate: 0 -#{$movementY};
   max-block-size: 90dvh;
@@ -65,25 +65,25 @@ dialog {
 }
 
 @starting-style {
-  dialog[open] {
+  .modal-base[open] {
     opacity: 0;
     translate: 0 $movementY;
   }
 }
 
-dialog::backdrop {
+.modal-base::backdrop {
   margin-inline: 0;
   background-color: rgb(0 0 0 / 0);
   transition: all $duration ease-out allow-discrete;
 }
 
-dialog[open]::backdrop {
+.modal-base[open]::backdrop {
   background-color: rgb(0 0 0 / 0.5);
   backdrop-filter: blur(2px);
 }
 
 @starting-style {
-  dialog[open]::backdrop {
+  .modal-base[open]::backdrop {
     background-color: rgb(0 0 0 / 0);
     backdrop-filter: blur(0);
   }
