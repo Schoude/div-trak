@@ -11,7 +11,7 @@ export const useAuthStore = defineStore('auth', () => {
   const sessionToken = ref(localStorage.getItem('sessionToken'));
   const user = ref<null | User>(null);
 
-  const isAuthenticated = computed(() => sessionToken.value != null && user.value != null);
+  const isAuthenticated = computed(() => sessionToken.value != null);
 
   async function login (loginData: {phone: string; pin: string}) {
     const loginRes = await supabase.functions.invoke<UserDataReturnType>('user-data', { body: loginData });
@@ -39,10 +39,12 @@ export const useAuthStore = defineStore('auth', () => {
     const checkSessionRes = await supabase.functions.invoke('user-logout', { body: { token: token } });
     if (checkSessionRes.error) throw checkSessionRes.error;
 
-    user.value = null;
+    
     sessionToken.value = null;
 
-    router.push({ name: 'login' });
+    await router.push({ name: 'login' });
+
+    user.value = null;
   }
 
   watchEffect(async () => {
