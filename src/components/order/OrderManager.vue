@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import ButtonAction from '@/components/buttons/ButtonAction.vue';
+import LabelFormInput from '@/components/inputs/LabelFormInput.vue';
 import ModalBase from '@/components/modals/ModalBase.vue';
 import { useAuthStore } from '@/stores/auth';
 import { supabase } from '@/supabase/client';
@@ -30,7 +31,7 @@ function onDialogOpenClick () {
 }
 
 function onDialogClose () {
-  amountOrder.value = 0;
+  amountOrder.value = null;
   dateOrder.value = '';
 }
 
@@ -59,13 +60,14 @@ async function onOrderClick (type: 'sell' | 'buy') {
   };
 
   try {
-    const newOrderRes = await supabase.functions.invoke<{user: User}>('order-add', {
+    const newOrderRes = await supabase.functions.invoke<{ user: User }>('order-add', {
       body: {
         token: authStore.sessionToken,
         alreadyInPortfolio: props.isInDetailPortfolio,
         order: newOrder,
       }
     });
+
     if (newOrderRes.error) throw newOrderRes.error;
 
     if (newOrderRes.data) {
@@ -99,7 +101,9 @@ async function onOrderClick (type: 'sell' | 'buy') {
         </p>
 
         <form class="order-form">
-          <input v-model="dateOrder" type="date" name="order-date" id="order-date">
+          <LabelFormInput for-input="order-data" text="Execution Date">
+            <input v-model="dateOrder" type="date" name="order-date" id="order-date">
+          </LabelFormInput>
           <p>TODO: ADD order type picker</p>
 
           <div class="wrapper">
@@ -172,11 +176,17 @@ async function onOrderClick (type: 'sell' | 'buy') {
     }
   }
 
+  input[type="number"],
+  input[type="date"] {
+    border: none;
+    background: transparent;
+  }
+
   input[type="number"] {
     text-align: center;
     border: none;
     background: transparent;
-    inline-size: 36px;
+    inline-size: 48px;
     block-size: 40px;
 
     &:focus {
