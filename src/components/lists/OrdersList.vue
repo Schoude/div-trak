@@ -6,7 +6,7 @@ import ButtonAction from '../buttons/ButtonAction.vue';
 import ModalBase from '../modals/ModalBase.vue';
 import OrderListItem from './OrderListItem.vue';
 
-defineProps<{
+const props = defineProps<{
   orders: Order[];
   portfolioName: string;
 }>();
@@ -16,10 +16,24 @@ const modalConfirmation = ref<typeof ModalBase | null>(null);
 
 const orderToDelete = ref<Order | null>(null);
 const orderToDeleteInstrument = computed(() => instruments.getInstrument(orderToDelete.value?.isin!));
+const isLastOrderInPortfolio = computed(() => props.orders.length === 1);
+
+function clearDeletionOrder () {
+  orderToDelete.value = null;
+}
 
 function onOrderDeleteClick (order: Order) {
   orderToDelete.value = order;
   modalConfirmation.value?.$el.showModal();
+}
+
+function onDeletionCancelClick () {
+  modalConfirmation.value?.$el.close();
+  clearDeletionOrder();
+}
+
+function onDeletionConfirmClick () {
+
 }
 </script>
 
@@ -30,10 +44,8 @@ function onOrderDeleteClick (order: Order) {
       <OrderListItem v-for="(order, index) of orders" :key="index" :order="order" @delete="onOrderDeleteClick" />
     </ul>
 
-    <ModalBase ref="modalConfirmation">
-      <template #title>
-        Confirm deletion
-      </template>
+    <ModalBase ref="modalConfirmation" @close="onDeletionCancelClick">
+      <template #title>Confirm deletion</template>
 
       <template #content>
         <div class="confirmation">
@@ -47,10 +59,10 @@ function onOrderDeleteClick (order: Order) {
           </div>
 
           <div class="actions">
-            <ButtonAction variant="dusk">
+            <ButtonAction class="button-confirmation text-s" variant="dusk" @click="onDeletionCancelClick">
               Cancel
             </ButtonAction>
-            <ButtonAction variant="dawn">
+            <ButtonAction class="button-confirmation text-s" variant="dawn" @click="onDeletionConfirmClick">
               Confirm Deletion
             </ButtonAction>
           </div>
@@ -78,7 +90,6 @@ ul {
   overflow-x: auto;
 }
 
-
 .confirmation {
   padding-inline: .5rem;
 }
@@ -90,9 +101,10 @@ ul {
 .actions {
   display: flex;
   gap: 1rem;
+  margin-block-end: 1.125rem;
 }
 
-.button-action {
+.button-confirmation {
   block-size: 40px;
 }
 </style>
