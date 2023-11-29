@@ -43,7 +43,7 @@ const authStore = useAuthStore();
 
   &:hover,
   &:focus-visible {
-    background-color: rgba(10, 10, 10, 0.6);
+    background-color: rgba(25, 25, 25, 0.6);
   }
 }
 </style>
