@@ -1,4 +1,4 @@
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.38.4';
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
 import type { Database } from '../../../src/supabase/types/database.ts';
 import type { DbResult } from '../../../src/supabase/types/helpers.ts';
 import { corsHeaders } from '../_shared/cors.ts';

@@ -1,10 +1,11 @@
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.38.4';
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
 import { Database } from '../../../src/supabase/types/database.ts';
 import type {
   DbResult,
   OrderNew,
 } from '../../../src/supabase/types/helpers.ts';
 import { corsHeaders } from '../_shared/cors.ts';
+import { getUserPortfolios } from '../_shared/user-data-helper.ts';
 
 Deno.serve(async (req) => {
   // This is needed if you're planning to invoke your function from a browser.
@@ -111,39 +112,32 @@ Deno.serve(async (req) => {
     );
   }
 
-  const userQuery = supabaseClient
-    .from('users')
-    .select(`
-      portfolios (
-        id,
-        name,
-        isins,
-        orders (
-          isin,
-          amount,
-          year,
-          month,
-          day,
-          executed_at,
-          execution_type
-        )
-      )
-    `)
-    .eq('id', session.data.user_id)
-    .single();
+  try {
+    const user = await getUserPortfolios(session.data.user_id);
 
-  const user: DbResult<typeof userQuery> = await userQuery;
-
-  return new Response(
-    JSON.stringify({
-      user: user.data,
-    }),
-    {
-      headers: {
-        ...corsHeaders,
-        'Content-Type': 'application/json',
+    return new Response(
+      JSON.stringify({
+        user,
+      }),
+      {
+        headers: {
+          ...corsHeaders,
+          'Content-Type': 'application/json',
+        },
+        status: 200,
       },
-      status: 200,
-    },
-  );
+    );
+  } catch (error) {
+    console.error(error);
+
+    return new Response(
+      JSON.stringify({
+        error: 'Server Error',
+      }),
+      {
+        headers: { 'Content-Type': 'application/json' },
+        status: 500,
+      },
+    );
+  }
 });
