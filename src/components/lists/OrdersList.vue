@@ -1,6 +1,9 @@
 <script setup lang="ts">
+import { useAuthStore } from '@/stores/auth';
 import { useInstrumentsStore } from '@/stores/instruments';
+import { supabase } from '@/supabase/client';
 import type { Order } from '@/supabase/types/helpers';
+import type { User } from '@/types/auth';
 import { computed, ref } from 'vue';
 import ButtonAction from '../buttons/ButtonAction.vue';
 import ModalBase from '../modals/ModalBase.vue';
@@ -11,12 +14,16 @@ const props = defineProps<{
   portfolioName: string;
 }>();
 
+const authStore = useAuthStore();
 const instruments = useInstrumentsStore();
 const modalConfirmation = ref<typeof ModalBase | null>(null);
 
 const orderToDelete = ref<Order | null>(null);
 const orderToDeleteInstrument = computed(() => instruments.getInstrument(orderToDelete.value?.isin!));
 const isLastOrderInPortfolio = computed(() => props.orders.length === 1);
+
+const isSending = ref(false);
+const canSend = computed(() => !isSending.value && orderToDelete.value != null);
 
 function clearDeletionOrder () {
   orderToDelete.value = null;
@@ -27,13 +34,42 @@ function onOrderDeleteClick (order: Order) {
   modalConfirmation.value?.$el.showModal();
 }
 
-function onDeletionCancelClick () {
+function clearAndClose () {
   modalConfirmation.value?.$el.close();
   clearDeletionOrder();
 }
 
-function onDeletionConfirmClick () {
+function onDeletionCancelClick () {
+  clearAndClose();
+}
 
+async function onDeletionConfirmClick () {
+  if (!canSend.value) {
+    return;
+  }
+
+  try {
+    const deleteOrderResponse = await supabase.functions.invoke<{ user: User }>('order-delete', {
+      body: {
+        token: authStore.sessionToken,
+        isLastOrderInPortfolio: isLastOrderInPortfolio.value,
+        orderDeleteId: orderToDelete.value!.id,
+      }
+    });
+
+    if (deleteOrderResponse.error) throw deleteOrderResponse.error;
+
+    if (deleteOrderResponse.data) {
+      // Set user with new orders of the portfolios
+      authStore.user!.portfolios = deleteOrderResponse.data.user.portfolios;
+
+      clearAndClose();
+
+    } else throw new Error('Response has no data: Function: order-delete');
+
+  } catch (error) {
+    console.log((error as Error).message);
+  }
 }
 </script>
 

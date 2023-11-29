@@ -23,6 +23,7 @@ export type Portfolio = Pick<Tables<'portfolios'>, 'id' | 'name'> & {
 
 export type Order = Pick<
   Tables<'orders'>,
+  | 'id'
   | 'isin'
   | 'amount'
   | 'year'

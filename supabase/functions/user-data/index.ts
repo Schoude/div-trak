@@ -27,6 +27,7 @@ Deno.serve(async (req) => {
         name,
         isins,
         orders (
+          id,
           isin,
           amount,
           year,

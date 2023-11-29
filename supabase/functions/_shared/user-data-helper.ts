@@ -18,6 +18,7 @@ export async function getUserPortfolios (id: number) {
         name,
         isins,
         orders (
+          id,
           isin,
           amount,
           year,

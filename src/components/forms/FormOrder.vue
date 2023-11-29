@@ -71,7 +71,7 @@ async function onOrderClick (type: 'sell' | 'buy') {
       onSuccess();
       emit('success');
 
-    } else throw new Error('Response has no data: Function: user-data');
+    } else throw new Error('Response has no data: Function: order-add');
 
   } catch (error) {
     console.log((error as Error).message);
