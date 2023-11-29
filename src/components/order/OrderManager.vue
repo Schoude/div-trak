@@ -66,4 +66,8 @@ function onSuccess () {
     margin-block: .5rem 1rem;
   }
 }
+
+.modal-base {
+  max-inline-size: 500px;
+}
 </style>

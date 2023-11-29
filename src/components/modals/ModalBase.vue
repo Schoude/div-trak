@@ -18,7 +18,7 @@ function onClose () {
 </script>
 
 <template>
-  <dialog ref="modalBase">
+  <dialog class="modal-base" ref="modalBase">
     <header>
       <div class="title text-m">
         <slot name="title" />

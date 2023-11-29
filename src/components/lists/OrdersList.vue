@@ -93,7 +93,7 @@ async function onDeletionConfirmClick () {
         <div class="confirmation">
           <p class="text-s">Do you really want to delete this order?</p>
 
-          <div class="order-description">
+          <div class="order-description text-m">
             <div class="instrument">{{ orderToDeleteInstrument?.instrument?.shortName }}</div>
             <div class="amount">{{ orderToDelete?.amount }} pcs. @ {{ new
               Date(orderToDelete?.executed_at!).toLocaleDateString() }}</div>
@@ -138,6 +138,8 @@ ul {
 
 .order-description {
   margin-block: 1.125rem;
+  display: grid;
+  place-content: center;
 }
 
 .actions {
@@ -148,5 +150,9 @@ ul {
 
 .button-confirmation {
   block-size: 40px;
+}
+
+.modal-base {
+  max-inline-size: 500px;
 }
 </style>
