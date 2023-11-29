@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import OrdersList from '@/components/lists/OrdersList.vue';
 import OrderManager from '@/components/order/OrderManager.vue';
 import { usePortfolioStore } from '@/stores/portfolio-store';
 import type { Instrument } from '@/types/tr/instrument';
@@ -19,6 +20,11 @@ const amountOwned = computed(() => portfolioStore.detailPortfolio
 
     return acc;
   }, 0) ?? 0);
+
+const ordersOfInstrument = computed(() => portfolioStore.detailPortfolio
+  ?.orders
+  .filter(order => order.isin === props.instrument.instrument.isin)
+  .sort((a, b) => new Date(b.executed_at).getTime() - new Date(a.executed_at).getTime()));
 </script>
 
 <template>
@@ -28,6 +34,8 @@ const amountOwned = computed(() => portfolioStore.detailPortfolio
 
     <template v-if="isInDetailPortfolio">
       <slot name="dividends" />
+
+      <OrdersList v-if="ordersOfInstrument" :orders="ordersOfInstrument" :portfolio-name="portfolioStore.detailPortfolio?.name ?? ''" />
     </template>
 
   </div>

@@ -42,6 +42,5 @@ const isPastDividend = computed(() => {
 
 .inner {
   inline-size: 220px;
-  position: relative;
 }
 </style>
