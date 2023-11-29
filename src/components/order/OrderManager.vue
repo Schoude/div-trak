@@ -57,6 +57,11 @@ function onSuccess () {
   inline-size: 60%;
   margin-inline: auto;
   block-size: 2.5rem;
+
+  @media only screen and (width >= 768px) {
+    inline-size: 200px;
+    margin-inline: initial;
+  }
 }
 
 .content {

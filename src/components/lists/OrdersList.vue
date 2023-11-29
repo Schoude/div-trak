@@ -149,7 +149,7 @@ ul {
 }
 
 .button-confirmation {
-  block-size: 40px;
+  block-size: 2.5rem;
 }
 
 .modal-base {

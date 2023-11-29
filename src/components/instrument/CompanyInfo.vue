@@ -21,11 +21,14 @@ defineProps<{
         style: 'decimal', roundingMode:
           'floor'
       }) }}</span>
-      <span v-if="company?.eps" class="indicator">EPS: {{ formatNumber(company.eps, { style: 'currency', currency: 'USD' })
+      <span v-if="company?.eps" class="indicator">EPS: {{ formatNumber(company.eps, {
+        style: 'currency', currency: 'USD'
+      })
       }}</span>
       <span v-if="company?.peRatioSnapshot" class="indicator">Price-to-Earnings: {{ formatNumber(company.peRatioSnapshot,
         { style: 'decimal', roundingMode: 'floor' }) }}</span>
-      <span v-if="company?.pbRatioSnapshot" class="indicator">Price-to-Book: {{ formatNumber(company.pbRatioSnapshot * 100,
+      <span v-if="company?.pbRatioSnapshot" class="indicator">Price-to-Book: {{ formatNumber(company.pbRatioSnapshot *
+        100,
         { style: 'decimal', roundingMode: 'floor' }) }} %</span>
     </div>
 
@@ -73,6 +76,12 @@ h2 {
   margin-block-end: 1.35rem;
 }
 
+.indicators {
+  @media only screen and (width >=768px) {
+    inline-size: 50%;
+  }
+}
+
 .tags {
   display: flex;
   gap: .35rem;
@@ -84,6 +93,12 @@ h2 {
   .text {
     block-size: 120px;
     overflow: auto;
+
+    @media only screen and (width >=768px) {
+      block-size: initial;
+      max-inline-size: 120ch;
+      text-align: justify;
+    }
   }
 }
 </style>
