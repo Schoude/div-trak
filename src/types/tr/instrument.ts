@@ -1,5 +1,5 @@
-import type { InstrumentEvent } from './events/instruments';
-import type { StockDetailsEvent } from './events/stock-details';
+import type { InstrumentEvent } from '@/types/tr/events/instruments';
+import type { StockDetailsEvent } from '@/types/tr/events/stock-details';
 
 export interface Instrument {
   instrument: InstrumentEvent;

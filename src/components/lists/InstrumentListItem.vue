@@ -40,12 +40,12 @@ async function onNavigateClick () {
 
 .instrument-list-item {
   list-style: none;
-  padding: .75rem;
   border-radius: 8px;
   @include mixins.bg-list-item;
 }
 
 .action {
+  padding: .75rem;
   display: flex;
   inline-size: 100%;
   text-align: start;

@@ -74,6 +74,7 @@ export const useInstrumentsStore = defineStore('instruments', () => {
       const updated = Object.assign(toUpdate, { ...updateData });
       setInstrument(isin, updated);
     },
+    getInstruments: computed(() => [...instruments.value.values()]),
     getInstrumentsFilled: computed(() => {
       return (portFolio: Portfolio) => {
         return portFolio?.isins
