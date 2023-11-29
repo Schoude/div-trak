@@ -96,21 +96,45 @@ async function onOrderClick (type: 'sell' | 'buy') {
     <template #content>
       <section class="content">
 
+        <p class="text-l instrument">{{ instrument.instrument.shortName }}</p>
+
         <p class="text-s">You currenty own {{ amountOwned }} pcs. of <b>{{ instrument.instrument.shortName }}</b> in
           portfolio <b>{{ portfolio.name }}</b>.
         </p>
 
-        <form class="order-form">
-          <LabelFormInput for-input="order-data" text="Execution Date">
-            <input v-model="dateOrder" type="date" name="order-date" id="order-date">
-          </LabelFormInput>
-          <p>TODO: ADD order type picker</p>
+        <!-- TODO: make into component FormOrder -->
+        <form class="order-form" @submit.prevent="">
+          <div class="row">
+            <LabelFormInput for-input="order-date" text="Execution Date">
+              <input v-model="dateOrder" type="date" name="order-date" id="order-date">
+            </LabelFormInput>
 
-          <div class="wrapper">
-            <button @click="onOrderClick('sell')" type="button" class="button-sell"
-              :disabled="!canSell || !canSend">Sell</button>
-            <input v-model.number="amountOrder" placeholder="0" type="number" name="amount" id="amount" min="0">
-            <button @click="onOrderClick('buy')" type="button" class="button-buy" :disabled="!canSend">Buy</button>
+            <!-- TODO: make into component SelectRadio -->
+            <fieldset class="select-radio">
+              <legend>Execution Type</legend>
+              <div class="controls">
+                <div class="field">
+                  <input v-model="executionType" type="radio" name="order-execution-type" id="execution-type-normal"
+                    value="normal" checked>
+                  <label class="" for="execution-type-normal">Normal</label>
+                </div>
+
+                <div class="field">
+                  <input v-model="executionType" type="radio" name="order-execution-type" id="execution-type-forecast"
+                    value="forecast">
+                  <label class="" for="execution-type-forecast">Forecast</label>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+
+          <div class="row">
+            <div class="wrapper">
+              <button @click="onOrderClick('sell')" type="button" class="button-sell"
+                :disabled="!canSell || !canSend">Sell</button>
+              <input v-model.number="amountOrder" placeholder="0" type="number" name="amount" id="amount" min="0">
+              <button @click="onOrderClick('buy')" type="button" class="button-buy" :disabled="!canSend">Buy</button>
+            </div>
           </div>
         </form>
       </section>
@@ -135,8 +159,22 @@ async function onOrderClick (type: 'sell' | 'buy') {
 
 .order-form {
   margin-block: 1rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  .row {
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-column: 1 / -1;
+    margin-block-start: 1.125rem;
+
+    .label-form-input {
+      margin: 0;
+    }
+  }
 
   .wrapper {
+    grid-column: 1 / -1;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -191,6 +229,43 @@ async function onOrderClick (type: 'sell' | 'buy') {
 
     &:focus {
       border-block: 1px solid rgb(48, 48, 48);
+    }
+  }
+
+  .select-radio {
+    border: none;
+    padding: 0;
+    outline: 1px solid transparent;
+    outline-offset: 6px;
+    transition: outline 150ms ease-out;
+
+    @media only screen and (width < 768px) {
+      &:focus-within {
+        outline: 1px solid rgba(255, 255, 255, 0.35);
+      }
+    }
+
+    legend {
+      margin-block-end: .5rem;
+    }
+
+    .controls {
+      display: flex;
+      gap: 1rem;
+
+      label {
+        color: var(--color-muted);
+        transition: color .35s ease-out;
+        cursor: pointer;
+      }
+    }
+
+    input[type="radio"] {
+      appearance: none;
+
+      &:checked+label {
+        color: var(--color-accent-1);
+      }
     }
   }
 }
