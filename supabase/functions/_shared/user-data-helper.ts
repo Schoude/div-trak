@@ -4,7 +4,7 @@ import type {
   DbResult,
 } from '../../../src/supabase/types/helpers.ts';
 
-export async function getUserPortfolios(id: number) {
+export async function getUserPortfolios (id: number) {
   const supabaseClient = createClient<Database>(
     Deno.env.get('SUPABASE_URL') ?? '',
     Deno.env.get('SUPABASE_ANON_KEY') ?? '',
@@ -36,4 +36,23 @@ export async function getUserPortfolios(id: number) {
   if (result.error) throw result.error;
 
   return result.data;
+}
+
+export async function getUserSessionFromToken (token: string) {
+  const supabaseClient = createClient<Database>(
+    Deno.env.get('SUPABASE_URL') ?? '',
+    Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+  );
+
+  const sessionQuery = supabaseClient
+    .from('sessions')
+    .select('user_id')
+    .eq('token', token)
+    .single();
+
+  const session: DbResult<typeof sessionQuery> = await sessionQuery;
+
+  if (session.error) throw session.error;
+
+  return session.data;
 }

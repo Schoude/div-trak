@@ -5,7 +5,7 @@ import type {
   OrderNew,
 } from '../../../src/supabase/types/helpers.ts';
 import { corsHeaders } from '../_shared/cors.ts';
-import { getUserPortfolios } from '../_shared/user-data-helper.ts';
+import { getUserPortfolios, getUserSessionFromToken } from '../_shared/user-data-helper.ts';
 
 Deno.serve(async (req) => {
   // This is needed if you're planning to invoke your function from a browser.
@@ -24,15 +24,13 @@ Deno.serve(async (req) => {
     Deno.env.get('SUPABASE_ANON_KEY') ?? '',
   );
 
-  const sessionQuery = supabaseClient
-    .from('sessions')
-    .select('user_id')
-    .eq('token', token)
-    .single();
+  let session: Session;
 
-  const session: DbResult<typeof sessionQuery> = await sessionQuery;
+  try {
+    session = await getUserSessionFromToken(token);
+  } catch (error) {
+    console.error(error);
 
-  if (session.error) {
     return new Response(
       JSON.stringify({
         error: 'Unauthorized',
@@ -44,6 +42,7 @@ Deno.serve(async (req) => {
     );
   }
 
+  // Add instrument to portfolio
   if (alreadyInPortfolio === false) {
     const selectPortfolioQuery = supabaseClient
       .from('portfolios')
@@ -93,7 +92,7 @@ Deno.serve(async (req) => {
     }
   }
 
-  // Add new order
+  // Add new order for instrument
   const createOrderQuery = supabaseClient.from('orders').insert(order);
   const createOrderResult: DbResult<typeof createOrderQuery> =
     await createOrderQuery;
@@ -112,8 +111,9 @@ Deno.serve(async (req) => {
     );
   }
 
+  // Return the portfolios for the user
   try {
-    const user = await getUserPortfolios(session.data.user_id);
+    const user = await getUserPortfolios(session.user_id);
 
     return new Response(
       JSON.stringify({
