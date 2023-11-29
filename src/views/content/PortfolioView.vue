@@ -3,7 +3,8 @@ import InstrumentListItem from '@/components/lists/InstrumentListItem.vue';
 import { useTRSocket } from '@/composables/useTRSocket';
 import { useInstrumentsStore } from '@/stores/instruments';
 import { usePortfolioStore } from '@/stores/portfolio-store';
-import { onMounted } from 'vue';
+import { formatNumber } from '@/utils/intl/currency';
+import { computed, onMounted } from 'vue';
 import { onBeforeRouteLeave, useRouter } from 'vue-router';
 
 const router = useRouter();
@@ -16,6 +17,12 @@ portfolioStore.selectPortfolio(+router.currentRoute.value.params.id);
 if (!portfolioStore.detailPortfolio) {
   router.push({ name: 'dashboard' });
 }
+
+const portfolioValue = computed(() => portfolioStore.instruments.reduce((acc, instrument) => {
+  acc += instrument.value;
+
+  return acc;
+}, 0));
 
 function getInstrumentsData () {
   portfolioStore.detailPortfolio?.isins.forEach(isin => {
@@ -51,11 +58,15 @@ onBeforeRouteLeave(() => {
 <template>
   <main class="portfolio-view view">
     <h1>{{ portfolioStore.detailPortfolio?.name }}</h1>
-    <h2>Instruments</h2>
-    <ul class="instruments-list" v-if="portfolioStore.instruments && portfolioStore.instruments?.length > 0">
-      <InstrumentListItem :instrument="instrument" v-for="instrument of portfolioStore.instruments"
-        :key="instrument?.instrument?.shortName" />
-    </ul>
+    <div class="portfolio-value text-m">{{ formatNumber(portfolioValue, { style: 'currency', currency: 'EUR' }) }}</div>
+
+    <div class="instruments">
+      <h2>Instruments</h2>
+      <ul class="instruments-list" v-if="portfolioStore.instruments && portfolioStore.instruments?.length > 0">
+        <InstrumentListItem :instrument="instrument" v-for="instrument of portfolioStore.instruments"
+          :key="instrument?.instrument?.shortName" />
+      </ul>
+    </div>
   </main>
 </template>
 
