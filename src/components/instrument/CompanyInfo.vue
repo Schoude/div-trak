@@ -13,23 +13,27 @@ defineProps<{
 <template>
   <div class="company-info text-s">
     <h2 class="text-m">Indicators</h2>
-    <div class="indicators">
-      <span v-if="company?.dividendYieldSnapshot" class="indicator">Yield: {{ formatNumber(company.dividendYieldSnapshot *
-        100, { style: 'decimal', roundingMode: 'floor' }) }}
-        %</span>
-      <span v-if="company?.beta" class="indicator">Beta: {{ formatNumber(company.beta, {
-        style: 'decimal', roundingMode:
-          'floor'
-      }) }}</span>
-      <span v-if="company?.eps" class="indicator">EPS: {{ formatNumber(company.eps, {
-        style: 'currency', currency: 'USD'
-      })
-      }}</span>
-      <span v-if="company?.peRatioSnapshot" class="indicator">Price-to-Earnings: {{ formatNumber(company.peRatioSnapshot,
-        { style: 'decimal', roundingMode: 'floor' }) }}</span>
-      <span v-if="company?.pbRatioSnapshot" class="indicator">Price-to-Book: {{ formatNumber(company.pbRatioSnapshot *
-        100,
-        { style: 'decimal', roundingMode: 'floor' }) }} %</span>
+    <div class="grid">
+      <div class="indicators">
+        <span v-if="company?.dividendYieldSnapshot" class="indicator">Yield: {{ formatNumber(company.dividendYieldSnapshot
+          *
+          100, { style: 'decimal', roundingMode: 'floor' }) }}
+          %</span>
+        <span v-if="company?.beta" class="indicator">Beta: {{ formatNumber(company.beta, {
+          style: 'decimal', roundingMode:
+            'floor'
+        }) }}</span>
+        <span v-if="company?.eps" class="indicator">EPS: {{ formatNumber(company.eps, {
+          style: 'currency', currency: 'USD'
+        })
+        }}</span>
+        <span v-if="company?.peRatioSnapshot" class="indicator">Price-to-Earnings: {{
+          formatNumber(company.peRatioSnapshot,
+            { style: 'decimal', roundingMode: 'floor' }) }}</span>
+        <span v-if="company?.pbRatioSnapshot" class="indicator">Price-to-Book: {{ formatNumber(company.pbRatioSnapshot *
+          100,
+          { style: 'decimal', roundingMode: 'floor' }) }} %</span>
+      </div>
     </div>
 
     <h2 class="text-m">Description</h2>
@@ -76,9 +80,10 @@ h2 {
   margin-block-end: 1.35rem;
 }
 
-.indicators {
+.grid {
   @media only screen and (width >=768px) {
-    inline-size: 50%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
   }
 }
 

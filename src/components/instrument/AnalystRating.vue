@@ -57,12 +57,13 @@ const downwardsMobility = computed(() => formatNumber((1 - props.currentPrice / 
 .analyst-rating {
   margin-block: 1.35rem;
 
+  @media only screen and (width >=768px) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
   >div {
     margin-block-end: 1.35rem;
-
-    @media only screen and (width >=768px) {
-      inline-size: 50%;
-    }
   }
 }
 
