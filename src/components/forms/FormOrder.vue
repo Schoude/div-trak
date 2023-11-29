@@ -94,13 +94,13 @@ async function onOrderClick (type: 'sell' | 'buy') {
           <div class="field">
             <input v-model="executionType" type="radio" name="order-execution-type" id="execution-type-normal"
               value="normal" checked>
-            <label class="" for="execution-type-normal">Normal</label>
+            <label class="tag-radio text-s" for="execution-type-normal">normal</label>
           </div>
 
           <div class="field">
             <input v-model="executionType" type="radio" name="order-execution-type" id="execution-type-forecast"
               value="forecast">
-            <label class="" for="execution-type-forecast">Forecast</label>
+            <label class="tag-radio text-s" for="execution-type-forecast">forecast</label>
           </div>
         </div>
       </fieldset>
@@ -213,11 +213,11 @@ input[type="number"] {
 
   .controls {
     display: flex;
-    gap: 1rem;
+    gap: .5rem;
 
     label {
       color: var(--color-muted);
-      transition: color .35s ease-out;
+      transition: color .35s ease-out, border-color .35s ease-out;
       cursor: pointer;
     }
   }
@@ -225,9 +225,19 @@ input[type="number"] {
   input[type="radio"] {
     appearance: none;
 
-    &:checked+label {
+    &:checked+.tag-radio {
       color: var(--color-accent-1);
+      border-color: var(--color-accent-1);
     }
+  }
+
+  .tag-radio {
+    color: var(--color-muted);
+    background-color: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgb(48, 48, 48);
+    padding: .25rem .45rem;
+    line-height: 1;
+    border-radius: 50px;
   }
 }
 </style>
