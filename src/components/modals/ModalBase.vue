@@ -50,7 +50,10 @@ $movementY: 8px;
   inline-size: 95%;
   margin: auto;
   padding: 0;
-  transition: all $duration ease-out allow-discrete;
+  transition:
+    opacity $duration ease-out,
+    translate $duration ease-out,
+    display $duration allow-discrete;
 
   // Bug fix?!
   overflow-x: hidden;
