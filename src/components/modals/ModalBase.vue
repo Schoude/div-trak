@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import IconClose from '../icons/IconClose.vue';
 
 const emit = defineEmits([
@@ -8,9 +8,12 @@ const emit = defineEmits([
 
 const modalBase = ref<HTMLDialogElement | null>(null);
 
+onMounted(() => {
+  modalBase.value?.addEventListener('close', onClose);
+});
+
 function onClose () {
   emit('close');
-  modalBase.value?.close();
 }
 </script>
 
