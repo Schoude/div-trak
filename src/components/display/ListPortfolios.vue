@@ -8,8 +8,8 @@ const authStore = useAuthStore();
   <h1 class="title-portfolios">Your Portfolios</h1>
   <ul class="list">
     <li>
-      <RouterLink :to="{ name: 'portfolio', params: { id: portfolio.id } }" v-for="portfolio of authStore.user?.portfolios"
-        class="portfolio" :key="portfolio.name">
+      <RouterLink :to="{ name: 'portfolio', params: { id: portfolio.id } }"
+        v-for="portfolio of authStore.user?.portfolios" class="portfolio" :key="portfolio.name">
         <div class="name text-l">{{ portfolio.name }}</div>
         <div class="count-instruments">Instruments: {{ portfolio.isins.length }}</div>
       </RouterLink>
@@ -18,6 +18,8 @@ const authStore = useAuthStore();
 </template>
 
 <style lang='scss' scoped>
+@use '../../styles/mixins';
+
 .title-portfolios {
   margin-block-end: 1rem;
 }
@@ -29,21 +31,14 @@ const authStore = useAuthStore();
 
 .portfolio {
   display: block;
-  background-color: rgba(12, 12, 12, 0.3);
   padding: .35rem .6rem;
   border-radius: 8px;
   text-decoration: none;
-  transition: background-color 150ms ease-out;
   outline: none;
-  box-shadow: var(--shadow);
+  @include mixins.bg-list-item;
 
   &:visited {
     color: currentColor;
-  }
-
-  &:hover,
-  &:focus-visible {
-    background-color: rgba(25, 25, 25, 0.6);
   }
 }
 </style>

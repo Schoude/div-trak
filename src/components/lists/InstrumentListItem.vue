@@ -36,18 +36,13 @@ async function onNavigateClick () {
 </template>
 
 <style scoped lang="scss">
+@use '../../styles/mixins';
+
 .instrument-list-item {
   list-style: none;
   padding: .75rem;
-  transition: background-color 150ms ease-out;
   border-radius: 8px;
-  background-color: rgba(12, 12, 12, 0.3);
-  box-shadow: var(--shadow);
-
-  &:hover,
-  &:focus-within {
-    background-color: rgba(25, 25, 25, 0.6);
-  }
+  @include mixins.bg-list-item;
 }
 
 .action {

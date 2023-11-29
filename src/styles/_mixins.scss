@@ -8,3 +8,14 @@
     outline: 1px solid rgba(255, 255, 255, 0.35);
   }
 }
+
+@mixin bg-list-item () {
+  transition: background-color 150ms ease-out;
+  box-shadow: var(--shadow);
+  background-image: var(--gradient-sky-transparent);
+  background-repeat: no-repeat;
+
+  &:hover {
+    background-color: rgba(250, 250, 250, 0.02);
+  }
+}
