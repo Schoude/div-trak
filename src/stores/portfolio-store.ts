@@ -1,7 +1,7 @@
+import { useAuthStore } from '@/stores/auth';
+import { useInstrumentsStore } from '@/stores/instruments';
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
-import { useAuthStore } from './auth';
-import { useInstrumentsStore } from './instruments';
 
 export const usePortfolioStore = defineStore('portfolios', () => {
   const authStore = useAuthStore();
