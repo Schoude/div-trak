@@ -62,7 +62,12 @@ onBeforeRouteLeave(() => {
 <style scoped lang="scss">
 .instruments-list {
   padding: 0;
+  padding-block-start: 1rem;
   display: grid;
   gap: 1rem;
+
+  @media only screen and (width >=1280px) {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
 }
 </style>

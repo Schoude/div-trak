@@ -57,6 +57,15 @@ label {
   -webkit-tap-highlight-color: transparent;
 }
 
+a {
+  text-decoration: none;
+
+  &:any-link,
+  &:visited {
+    color: currentColor;
+  }
+}
+
 button {
   cursor: pointer;
   border: none;

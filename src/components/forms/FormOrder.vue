@@ -150,6 +150,7 @@ async function onOrderClick (type: 'sell' | 'buy') {
     letter-spacing: 1px;
     filter: saturate(.5);
     transition: background-color .35s ease-out;
+    box-shadow: var(--shadow);
 
     &:hover,
     &:focus-visible {
