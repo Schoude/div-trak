@@ -90,7 +90,7 @@ const calculatedDividendPayments = computed<DividendWithPayment[]>(() => aggrega
     ...dividend,
     sourceTax: formattedSourceTax,
     amountAtExDate: orderAmountExDate,
-    paymentAmount: formatNumber(dividend.amount * orderAmountExDate, { style: 'currency', currency: 'EUR' }),
+    paymentAmount: formatNumber(paymentAmount, { style: 'currency', currency: 'EUR' }),
   };
 }));
 </script>
