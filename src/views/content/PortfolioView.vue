@@ -3,7 +3,7 @@ import InstrumentListItem from '@/components/lists/InstrumentListItem.vue';
 import { useTRSocket } from '@/composables/useTRSocket';
 import { useInstrumentsStore } from '@/stores/instruments';
 import { usePortfolioStore } from '@/stores/portfolio-store';
-import type { Dividend } from '@/types/tr/events/stock-details';
+import type { CalendarDividend, Dividend } from '@/types/tr/events/stock-details';
 import { formatNumber } from '@/utils/intl/currency';
 import { computed, onMounted } from 'vue';
 import { onBeforeRouteLeave, useRouter } from 'vue-router';
@@ -19,6 +19,7 @@ if (!portfolioStore.detailPortfolio) {
   router.push({ name: 'dashboard' });
 }
 
+const year = 2023;
 const portfolioValue = computed(() => portfolioStore.instruments.reduce((acc, instrument) => {
   acc += instrument.value;
 
@@ -26,25 +27,28 @@ const portfolioValue = computed(() => portfolioStore.instruments.reduce((acc, in
 }, 0));
 
 const dividendsForYear = computed(() => {
-  const year = 2023;
   // TODO: Or use const monthsMap = new Map<number, Map<string, unknown[]>>([
   const monthsMap = new Map<number, unknown[]>([
-    [1, [{ month: 1 }]],
-    [2, [{ month: 2 }]],
-    [3, [{ month: 3 }]],
-    [4, [{ month: 4 }]],
-    [5, [{ month: 5 }]],
-    [6, [{ month: 6 }]],
-    [7, [{ month: 7 }]],
-    [8, [{ month: 8 }]],
-    [9, [{ month: 9 }]],
-    [10, [{ month: 10 }]],
-    [11, [{ month: 11 }]],
-    [12, [{ month: 12 }]],
+    [1, []],
+    [2, []],
+    [3, []],
+    [4, []],
+    [5, []],
+    [6, []],
+    [7, []],
+    [8, []],
+    [9, []],
+    [10, []],
+    [11, []],
+    [12, []],
   ]);
 
-  for (let month = 1; month < 12; month++) {
-    const ordersOfMonth = monthsMap.get(month) as unknown[];
+  for (let month = 1; month <= 12; month++) {
+    const dividendsOfMonth = monthsMap.get(month);
+
+    if (!dividendsOfMonth) {
+      break;
+    }
 
     instrumentStore.getInstruments.forEach(instrument => {
       // Get complete dividends of STOCK
@@ -67,9 +71,10 @@ const dividendsForYear = computed(() => {
 
       // Then add already past dividends
       pastDividends?.forEach(dividend => dividendMap.set(dividend.id, dividend));
-      const dividendsOfCurrentMonth = [...dividendMap.values()].filter(dividend => dividend.exDate.includes(`${year}-${month.toString().padStart(2, '0')}`));
 
-      // TODO: Loop over all orders of the month and sum up the order amount for each dividend before the ex-date
+      const dividendsOfCurrentMonth = [...dividendMap.values()]
+        .filter(dividend => dividend.paymentDate.includes(`${year}-${month.toString().padStart(2, '0')}`));
+
       const instrumentAmountAtCurrentMonth = portfolioStore.detailPortfolio!
         .orders
         .filter((order) =>
@@ -82,19 +87,49 @@ const dividendsForYear = computed(() => {
           return acc;
         }, 0);
 
-      // TODO: Either use a nested array as the map value or map for each instrument in each month
-      if (instrumentAmountAtCurrentMonth > 0) {
-        ordersOfMonth.splice(0, 1, {
-          month,
-          instrumentAmount: instrumentAmountAtCurrentMonth,
-          dividends: dividendsOfCurrentMonth,
+      if (dividendsOfCurrentMonth.length > 0) {
+        const dividendsWihPayment = dividendsOfCurrentMonth.map(dividend => {
+          let sourceTax: number | null = null;
+          let payment = dividend.amount * instrumentAmountAtCurrentMonth;
+
+          if (instrument.instrument!.company.countryOfOrigin === 'US') {
+            sourceTax = payment * .15;
+            payment = payment - sourceTax;
+          }
+
+          let formattedSourceTax = sourceTax != null
+            ? formatNumber(sourceTax, { style: 'currency', currency: 'EUR' })
+            : sourceTax;
+
+          return {
+            // Dividend Information
+            id: dividend.id,
+            paymentDate: dividend.paymentDate,
+            recordDate: dividend.recordDate,
+            exDate: dividend.exDate,
+            amount: dividend.amount,
+            amountFormatted: formatNumber(dividend.amount, { style: 'currency', currency: 'EUR' }),
+            // Payments
+            paymentDateTimestamp: new Date(dividend.paymentDate).getTime(),
+            amountOwned: instrumentAmountAtCurrentMonth,
+            sourceTax,
+            sourceTaxFormatted: formattedSourceTax,
+            payment,
+            paymentFormatted: formatNumber(payment, { style: 'currency', currency: 'EUR' }),
+            // Instrument
+            isin: instrument.instrument?.isin,
+            instrumentName: instrument.instrument?.shortName,
+          } as CalendarDividend;
         });
+
+        dividendsOfMonth.push(...dividendsWihPayment.sort((a, b) => a.paymentDateTimestamp - b.paymentDateTimestamp));
+
+        monthsMap.set(month, dividendsOfMonth);
       }
     });
-
   }
 
-  return [...monthsMap.values()];
+  return ([...monthsMap.values()] as unknown as CalendarDividend[][]);
 });
 
 function getInstrumentsData () {
@@ -130,10 +165,14 @@ onBeforeRouteLeave(() => {
 
 <template>
   <main class="portfolio-view view">
-
-    <pre class="text-l">TODO: complete the dividend calendar aggretation</pre>
-
-    <div>{{ dividendsForYear }}</div>
+    <div class="dividend-calendar">
+      <div class="month" v-for="(monthlyDividends, index) of dividendsForYear" :key="index">
+        {{ index + 1 }}
+        <div class="dividend" v-for="dividend of monthlyDividends" :key="dividend.id">
+          {{ dividend }}
+        </div>
+      </div>
+    </div>
 
     <h1>{{ portfolioStore.detailPortfolio?.name }}</h1>
     <div class="portfolio-value text-m">{{ formatNumber(portfolioValue, { style: 'currency', currency: 'EUR' }) }}</div>
@@ -149,6 +188,11 @@ onBeforeRouteLeave(() => {
 </template>
 
 <style scoped lang="scss">
+.month {
+  background-color: darkblue;
+  margin-block-end: 1rem;
+}
+
 .instruments-list {
   padding: 0;
   padding-block-start: 1rem;

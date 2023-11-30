@@ -76,6 +76,18 @@ export type DividendWithPayment = Dividend & {
   paymentAmount: string;
 }
 
+export interface CalendarDividend extends Pick<Dividend, 'id' | 'paymentDate' | 'recordDate' | 'exDate' | 'amount'> {
+  amountFormatted: string;
+  paymentDateTimestamp: number;
+  amountOwned: number;
+  sourceTax: number;
+  sourceTaxFormatted: string;
+  payment: number;
+  paymentFormatted: string;
+  isin: string;
+  instrumentName: string;
+}
+
 enum DividendType {
   Cash = 'cash',
   Unknown = 'unknown',
