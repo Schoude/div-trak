@@ -7,7 +7,7 @@ import TRAssetLoader from '@/components/loaders/TRAssetLoader.vue';
 import { usePortfolioStore } from '@/stores/portfolio-store';
 import type { Dividend, DividendWithPayment } from '@/types/tr/events/stock-details';
 import type { TickerEvent } from '@/types/tr/events/ticker';
-import type { Stock } from '@/types/tr/instrument';
+import { type Stock } from '@/types/tr/instrument';
 import { formatNumber } from '@/utils/intl/currency';
 import { computed } from 'vue';
 import InstrumentPortfolioInfo from '../instrument/InstrumentPortfolioInfo.vue';
@@ -65,6 +65,7 @@ const calculatedDividendPayments = computed<DividendWithPayment[]>(() => aggrega
   const orders = portfolioStore.detailPortfolio?.orders;
 
   let orderAmountExDate = 0;
+  let sourceTax: number | null = null;
 
   orders
     ?.filter(order => order.isin === props.stock.instrument.isin)
@@ -74,8 +75,20 @@ const calculatedDividendPayments = computed<DividendWithPayment[]>(() => aggrega
       }
     });
 
+  let paymentAmount = dividend.amount * orderAmountExDate;
+
+  if (props.stock.instrument.company.countryOfOrigin === 'US') {
+    sourceTax = paymentAmount * .15;
+    paymentAmount = paymentAmount - sourceTax;
+  }
+
+  let formattedSourceTax = sourceTax != null
+    ? formatNumber(sourceTax, { style: 'currency', currency: 'EUR' })
+    : sourceTax;
+
   return {
     ...dividend,
+    sourceTax: formattedSourceTax,
     amountAtExDate: orderAmountExDate,
     paymentAmount: formatNumber(dividend.amount * orderAmountExDate, { style: 'currency', currency: 'EUR' }),
   };

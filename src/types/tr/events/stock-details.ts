@@ -72,6 +72,7 @@ export interface Dividend {
 
 export type DividendWithPayment = Dividend & {
   amountAtExDate: number;
+  sourceTax: string | null;
   paymentAmount: string;
 }
 

@@ -20,6 +20,9 @@ const isPastDividend = computed(() => {
     <div class="inner">
       <template v-if="'paymentAmount' in dividend">
         <div><b>{{ dividend.paymentAmount }}</b> • <small>({{ dividend.amountAtExDate }} pcs.)</small></div>
+        <template v-if="dividend.sourceTax">
+          <pre class="text-xs">Source Tax: {{ dividend.sourceTax }}</pre>
+        </template>
       </template>
 
       <DividendInfo v-if="dividend" :dividend="dividend" />
