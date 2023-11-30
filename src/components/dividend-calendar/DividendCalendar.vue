@@ -155,4 +155,8 @@ const getDividendsOfCurrentMonth = computed(() => {
 .dividend-calendar {
   margin-block: 1.125rem;
 }
+
+.aggregated {
+  margin-block-end: 1rem;
+}
 </style>

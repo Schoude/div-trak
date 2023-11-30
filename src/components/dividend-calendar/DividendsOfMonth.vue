@@ -111,7 +111,11 @@ onMounted(() => {
     <div id="chart"></div>
 
     <ul class="dividends-list">
-      <li class="dividend" v-for="dividend of dividends" :key="dividend.id">{{ dividend.instrumentName }}</li>
+      <li class="dividend" v-for="dividend of dividends" :key="dividend.id">
+        <span class="name">{{ dividend.instrumentName }}</span>
+        <span class="payment"> • <b>{{ dividend.paymentFormatted }}</b> • </span>
+        <span class="date text-s">@ {{ new Date(dividend.paymentDate).toLocaleDateString() }}</span>
+      </li>
     </ul>
   </div>
 </template>
@@ -166,5 +170,17 @@ onMounted(() => {
 .dividends-list {
   padding: 0;
   list-style: none;
+  display: flex;
+  gap: .75rem;
+  flex-wrap: wrap;
+
+  .dividend {
+    block-size: max-content;
+    background-color: rgba(0, 0, 0, 0.6);
+    border: 1px solid var(--color-accent-1);
+    padding: 0.25rem 0.75rem;
+    line-height: 1;
+    border-radius: 50px;
+  }
 }
 </style>
