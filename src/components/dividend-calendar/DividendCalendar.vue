@@ -118,7 +118,7 @@ const dividendsCalendarData = computed(() => {
 
 const getDividendsOfCurrentMonth = computed(() => {
   const currentMonth = new Date().getUTCMonth();
-  const dividendsOfCurrentMonth = dividendsCalendarData.value[currentMonth];
+  const dividendsOfCurrentMonth = dividendsCalendarData.value[currentMonth]!.sort((a, b) => b.payment - a.payment);
 
   const aggregatedAmount = dividendsOfCurrentMonth.reduce((acc, dividend) => {
     acc += dividend.payment;
@@ -128,7 +128,7 @@ const getDividendsOfCurrentMonth = computed(() => {
 
   return {
     aggregatedAmount: formatNumber(aggregatedAmount, { style: 'currency', currency: 'EUR' }),
-    dividends: dividendsOfCurrentMonth
+    dividends: dividendsOfCurrentMonth,
   };
 });
 </script>
@@ -136,12 +136,10 @@ const getDividendsOfCurrentMonth = computed(() => {
 <template>
   <div class="dividend-calendar">
     <div class="current-month">
-      <div class="aggregated text-m">Monthly payment: {{ getDividendsOfCurrentMonth.aggregatedAmount }}</div>
-      
+      <div class="aggregated-amount text-m">Payment this month: {{ getDividendsOfCurrentMonth.aggregatedAmount }}</div>
+
       <DividendsOfMonth :dividends="getDividendsOfCurrentMonth.dividends" />
     </div>
-
-    <hr>
 
     <!-- <div class="month-list">
       <div class="month" v-for="(monthlyDividends, index) of dividendsCalendarData" :key="index">
@@ -152,3 +150,9 @@ const getDividendsOfCurrentMonth = computed(() => {
     </div> -->
   </div>
 </template>
+
+<style lang="scss" scoped>
+.dividend-calendar {
+  margin-block: 1.125rem;
+}
+</style>

@@ -4,7 +4,8 @@
 @use 'layout';
 
 body {
-  font-family: 'Overlock', sans-serif;
+  --font-family: 'Overlock', sans-serif;
+  font-family: var(--font-family);
   background-color: rgb(18, 18, 18);
 }
 
