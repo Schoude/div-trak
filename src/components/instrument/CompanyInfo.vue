@@ -103,6 +103,7 @@ h2 {
       block-size: initial;
       max-inline-size: 120ch;
       text-align: justify;
+      margin-inline: auto;
     }
   }
 }
