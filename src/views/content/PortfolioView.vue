@@ -26,8 +26,7 @@ const portfolioValue = computed(() => portfolioStore.instruments.reduce((acc, in
   return acc;
 }, 0));
 
-const dividendsForYear = computed(() => {
-  // TODO: Or use const monthsMap = new Map<number, Map<string, unknown[]>>([
+const dividendsCalendarData = computed(() => {
   const monthsMap = new Map<number, unknown[]>([
     [1, []],
     [2, []],
@@ -132,6 +131,22 @@ const dividendsForYear = computed(() => {
   return ([...monthsMap.values()] as unknown as CalendarDividend[][]);
 });
 
+const getDividendsOfCurrentMonth = computed(() => {
+  const currentMonth = new Date().getUTCMonth();
+  const dividendsOfCurrentMonth = dividendsCalendarData.value[currentMonth];
+
+  const aggregatedAmount = dividendsOfCurrentMonth.reduce((acc, dividend) => {
+    acc += dividend.amount;
+
+    return acc;
+  }, 0);
+
+  return {
+    aggregatedAmount: formatNumber(aggregatedAmount, { style: 'currency', currency: 'EUR' }),
+    dividends: dividendsOfCurrentMonth
+  };
+});
+
 function getInstrumentsData () {
   portfolioStore.detailPortfolio?.isins.forEach(isin => {
     const existingInsrument = instrumentStore.getInstrument(isin);
@@ -165,16 +180,24 @@ onBeforeRouteLeave(() => {
 
 <template>
   <main class="portfolio-view view">
-    <div class="dividend-calendar">
-      <div class="month" v-for="(monthlyDividends, index) of dividendsForYear" :key="index">
+    <h1>{{ portfolioStore.detailPortfolio?.name }}</h1>
+
+    <div class="current-month">
+      <div class="aggregated text-m">Monthly dividends: {{ getDividendsOfCurrentMonth.aggregatedAmount }}</div>
+      <div class="dividend" v-for="dividend of getDividendsOfCurrentMonth.dividends" :key="dividend.id">
+        {{ dividend }}
+      </div>
+    </div>
+
+    <!-- <div class="dividend-calendar">
+      <div class="month" v-for="(monthlyDividends, index) of dividendsCalendarData" :key="index">
         {{ index + 1 }}
         <div class="dividend" v-for="dividend of monthlyDividends" :key="dividend.id">
           {{ dividend }}
         </div>
       </div>
-    </div>
+    </div> -->
 
-    <h1>{{ portfolioStore.detailPortfolio?.name }}</h1>
     <div class="portfolio-value text-m">{{ formatNumber(portfolioValue, { style: 'currency', currency: 'EUR' }) }}</div>
 
     <div class="instruments">
