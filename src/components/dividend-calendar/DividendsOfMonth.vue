@@ -10,11 +10,11 @@ const props = defineProps<{
 const margin = {
   top: 16,
   right: 0,
-  bottom: 100,
+  bottom: 16,
   left: 60
 };
 const width = 200 - margin.left - margin.right;
-const height = 300 - margin.top - margin.bottom;
+const height = 150 - margin.top - margin.bottom;
 
 const defaultFormat = formatLocale({
   decimal: ',',
@@ -23,7 +23,38 @@ const defaultFormat = formatLocale({
   currency: ['', ' €']
 });
 
+
 onMounted(() => {
+  const tooltip = select('#chart')
+    .append('div')
+    .attr('class', 'tooltip text-s');
+
+  const mouseover = function (event: MouseEvent, d: CalendarDividend) {
+    tooltip
+      .html(`${d.instrumentName} • ${d.paymentFormatted}`)
+      .style('opacity', 1);
+
+    const rect = event.target as SVGRectElement;
+    select(rect)
+      .attr('class', 'hovered');
+  };
+
+  const mousemove = function (event: MouseEvent) {
+    tooltip
+      .style('transform', 'translateY(0%)')
+      .style('left', (event.x) / 2 - 140 + 'px')
+      .style('top', (event.y) / 2 - 130 + 'px');
+  };
+
+  const mouseleave = function (event: MouseEvent) {
+    tooltip
+      .style('opacity', 0);
+
+    const rect = event.target as SVGRectElement;
+    select(rect)
+      .attr('class', '');
+  };
+
   setTimeout(() => {
     const svg = select('#chart')
       .append('svg')
@@ -40,10 +71,7 @@ onMounted(() => {
 
     svg.append('g')
       .attr('transform', `translate(0, ${height})`)
-      .call(axisBottom(x))
-      .selectAll('text')
-      .attr('transform', 'translate(20,0), rotate(-20)')
-      .style('text-anchor', 'end');
+      .call(axisBottom(x).tickSize(0).tickValues([]));
 
     // Add Y axis
     const maxValue = max(props.dividends.map(d => d.payment));
@@ -61,7 +89,7 @@ onMounted(() => {
       .attr('class', 'axis-y');
 
     // Bars
-    svg.selectAll('mybar')
+    const bars = svg.selectAll('mybar')
       .data(props.dividends)
       .join('rect')
       .attr('x', d => x(d.instrumentName) as number)
@@ -69,6 +97,11 @@ onMounted(() => {
       .attr('width', x.bandwidth())
       .attr('height', d => height - y(d.payment))
       .attr('fill', '#242b35');
+
+    bars
+      .on('mouseover', mouseover)
+      .on('mousemove', mousemove)
+      .on('mouseleave', mouseleave);
   }, 800);
 });
 </script>
@@ -92,7 +125,20 @@ onMounted(() => {
 
 #chart {
   inline-size: 200px;
-  block-size: 300px;
+  block-size: 150px;
+  position: relative;
+
+  &:deep(.tooltip) {
+    opacity: 0;
+    position: absolute;
+    white-space: nowrap;
+    background-color: #0a080b;
+    border: 1px solid rgb(48, 48, 48);
+    padding: 0.55rem 0.85rem;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    transition: opacity .25s ease-out;
+  }
 
   &:deep(svg) {
     .axis-y {
@@ -104,6 +150,14 @@ onMounted(() => {
     .tick {
       text {
         font-family: var(--font-family);
+      }
+    }
+
+    rect {
+      transition: fill .25s ease-out;
+
+      &.hovered {
+        fill: #3d4a5b;
       }
     }
   }
