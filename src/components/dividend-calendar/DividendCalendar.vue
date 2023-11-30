@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import DividendsOfMonth from '@/components/dividend-calendar/DividendsOfMonth.vue';
 import { useInstrumentsStore } from '@/stores/instruments';
 import { usePortfolioStore } from '@/stores/portfolio-store';
 import type { CalendarDividend, Dividend } from '@/types/tr/events/stock-details';
@@ -75,7 +76,7 @@ const dividendsCalendarData = computed(() => {
           let sourceTax: number | null = null;
           let payment = dividend.amount * instrumentAmountAtCurrentMonth;
 
-          if (instrument.instrument!.company.countryOfOrigin === 'US') {
+          if (instrument.instrument?.company.countryOfOrigin === 'US') {
             sourceTax = payment * .15;
             payment = payment - sourceTax;
           }
@@ -120,7 +121,7 @@ const getDividendsOfCurrentMonth = computed(() => {
   const dividendsOfCurrentMonth = dividendsCalendarData.value[currentMonth];
 
   const aggregatedAmount = dividendsOfCurrentMonth.reduce((acc, dividend) => {
-    acc += dividend.amount;
+    acc += dividend.payment;
 
     return acc;
   }, 0);
@@ -136,19 +137,18 @@ const getDividendsOfCurrentMonth = computed(() => {
   <div class="dividend-calendar">
     <div class="current-month">
       <div class="aggregated text-m">Monthly payment: {{ getDividendsOfCurrentMonth.aggregatedAmount }}</div>
-      <div class="dividend" v-for="dividend of getDividendsOfCurrentMonth.dividends" :key="dividend.id">
-        {{ dividend }}
-      </div>
+      
+      <DividendsOfMonth :dividends="getDividendsOfCurrentMonth.dividends" />
     </div>
 
     <hr>
 
-    <div class="month-list">
+    <!-- <div class="month-list">
       <div class="month" v-for="(monthlyDividends, index) of dividendsCalendarData" :key="index">
         <div class="dividend" v-for="dividend of monthlyDividends" :key="dividend.id">
           {{ dividend }}
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
