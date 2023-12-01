@@ -5,6 +5,7 @@ import { usePortfolioStore } from '@/stores/portfolio-store';
 import type { CalendarDividend, Dividend } from '@/types/tr/events/stock-details';
 import { formatNumber } from '@/utils/intl/currency';
 import { computed, ref } from 'vue';
+import ChartDividendsOfYear from './ChartDividendsOfYear.vue';
 
 const instrumentStore = useInstrumentsStore();
 const portfolioStore = usePortfolioStore();
@@ -71,7 +72,7 @@ const dividendsCalendarData = computed(() => {
           return acc;
         }, 0);
 
-      if (dividendsOfCurrentMonth.length > 0) {
+      if (dividendsOfCurrentMonth.length > 0 && instrumentAmountAtCurrentMonth > 0) {
         const dividendsWihPayment = dividendsOfCurrentMonth.map(dividend => {
           let sourceTax: number | null = null;
           let payment = dividend.amount * instrumentAmountAtCurrentMonth;
@@ -141,13 +142,7 @@ const getDividendsOfCurrentMonth = computed(() => {
       <ChartDividendsOfMonth :dividends="getDividendsOfCurrentMonth.dividends" />
     </div>
 
-    <!-- <div class="month-list">
-      <div class="month" v-for="(monthlyDividends, index) of dividendsCalendarData" :key="index">
-        <div class="dividend" v-for="dividend of monthlyDividends" :key="dividend.id">
-          {{ dividend }}
-        </div>
-      </div>
-    </div> -->
+    <ChartDividendsOfYear :dividends="dividendsCalendarData" />
   </div>
 </template>
 
