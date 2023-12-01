@@ -77,7 +77,7 @@ const calculatedDividendPayments = computed<DividendWithPayment[]>(() => aggrega
 
   let paymentAmount = dividend.amount * orderAmountExDate;
 
-  if (props.stock.instrument.company.countryOfOrigin === 'US') {
+  if (props.stock.instrument.company.countryOfOrigin === 'US' || props.stock.stockDetails?.company.countryCode === 'US') {
     sourceTax = paymentAmount * .15;
     paymentAmount = paymentAmount - sourceTax;
   }

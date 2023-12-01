@@ -62,10 +62,22 @@ const dividendsCalendarData = computed(() => {
 
       const instrumentAmountAtCurrentMonth = portfolioStore.detailPortfolio!
         .orders
-        .filter((order) =>
-          order.isin === instrument.instrument?.isin &&
-          order.year === year.value && order.month <= month
-        )
+        .filter((order) => {
+          let keep = false;
+
+          // Keep Orders of past years
+          if (order.isin === instrument.instrument?.isin &&
+            order.year < year.value) {
+            keep = true;
+          }
+
+          // Keep Orders from this year including the current month
+          if (order.isin === instrument.instrument?.isin && order.year == year.value && order.month <= month) {
+            keep = true;
+          }
+
+          return keep;
+        })
         .reduce((acc, order) => {
           acc += order.amount;
 
@@ -78,12 +90,12 @@ const dividendsCalendarData = computed(() => {
           let payment = dividend.amount * instrumentAmountAtCurrentMonth;
 
           if (instrument.instrument?.company.countryOfOrigin === 'US' || instrument.stockDetails?.company.countryCode === 'US') {
+            console.log(instrument.instrument?.shortName);
+
             sourceTax = payment * .15;
             payment = payment - sourceTax;
-          } else {
-            console.log(instrument.instrument?.company.countryOfOrigin);
 
-            console.log(instrument.instrument?.shortName);
+            console.log(sourceTax);
 
           }
 
