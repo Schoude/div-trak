@@ -27,6 +27,7 @@ const authStore = useAuthStore();
 function onSuccess () {
   amountOrder.value = null;
   dateOrder.value = '';
+  executionType.value = 'normal';
 }
 
 const canSell = computed(() => props.amountOwned > 0 && amountOrder.value! <= props.amountOwned);
