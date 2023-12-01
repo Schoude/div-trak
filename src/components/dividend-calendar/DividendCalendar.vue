@@ -137,7 +137,7 @@ const getDividendsOfCurrentMonth = computed(() => {
 <template>
   <div class="dividend-calendar">
     <div class="current-month">
-      <div class="aggregated-amount text-m">Payment this month: {{ getDividendsOfCurrentMonth.aggregatedAmount }}</div>
+      <h2 class="aggregated-amount">Payment this month: {{ getDividendsOfCurrentMonth.aggregatedAmount }}</h2>
 
       <ChartDividendsOfMonth :dividends="getDividendsOfCurrentMonth.dividends" />
     </div>

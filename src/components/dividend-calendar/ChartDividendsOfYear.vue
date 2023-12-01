@@ -118,9 +118,7 @@ onMounted(() => {
 
 <template>
   <div class="chart-dividends-of-year">
-    <div class="text-m">
-      Dividend Calendar
-    </div>
+    <h2>Dividend Calendar</h2>
     <div ref="chart" class="dividends-yearly"></div>
   </div>
 </template>
