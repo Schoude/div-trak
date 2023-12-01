@@ -152,9 +152,10 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .dividends-yearly {
-  min-inline-size: 1200px;
-  block-size: 300px;
+  min-block-size: 300px;
   position: relative;
+  overflow-x: auto;
+  padding-block-end: 1rem;
 
   &:deep(.tooltip) {
     opacity: 0;
@@ -170,7 +171,7 @@ onMounted(() => {
 
   &:deep(svg) {
     margin-inline: auto;
-    display: block;
+    max-width: initial;
 
     .axis-y,
     .axis-x {
