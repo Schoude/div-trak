@@ -12,11 +12,11 @@ const chart = ref<HTMLElement | null>(null);
 const margin = {
   top: 16,
   right: 0,
-  bottom: 16,
+  bottom: 24,
   left: 60
 };
 const width = 1200 - margin.left - margin.right;
-const height = 300 - margin.top - margin.bottom;
+const height = 320 - margin.top - margin.bottom;
 
 const defaultFormat = formatLocale({
   decimal: ',',
@@ -24,6 +24,20 @@ const defaultFormat = formatLocale({
   grouping: [3],
   currency: ['', ' €']
 });
+const monthNamesMap = new Map([
+  [0, 'Jan'],
+  [1, 'Feb'],
+  [2, 'Mar'],
+  [3, 'Apr'],
+  [4, 'May'],
+  [5, 'Jun.'],
+  [6, 'Jul'],
+  [7, 'Aug'],
+  [8, 'Sep'],
+  [9, 'Oct'],
+  [10, 'Nov'],
+  [11, 'Dec'],
+]);
 
 onMounted(() => {
   setTimeout(() => {
@@ -32,8 +46,8 @@ onMounted(() => {
     const data = props
       .dividends
       .map((dividendsOfMonth, index) => {
-        const dataPoint: Record<string, number> = {
-          group: index
+        const dataPoint: Record<string, string | number> = {
+          group: monthNamesMap.get(index)!
         };
 
         dividendsOfMonth.forEach(dividend => {
@@ -44,7 +58,7 @@ onMounted(() => {
         return dataPoint;
       });
 
-    const groups = props.dividends.map((_, index) => index);
+    const groups = props.dividends.map((_, index) => monthNamesMap.get(index)!);
     const aggrgateDividendsInMonth = props.dividends.map(dividend => dividend.reduce((acc, dividend) => {
       acc += dividend.payment;
 
@@ -61,13 +75,13 @@ onMounted(() => {
 
     // Add X axis (bottom)
     const xBottom = scaleBand()
-      // @ts-expect-error bad lib types
       .domain(groups)
       .range([0, width])
       .padding(0.2);
     svg.append('g')
       .attr('transform', `translate(0, ${height})`)
-      .call(axisBottom(xBottom).tickSizeOuter(0));
+      .call(axisBottom(xBottom).tickSizeOuter(0))
+      .attr('class', 'axis-x');
 
     // Add Y axis
     const maxValue = max(aggrgateDividendsInMonth)!;
@@ -158,7 +172,8 @@ onMounted(() => {
     margin-inline: auto;
     display: block;
 
-    .axis-y {
+    .axis-y,
+    .axis-x {
       text {
         font-size: 13px;
       }
