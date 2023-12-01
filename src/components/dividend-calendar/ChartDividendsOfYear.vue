@@ -27,11 +27,28 @@ const defaultFormat = formatLocale({
 
 onMounted(() => {
   setTimeout(() => {
-    const groups = props.dividends.map((_, index) => index.toString());
-    const subgroups = props
+    const subgroups = new Set();
+    const data = props
       .dividends
-      .map(month => month);
-    // .flatMap(month => month.map(dividend => ({ name: dividend.instrumentName, payment: dividend.payment })));
+      .map((dividendsOfMonth, index) => {
+        const dataPoint: Record<string, number> = {
+          group: index
+        };
+
+        dividendsOfMonth.forEach(dividend => {
+          subgroups.add(dividend.instrumentName);
+          dataPoint[dividend.instrumentName] = dividend.payment;
+        });
+
+        return dataPoint;
+      });
+
+    const groups = props.dividends.map((_, index) => index);
+
+    console.log(data);
+    console.log(groups);
+
+
 
     const svg = select(chart.value)
       .append('svg')
@@ -50,7 +67,12 @@ onMounted(() => {
       .call(axisBottom(x).tickSizeOuter(0));
 
     // Add Y axis
-    const maxValue = max(props.dividends.flatMap(dividend => dividend.map(d => d.payment)));
+    const aggrgateDividendsInMonth = props.dividends.map(dividend => dividend.reduce((acc, dividend) => {
+      acc += dividend.payment;
+
+      return acc;
+    }, 0));
+    const maxValue = max(aggrgateDividendsInMonth);
 
     const y = scaleLinear()
       .domain([0, maxValue!])
@@ -66,7 +88,7 @@ onMounted(() => {
 
     // Add subgroups
     const color = scaleOrdinal()
-      .domain(subgroups)
+      .domain([...subgroups.values()])
       // Add colors until 10
       .range([
         '#C7EFCF',
@@ -76,7 +98,7 @@ onMounted(() => {
 
     //stack the data? --> stack per subgroup
     const stackedData = stack()
-      .keys(subgroups)(props.dividends);
+      .keys([...subgroups.values()])(data);
 
     // console.log(stackedData);
 
@@ -106,9 +128,7 @@ onMounted(() => {
         return y(d[1]);
       })
       .attr('height', function (d) {
-        // console.log(d);
-
-        return y(d[0]) - y(d[1]);
+        return !Number.isNaN(d[1]) ? y(d[0]) - y(d[1]) : 0;
       })
       .attr('width', x.bandwidth())
       .attr('stroke', 'grey');
