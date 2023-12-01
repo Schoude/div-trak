@@ -90,13 +90,8 @@ const dividendsCalendarData = computed(() => {
           let payment = dividend.amount * instrumentAmountAtCurrentMonth;
 
           if (instrument.instrument?.company.countryOfOrigin === 'US' || instrument.stockDetails?.company.countryCode === 'US') {
-            console.log(instrument.instrument?.shortName);
-
             sourceTax = payment * .15;
             payment = payment - sourceTax;
-
-            console.log(sourceTax);
-
           }
 
           let formattedSourceTax = sourceTax != null

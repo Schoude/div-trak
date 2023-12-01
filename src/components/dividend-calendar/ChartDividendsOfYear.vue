@@ -45,11 +45,6 @@ onMounted(() => {
 
     const groups = props.dividends.map((_, index) => index);
 
-    console.log(data);
-    console.log(groups);
-
-
-
     const svg = select(chart.value)
       .append('svg')
       .attr('width', width + margin.left + margin.right)
