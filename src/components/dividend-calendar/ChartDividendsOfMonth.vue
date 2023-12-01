@@ -42,9 +42,9 @@ onMounted(() => {
 
   const mousemove = function (event: MouseEvent) {
     tooltip
-      .style('transform', 'translateY(0%)')
-      .style('left', (event.x) / 2 - 140 + 'px')
-      .style('top', (event.y) / 2 - 130 + 'px');
+      .style('transform', 'translate(5%, -120%)')
+      .style('left', `${event.x}px`)
+      .style('top', `${event.y}px`);
   };
 
   const mouseleave = function (event: MouseEvent) {
@@ -133,11 +133,10 @@ onMounted(() => {
 .dividends-monthly {
   inline-size: 250px;
   block-size: 150px;
-  position: relative;
 
   &:deep(.tooltip) {
     opacity: 0;
-    position: absolute;
+    position: fixed;
     white-space: nowrap;
     background-color: #0a080b;
     border: 1px solid rgb(48, 48, 48);
@@ -145,6 +144,7 @@ onMounted(() => {
     border-radius: 8px;
     box-shadow: var(--shadow);
     transition: opacity .25s ease-out;
+    pointer-events: none;
   }
 
   &:deep(svg) {
