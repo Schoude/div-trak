@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import type { CalendarDividend } from '@/types/tr/events/stock-details';
 import { axisBottom, axisLeft, formatLocale, max, scaleBand, scaleLinear, select } from 'd3';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 
 const props = defineProps<{
   dividends: CalendarDividend[]
 }>();
+
+const chart = ref<HTMLElement | null>(null);
 
 const margin = {
   top: 16,
@@ -25,7 +27,7 @@ const defaultFormat = formatLocale({
 
 
 onMounted(() => {
-  const tooltip = select('#chart')
+  const tooltip = select(chart.value)
     .append('div')
     .attr('class', 'tooltip text-s');
 
@@ -56,7 +58,7 @@ onMounted(() => {
   };
 
   setTimeout(() => {
-    const svg = select('#chart')
+    const svg = select(chart.value)
       .append('svg')
       .attr('width', width + margin.left + margin.right)
       .attr('height', height + margin.top + margin.bottom)
@@ -108,7 +110,7 @@ onMounted(() => {
 
 <template>
   <div class="dividends-of-month">
-    <div id="chart"></div>
+    <div ref="chart" class="dividends-monthly"></div>
 
     <ul class="dividends-list">
       <li class="dividend" v-for="dividend of dividends" :key="dividend.id">
@@ -129,7 +131,7 @@ onMounted(() => {
   gap: 2rem;
 }
 
-#chart {
+.dividends-monthly {
   inline-size: 250px;
   block-size: 150px;
   position: relative;
