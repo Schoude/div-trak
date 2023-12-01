@@ -27,6 +27,7 @@ const defaultFormat = formatLocale({
 
 onMounted(() => {
   setTimeout(() => {
+    // START data setup
     const subgroups = new Set();
     const data = props
       .dividends
@@ -44,6 +45,12 @@ onMounted(() => {
       });
 
     const groups = props.dividends.map((_, index) => index);
+    const aggrgateDividendsInMonth = props.dividends.map(dividend => dividend.reduce((acc, dividend) => {
+      acc += dividend.payment;
+
+      return acc;
+    }, 0));
+    // END data setup
 
     const svg = select(chart.value)
       .append('svg')
@@ -52,21 +59,16 @@ onMounted(() => {
       .append('g')
       .attr('transform', `translate(${margin.left},${margin.top})`);
 
-    // Add X axis
-    const x = scaleBand()
+    // Add X axis (bottom)
+    const xBottom = scaleBand()
       .domain(groups)
       .range([0, width])
       .padding(0.2);
     svg.append('g')
       .attr('transform', `translate(0, ${height})`)
-      .call(axisBottom(x).tickSizeOuter(0));
+      .call(axisBottom(xBottom).tickSizeOuter(0));
 
     // Add Y axis
-    const aggrgateDividendsInMonth = props.dividends.map(dividend => dividend.reduce((acc, dividend) => {
-      acc += dividend.payment;
-
-      return acc;
-    }, 0));
     const maxValue = max(aggrgateDividendsInMonth);
 
     const y = scaleLinear()
@@ -75,7 +77,7 @@ onMounted(() => {
 
     const axisY = axisLeft(y)
       .tickFormat(defaultFormat.format('$.2f'))
-      .ticks(3);
+      .ticks(4);
 
     svg.append('g')
       .call(axisY)
@@ -94,8 +96,6 @@ onMounted(() => {
     //stack the data? --> stack per subgroup
     const stackedData = stack()
       .keys([...subgroups.values()])(data);
-
-    // console.log(stackedData);
 
     svg.append('g')
       .selectAll('g')
@@ -117,7 +117,7 @@ onMounted(() => {
       .attr('x', function (d) {
 
         // TOOD: this should be the month index
-        return x(d.data.group);
+        return xBottom(d.data.group);
       })
       .attr('y', function (d) {
         return y(d[1]);
@@ -125,7 +125,7 @@ onMounted(() => {
       .attr('height', function (d) {
         return !Number.isNaN(d[1]) ? y(d[0]) - y(d[1]) : 0;
       })
-      .attr('width', x.bandwidth())
+      .attr('width', xBottom.bandwidth())
       .attr('stroke', 'grey');
   }, 800);
 });
