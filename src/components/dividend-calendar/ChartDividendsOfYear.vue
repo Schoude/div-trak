@@ -90,9 +90,10 @@ onMounted(() => {
       .domain([...subgroups.values()])
       // Add colors until 10
       .range([
-        '#576981',
-        '#242b35',
-        '#3d4a5b',
+        'hsl(219, 20%, 36%)',
+        'hsl(219, 20%, 12%)',
+        'hsl(219, 20%, 24%)',
+        'hsl(219, 20%, 48%)',
       ]);
 
     //stack the data? --> stack per subgroup
@@ -137,7 +138,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .dividends-yearly {
-  inline-size: 1200px;
+  min-inline-size: 1200px;
   block-size: 300px;
   position: relative;
 
@@ -154,6 +155,9 @@ onMounted(() => {
   }
 
   &:deep(svg) {
+    margin-inline: auto;
+    display: block;
+
     .axis-y {
       text {
         font-size: 13px;
@@ -168,7 +172,7 @@ onMounted(() => {
 
     rect {
       transition: fill .25s ease-out;
-      stroke: none;
+      stroke: hsl(0, 0%, 30%);
 
       &.hovered {
         fill: #3d4a5b;
