@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import DividendsOfMonth from '@/components/dividend-calendar/DividendsOfMonth.vue';
+import ChartDividendsOfMonth from '@/components/dividend-calendar/ChartDividendsOfMonth.vue';
 import { useInstrumentsStore } from '@/stores/instruments';
 import { usePortfolioStore } from '@/stores/portfolio-store';
 import type { CalendarDividend, Dividend } from '@/types/tr/events/stock-details';
@@ -138,7 +138,7 @@ const getDividendsOfCurrentMonth = computed(() => {
     <div class="current-month">
       <div class="aggregated-amount text-m">Payment this month: {{ getDividendsOfCurrentMonth.aggregatedAmount }}</div>
 
-      <DividendsOfMonth :dividends="getDividendsOfCurrentMonth.dividends" />
+      <ChartDividendsOfMonth :dividends="getDividendsOfCurrentMonth.dividends" />
     </div>
 
     <!-- <div class="month-list">

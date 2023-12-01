@@ -25,7 +25,6 @@ const defaultFormat = formatLocale({
   currency: ['', ' €']
 });
 
-
 onMounted(() => {
   const tooltip = select(chart.value)
     .append('div')
@@ -109,7 +108,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="dividends-of-month">
+  <div class="chart-dividends-of-month">
     <div ref="chart" class="dividends-monthly"></div>
 
     <ul class="dividends-list">
@@ -125,7 +124,7 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
-.dividends-of-month {
+.chart-dividends-of-month {
   display: grid;
   grid-template-columns: auto 1fr;
   gap: 2rem;
