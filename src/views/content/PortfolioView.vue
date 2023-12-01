@@ -65,7 +65,7 @@ onBeforeRouteLeave(() => {
     <DividendCalendar />
 
     <div class="instruments">
-      <h2>Instruments</h2>
+      <h2>Instruments <small class="text-s">({{ portfolioStore.detailPortfolio?.isins.length }})</small></h2>
       <ul class="instruments-list" v-if="portfolioStore.instruments && portfolioStore.instruments?.length > 0">
         <InstrumentListItem :instrument="instrument" v-for="instrument of portfolioStore.instruments"
           :key="instrument?.instrument?.shortName" />

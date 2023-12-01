@@ -13,7 +13,7 @@ const margin = {
   bottom: 16,
   left: 60
 };
-const width = 200 - margin.left - margin.right;
+const width = 250 - margin.left - margin.right;
 const height = 150 - margin.top - margin.bottom;
 
 const defaultFormat = formatLocale({
@@ -112,9 +112,11 @@ onMounted(() => {
 
     <ul class="dividends-list">
       <li class="dividend" v-for="dividend of dividends" :key="dividend.id">
-        <span class="name">{{ dividend.instrumentName }}</span>
-        <span class="payment"> • <b>{{ dividend.paymentFormatted }}</b> • </span>
-        <span class="date text-s">@ {{ new Date(dividend.paymentDate).toLocaleDateString() }}</span>
+        <div class="name">{{ dividend.instrumentName }}</div>
+        <div class="metadata">
+          <span class="payment"><b>{{ dividend.paymentFormatted }}</b> • </span>
+          <span class="date text-s">@ {{ new Date(dividend.paymentDate).toLocaleDateString() }}</span>
+        </div>
       </li>
     </ul>
   </div>
@@ -128,7 +130,7 @@ onMounted(() => {
 }
 
 #chart {
-  inline-size: 200px;
+  inline-size: 250px;
   block-size: 150px;
   position: relative;
 
@@ -173,14 +175,19 @@ onMounted(() => {
   display: flex;
   gap: .75rem;
   flex-wrap: wrap;
+  block-size: max-content;
 
   .dividend {
     block-size: max-content;
     background-color: rgba(0, 0, 0, 0.6);
     border: 1px solid var(--color-accent-1);
-    padding: 0.25rem 0.75rem;
+    padding: 0.35rem .75rem;
     line-height: 1;
-    border-radius: 50px;
+    border-radius: 8px;
+
+    .metadata {
+      margin-block-start: .25rem;
+    }
   }
 }
 </style>
