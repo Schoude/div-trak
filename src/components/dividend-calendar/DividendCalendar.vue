@@ -160,10 +160,15 @@ const getDividendsOfCurrentMonth = computed(() => {
 
 <style lang="scss" scoped>
 .dividend-calendar {
-  margin-block: 1.125rem;
+  margin-block-start: 1.125rem;
+  margin-block-end: 2.125rem;
 }
 
 .aggregated-amount {
   margin-block-end: 1rem;
+}
+
+.current-month {
+  margin-block-end: 2.125rem;
 }
 </style>
