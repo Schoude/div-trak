@@ -61,6 +61,7 @@ onMounted(() => {
 
     // Add X axis (bottom)
     const xBottom = scaleBand()
+      // @ts-expect-error bad lib types
       .domain(groups)
       .range([0, width])
       .padding(0.2);
@@ -69,7 +70,7 @@ onMounted(() => {
       .call(axisBottom(xBottom).tickSizeOuter(0));
 
     // Add Y axis
-    const maxValue = max(aggrgateDividendsInMonth);
+    const maxValue = max(aggrgateDividendsInMonth)!;
 
     const y = scaleLinear()
       .domain([0, maxValue!])
@@ -85,45 +86,41 @@ onMounted(() => {
 
     // Add subgroups
     const color = scaleOrdinal()
+      // @ts-expect-error bad lib types
       .domain([...subgroups.values()])
       // Add colors until 10
       .range([
-        '#C7EFCF',
-        '#FE5F55',
-        '#EEF5DB',
+        '#576981',
+        '#242b35',
+        '#3d4a5b',
       ]);
 
     //stack the data? --> stack per subgroup
     const stackedData = stack()
+      // @ts-expect-error bad lib types
       .keys([...subgroups.values()])(data);
 
     svg.append('g')
       .selectAll('g')
-      // Enter in the stack data = loop key per key = group per group
       .data(stackedData)
       .enter()
       .append('g')
-      .attr('fill', function (d) {
-        return color(d.key) as string;
+      .attr('fill', (d) => {
+        return color((d as unknown as { key: string }).key) as string;
       })
       .selectAll('rect')
       // enter a second time = loop subgroup per subgroup to add all rectangles
-      .data(function (d) {
-
-        return d;
-      })
+      .data((d) => d)
       .enter()
       .append('rect')
-      .attr('x', function (d) {
-
-        // TOOD: this should be the month index
-        return xBottom(d.data.group);
+      .attr('x', (d) => {
+        return xBottom(((d as unknown as { data: { group: string } }).data).group) as unknown as string;
       })
       .attr('y', function (d) {
-        return y(d[1]);
+        return y(d[1] as unknown as number);
       })
       .attr('height', function (d) {
-        return !Number.isNaN(d[1]) ? y(d[0]) - y(d[1]) : 0;
+        return !Number.isNaN(d[1]) ? y(d[0] as unknown as number) - y(d[1] as unknown as number) : 0;
       })
       .attr('width', xBottom.bandwidth())
       .attr('stroke', 'grey');
@@ -171,6 +168,7 @@ onMounted(() => {
 
     rect {
       transition: fill .25s ease-out;
+      stroke: none;
 
       &.hovered {
         fill: #3d4a5b;
