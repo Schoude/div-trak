@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { CalendarDividend } from '@/types/tr/events/stock-details';
+import { formatNumber } from '@/utils/intl/currency';
 import { axisBottom, axisLeft, formatLocale, max, scaleBand, scaleLinear, scaleOrdinal, select, stack } from 'd3';
 import { onMounted, ref } from 'vue';
 
@@ -40,6 +41,39 @@ const monthNamesMap = new Map([
 ]);
 
 onMounted(() => {
+  const tooltip = select(chart.value)
+    .append('div')
+    .attr('class', 'tooltip text-s');
+
+  const mousemove = function (event: MouseEvent) {
+    tooltip
+      .style('transform', 'translate(5%, -120%)')
+      .style('left', `${event.x}px`)
+      .style('top', `${event.y}px`);
+  };
+
+  const mouseover = function (event: MouseEvent, d: { data: Record<string, number> }) {
+    // @ts-expect-error bad lib types
+    const name = (select(this.parentNode).datum() as { key: string }).key;
+    const value = formatNumber(d.data[name], { currency: 'EUR', style: 'currency' });
+    tooltip
+      .html(`${name} • ${value}`)
+      .style('opacity', 1);
+
+    const rect = event.target as SVGRectElement;
+    select(rect)
+      .attr('class', 'hovered');
+  };
+
+  const mouseleave = function (event: MouseEvent) {
+    tooltip
+      .style('opacity', 0);
+
+    const rect = event.target as SVGRectElement;
+    select(rect)
+      .attr('class', '');
+  };
+
   setTimeout(() => {
     // START data setup
     const subgroups = new Set();
@@ -138,7 +172,10 @@ onMounted(() => {
         return !Number.isNaN(d[1]) ? y(d[0] as unknown as number) - y(d[1] as unknown as number) : 0;
       })
       .attr('width', xBottom.bandwidth())
-      .attr('stroke', 'grey');
+      .attr('stroke', 'grey')
+      .on('mouseover', mouseover)
+      .on('mousemove', mousemove)
+      .on('mouseleave', mouseleave);
   }, 800);
 });
 </script>
@@ -158,7 +195,7 @@ onMounted(() => {
 
   &:deep(.tooltip) {
     opacity: 0;
-    position: absolute;
+    position: fixed;
     white-space: nowrap;
     background-color: #0a080b;
     border: 1px solid rgb(48, 48, 48);
@@ -166,6 +203,7 @@ onMounted(() => {
     border-radius: 8px;
     box-shadow: var(--shadow);
     transition: opacity .25s ease-out;
+    pointer-events: none;
   }
 
   &:deep(svg) {
@@ -182,15 +220,6 @@ onMounted(() => {
     .tick {
       text {
         font-family: var(--font-family);
-      }
-    }
-
-    rect {
-      transition: fill .25s ease-out;
-      stroke: hsl(0, 0%, 30%);
-
-      &.hovered {
-        fill: #3d4a5b;
       }
     }
   }
