@@ -77,7 +77,7 @@ onMounted(() => {
     const xBottom = scaleBand()
       .domain(groups)
       .range([0, width])
-      .padding(0.2);
+      .padding(0.1);
     svg.append('g')
       .attr('transform', `translate(0, ${height})`)
       .call(axisBottom(xBottom).tickSizeOuter(0))
@@ -152,10 +152,9 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .dividends-yearly {
-  min-block-size: 300px;
+  min-block-size: 335px;
   position: relative;
   overflow-x: auto;
-  padding-block-end: 1rem;
 
   &:deep(.tooltip) {
     opacity: 0;
