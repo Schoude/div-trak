@@ -71,6 +71,12 @@ export function useTRSocket () {
         instrument: eventData.jsonObject,
         tickerEventId: eventData.eventId + 2,
       });
+
+      if (eventData.jsonObject.typeId === 'stock') {
+        sendMessage(`sub ${runningEventId.value} {"type":"stockDetails","id":"${eventData.jsonObject.isin}","jurisdiction":"DE"}`);
+      } else if (eventData.jsonObject.typeId === 'fund') {
+        sendMessage(`sub ${runningEventId.value} {"type":"etfDetails","id":"${eventData.jsonObject.isin}","jurisdiction":"DE"}`);
+      }
     }
 
     // 3) Details of a stock | "type":"stockDetails"
@@ -83,7 +89,7 @@ export function useTRSocket () {
     // 4) Ticker of an instrument | "type":"ticker"
     if (isTickerEvent(eventData)) {
       ticker.setTicker(eventData.eventId, eventData.jsonObject);
-      
+
       return;
     }
 
