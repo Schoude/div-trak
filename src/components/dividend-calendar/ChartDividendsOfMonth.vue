@@ -50,71 +50,69 @@ onMounted(() => {
       .attr('class', '');
   };
 
-  setTimeout(() => {
-    const svg = select(chart.value)
-      .append('svg')
-      .attr('width', width + margin.left + margin.right)
-      .attr('height', height + margin.top + margin.bottom)
-      .append('g')
-      .attr('transform', `translate(${margin.left},${margin.top})`);
+  const svg = select(chart.value)
+    .append('svg')
+    .attr('width', width + margin.left + margin.right)
+    .attr('height', height + margin.top + margin.bottom)
+    .append('g')
+    .attr('transform', `translate(${margin.left},${margin.top})`);
 
-    // X axis
-    const x = scaleBand()
-      .range([0, width])
-      .domain(props.dividends.map(d => d.instrumentName))
-      .padding(0.2);
+  // X axis
+  const x = scaleBand()
+    .range([0, width])
+    .domain(props.dividends.map(d => d.instrumentName))
+    .padding(0.2);
 
-    svg.append('g')
-      .attr('transform', `translate(0, ${height})`)
-      .call(axisBottom(x).tickSize(0).tickValues([]));
+  svg.append('g')
+    .attr('transform', `translate(0, ${height})`)
+    .call(axisBottom(x).tickSize(0).tickValues([]));
 
-    // Add Y axis
-    const maxValue = max(props.dividends.map(d => d.payment));
+  // Add Y axis
+  const maxValue = max(props.dividends.map(d => d.payment));
 
-    const y = scaleLinear()
-      .domain([0, maxValue!])
-      .range([height, 0]);
+  const y = scaleLinear()
+    .domain([0, maxValue!])
+    .range([height, 0]);
 
-    const axisY = axisLeft(y)
-      .tickFormat(defaultFormat.format('$.2f'))
-      .ticks(3);
+  const axisY = axisLeft(y)
+    .tickFormat(defaultFormat.format('$.2f'))
+    .ticks(3);
 
-    svg.append('g')
-      .call(axisY)
-      .attr('class', 'axis-y');
+  svg.append('g')
+    .call(axisY)
+    .attr('class', 'axis-y');
 
-      const color = scaleOrdinal()
-      .domain(props.dividends.map(d => d.instrumentName))
-      .range([
-        // orange to yellow
-        'hsl(17, 96%, 64%, .8)',
-        'hsl(29, 98%, 63%, .8)',
-        'hsl(10, 96%, 62%, .8)',
-        'hsl(38, 98%, 63%, .8)',
-        // purple to pink
-        'hsl(281, 87%, 29%, .8)',
-        'hsl(329, 91%, 41%, .8)',
-        'hsl(333, 87%, 52%, .8)',
-        'hsl(335, 98%, 57%, .8)',
-      ]);
+  const color = scaleOrdinal()
+    .domain(props.dividends.map(d => d.instrumentName))
+    .range([
+      // orange to yellow
+      'hsl(17, 96%, 64%, .8)',
+      'hsl(29, 98%, 63%, .8)',
+      'hsl(10, 96%, 62%, .8)',
+      'hsl(38, 98%, 63%, .8)',
+      // purple to pink
+      'hsl(281, 87%, 29%, .8)',
+      'hsl(329, 91%, 41%, .8)',
+      'hsl(333, 87%, 52%, .8)',
+      'hsl(335, 98%, 57%, .8)',
+    ]);
 
-    // Bars
-    const bars = svg.selectAll('mybar')
-      .data(props.dividends)
-      .join('rect')
-      .attr('x', d => x(d.instrumentName) as number)
-      .attr('y', d => y(d.payment))
-      .attr('width', x.bandwidth())
-      .attr('height', d => height - y(d.payment))
-      .attr('fill', (d) => {
-        return color((d as unknown as { instrumentName: string }).instrumentName) as string;
-      });
+  // Bars
+  const bars = svg.selectAll('mybar')
+    .data(props.dividends)
+    .join('rect')
+    .attr('x', d => x(d.instrumentName) as number)
+    .attr('y', d => y(d.payment))
+    .attr('width', x.bandwidth())
+    .attr('height', d => height - y(d.payment))
+    .attr('fill', (d) => {
+      return color((d as unknown as { instrumentName: string }).instrumentName) as string;
+    });
 
-    bars
-      .on('mouseover', mouseover)
-      .on('mousemove', mousemove)
-      .on('mouseleave', mouseleave);
-  }, 800);
+  bars
+    .on('mouseover', mouseover)
+    .on('mousemove', mousemove)
+    .on('mouseleave', mouseleave);
 });
 </script>
 

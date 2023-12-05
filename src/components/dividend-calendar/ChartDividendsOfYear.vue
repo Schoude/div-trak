@@ -67,114 +67,112 @@ onMounted(() => {
     detailMonth.value = monthIndex!;
   };
 
-  setTimeout(() => {
-    // START data setup
-    const subgroups = new Set();
-    const data = props
-      .dividends
-      .map((dividendsOfMonth, index) => {
-        const dataPoint: Record<string, string | number> = {
-          group: monthNamesMap.get(index)!
-        };
+  // START data setup
+  const subgroups = new Set();
+  const data = props
+    .dividends
+    .map((dividendsOfMonth, index) => {
+      const dataPoint: Record<string, string | number> = {
+        group: monthNamesMap.get(index)!
+      };
 
-        dividendsOfMonth.forEach(dividend => {
-          subgroups.add(dividend.instrumentName);
-          dataPoint[dividend.instrumentName] = dividend.payment;
-        });
-
-        return dataPoint;
+      dividendsOfMonth.forEach(dividend => {
+        subgroups.add(dividend.instrumentName);
+        dataPoint[dividend.instrumentName] = dividend.payment;
       });
 
-    const groups = props.dividends.map((_, index) => monthNamesMap.get(index)!);
-    const aggrgateDividendsInMonth = props.dividends.map(dividend => dividend.reduce((acc, dividend) => {
-      acc += dividend.payment;
+      return dataPoint;
+    });
 
-      return acc;
-    }, 0));
-    // END data setup
+  const groups = props.dividends.map((_, index) => monthNamesMap.get(index)!);
+  const aggrgateDividendsInMonth = props.dividends.map(dividend => dividend.reduce((acc, dividend) => {
+    acc += dividend.payment;
 
-    const svg = select(chart.value)
-      .append('svg')
-      .attr('width', width + margin.left + margin.right)
-      .attr('height', height + margin.top + margin.bottom)
-      .append('g')
-      .attr('transform', `translate(${margin.left},${margin.top})`);
+    return acc;
+  }, 0));
+  // END data setup
 
-    // Add X axis (bottom)
-    const xBottom = scaleBand()
-      .domain(groups)
-      .range([0, width])
-      .padding(0.1);
-    svg.append('g')
-      .attr('transform', `translate(0, ${height})`)
-      .call(axisBottom(xBottom).tickSizeOuter(0))
-      .attr('class', 'axis-x');
+  const svg = select(chart.value)
+    .append('svg')
+    .attr('width', width + margin.left + margin.right)
+    .attr('height', height + margin.top + margin.bottom)
+    .append('g')
+    .attr('transform', `translate(${margin.left},${margin.top})`);
 
-    // Add Y axis
-    const maxValue = max(aggrgateDividendsInMonth)!;
+  // Add X axis (bottom)
+  const xBottom = scaleBand()
+    .domain(groups)
+    .range([0, width])
+    .padding(0.1);
+  svg.append('g')
+    .attr('transform', `translate(0, ${height})`)
+    .call(axisBottom(xBottom).tickSizeOuter(0))
+    .attr('class', 'axis-x');
 
-    const y = scaleLinear()
-      .domain([0, maxValue!])
-      .range([height, 0]);
+  // Add Y axis
+  const maxValue = max(aggrgateDividendsInMonth)!;
 
-    const axisY = axisLeft(y)
-      .tickFormat(defaultFormat.format('$.2f'))
-      .ticks(4);
+  const y = scaleLinear()
+    .domain([0, maxValue!])
+    .range([height, 0]);
 
-    svg.append('g')
-      .call(axisY)
-      .attr('class', 'axis-y');
+  const axisY = axisLeft(y)
+    .tickFormat(defaultFormat.format('$.2f'))
+    .ticks(4);
 
-    // Add subgroups
-    const color = scaleOrdinal()
-      // @ts-expect-error bad lib types
-      .domain([...subgroups.values()])
-      .range([
-        // purple to pink
-        'hsl(281, 87%, 29%, .8)',
-        'hsl(329, 91%, 41%, .8)',
-        'hsl(333, 87%, 52%, .8)',
-        'hsl(335, 98%, 57%, .8)',
-        // orange to yellow
-        'hsl(17, 96%, 64%, .8)',
-        'hsl(29, 98%, 63%, .8)',
-        'hsl(10, 96%, 62%, .8)',
-        'hsl(38, 98%, 63%, .8)',
-      ]);
+  svg.append('g')
+    .call(axisY)
+    .attr('class', 'axis-y');
 
-    const stackedData = stack()
-      // @ts-expect-error bad lib types
-      .keys([...subgroups.values()])(data);
+  // Add subgroups
+  const color = scaleOrdinal()
+    // @ts-expect-error bad lib types
+    .domain([...subgroups.values()])
+    .range([
+      // purple to pink
+      'hsl(281, 87%, 29%, .8)',
+      'hsl(329, 91%, 41%, .8)',
+      'hsl(333, 87%, 52%, .8)',
+      'hsl(335, 98%, 57%, .8)',
+      // orange to yellow
+      'hsl(17, 96%, 64%, .8)',
+      'hsl(29, 98%, 63%, .8)',
+      'hsl(10, 96%, 62%, .8)',
+      'hsl(38, 98%, 63%, .8)',
+    ]);
 
-    svg.append('g')
-      .selectAll('g')
-      .data(stackedData)
-      .enter()
-      .append('g')
-      .attr('fill', (d) => {
-        return color((d as unknown as { key: string }).key) as string;
-      })
-      .selectAll('rect')
-      // enter a second time = loop subgroup per subgroup to add all rectangles
-      .data((d) => d)
-      .enter()
-      .append('rect')
-      .attr('x', (d) => {
-        return xBottom(((d as unknown as { data: { group: string } }).data).group) as unknown as string;
-      })
-      .attr('y', function (d) {
-        return y(d[1] as unknown as number);
-      })
-      .attr('height', function (d) {
-        return !Number.isNaN(d[1]) ? y(d[0] as unknown as number) - y(d[1] as unknown as number) : 0;
-      })
-      .attr('width', xBottom.bandwidth())
-      .attr('stroke', '#ffffff99')
-      .on('mouseover', mouseover)
-      .on('mousemove', mousemove)
-      .on('mouseleave', mouseleave)
-      .on('click', onBarClick);
-  }, 800);
+  const stackedData = stack()
+    // @ts-expect-error bad lib types
+    .keys([...subgroups.values()])(data);
+
+  svg.append('g')
+    .selectAll('g')
+    .data(stackedData)
+    .enter()
+    .append('g')
+    .attr('fill', (d) => {
+      return color((d as unknown as { key: string }).key) as string;
+    })
+    .selectAll('rect')
+    // enter a second time = loop subgroup per subgroup to add all rectangles
+    .data((d) => d)
+    .enter()
+    .append('rect')
+    .attr('x', (d) => {
+      return xBottom(((d as unknown as { data: { group: string } }).data).group) as unknown as string;
+    })
+    .attr('y', function (d) {
+      return y(d[1] as unknown as number);
+    })
+    .attr('height', function (d) {
+      return !Number.isNaN(d[1]) ? y(d[0] as unknown as number) - y(d[1] as unknown as number) : 0;
+    })
+    .attr('width', xBottom.bandwidth())
+    .attr('stroke', '#ffffff99')
+    .on('mouseover', mouseover)
+    .on('mousemove', mousemove)
+    .on('mouseleave', mouseleave)
+    .on('click', onBarClick);
 });
 </script>
 
