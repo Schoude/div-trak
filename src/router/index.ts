@@ -1,4 +1,5 @@
 import { useAuthStore } from '@/stores/auth';
+import { useInstrumentsStore } from '@/stores/instruments';
 import { usePortfolioStore } from '@/stores/portfolio-store';
 import { createRouter, createWebHistory } from 'vue-router';
 
@@ -33,6 +34,17 @@ const router = createRouter({
     {
       path: '/portfolio/:id',
       component: () => import('../views/ContentView.vue'),
+      beforeEnter: (to, from, next) => {
+        const instrumentsStore = useInstrumentsStore();
+
+        if (instrumentsStore.getInstruments.length > 0) {
+          next();
+        } else if (from.name === 'dashboard') {
+          next();
+        } else {
+          next({ name: 'dashboard' });
+        }
+      },
       children: [
         {
           path: '',

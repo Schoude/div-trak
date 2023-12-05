@@ -5,7 +5,7 @@ import { useTRSocket } from '@/composables/useTRSocket';
 import { useInstrumentsStore } from '@/stores/instruments';
 import { usePortfolioStore } from '@/stores/portfolio-store';
 import { formatNumber } from '@/utils/intl/currency';
-import { computed, onMounted } from 'vue';
+import { computed } from 'vue';
 import { onBeforeRouteLeave, useRouter } from 'vue-router';
 
 const router = useRouter();
@@ -26,7 +26,7 @@ const portfolioValue = computed(() => portfolioStore.instruments.reduce((acc, in
 }, 0));
 
 
-function getInstrumentsData () {
+function startTicker () {
   portfolioStore.detailPortfolio?.isins.forEach(isin => {
     const existingInsrument = instrumentStore.getInstrument(isin);
     if (existingInsrument) {
@@ -35,16 +35,10 @@ function getInstrumentsData () {
 
       return;
     }
-
-    socket.sendMessage(`sub ${socket.runningEventId.value} {"type":"instrument","id":"${isin}","jurisdiction":"DE"}`);
-    socket.sendMessage(`sub ${socket.runningEventId.value} {"type":"stockDetails","id":"${isin}","jurisdiction":"DE"}`);
-    socket.sendMessage(`sub ${socket.runningEventId.value} {"type":"ticker","id":"${isin}.LSX","jurisdiction":"DE"}`);
   });
 }
 
-onMounted(() => {
-  getInstrumentsData();
-});
+startTicker();
 
 onBeforeRouteLeave(() => {
   portfolioStore.instruments.forEach(instrumentData => {

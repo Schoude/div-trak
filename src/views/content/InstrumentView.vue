@@ -6,7 +6,7 @@ import { useInstrumentsStore } from '@/stores/instruments';
 import { usePortfolioStore } from '@/stores/portfolio-store';
 import { useTickerStore } from '@/stores/ticker';
 import { isETF, isStock } from '@/types/tr/instrument';
-import { computed, onMounted, ref, watchEffect } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
 import { onBeforeRouteLeave, onBeforeRouteUpdate, useRouter } from 'vue-router';
 
 const socket = useTRSocket();
@@ -24,31 +24,24 @@ watchEffect(() => {
   isin.value = router.currentRoute.value.params.isin as string;
 });
 
-onMounted(() => {
-  getInstrumentData(isin.value);
-});
-
 onBeforeRouteLeave(() => {
   socket.sendMessage(`unsub ${instrumentData.value?.tickerEventId}`, { updateEventId: false });
 });
 
 onBeforeRouteUpdate((guard) => {
-  getInstrumentData(guard.params.isin as string);
+  startTicker(guard.params.isin as string);
 });
 
-function getInstrumentData (isin: string) {
+function startTicker (isin: string) {
   if (instruments.getInstrument(isin)) {
     // Re-sub for existing ticker of the instrument
     socket.sendMessage(`sub ${instrumentData.value?.tickerEventId} {"type":"ticker","id":"${isin}.LSX","jurisdiction":"DE"}`, { updateEventId: false });
 
     return;
   }
-
-  socket.sendMessage(`sub ${socket.runningEventId.value} {"type":"instrument","id":"${isin}","jurisdiction":"DE"}`);
-  socket.sendMessage(`sub ${socket.runningEventId.value} {"type":"stockDetails","id":"${isin}","jurisdiction":"DE"}`);
-  socket.sendMessage(`sub ${socket.runningEventId.value} {"type":"etfDetails","id":"${isin}","jurisdiction":"DE"}`);
-  socket.sendMessage(`sub ${socket.runningEventId.value} {"type":"ticker","id":"${isin}.LSX","jurisdiction":"DE"}`);
 }
+
+startTicker(isin.value);
 </script>
 
 <template>
