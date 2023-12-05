@@ -2,7 +2,7 @@
 import type { CalendarDividend } from '@/types/tr/events/stock-details';
 import { formatNumber } from '@/utils/intl/currency';
 import { axisBottom, axisLeft, formatLocale, max, scaleBand, scaleLinear, scaleOrdinal, select, stack } from 'd3';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 
 const props = defineProps<{
   dividends: CalendarDividend[][];
@@ -10,13 +10,16 @@ const props = defineProps<{
 
 const chart = ref<HTMLElement | null>(null);
 
+const detailMonth = ref<number>(new Date().getUTCMonth());
+const getDetailMonthDividends = computed(() => props.dividends.at(detailMonth.value));
+
 const margin = {
   top: 16,
   right: 0,
   bottom: 24,
   left: 60
 };
-const width = 1200 - margin.left - margin.right;
+const width = 800 - margin.left - margin.right;
 const height = 320 - margin.top - margin.bottom;
 
 const defaultFormat = formatLocale({
@@ -38,6 +41,20 @@ const monthNamesMap = new Map([
   [9, 'Oct'],
   [10, 'Nov'],
   [11, 'Dec'],
+]);
+const monthIndicesMap = new Map([
+  ['Jan', 0],
+  ['Feb', 1],
+  ['Mar', 2],
+  ['Apr', 3],
+  ['May', 4],
+  ['Jun.', 5],
+  ['Jul', 6],
+  ['Aug', 7],
+  ['Sep', 8],
+  ['Oct', 9],
+  ['Nov', 10],
+  ['Dec', 11],
 ]);
 
 onMounted(() => {
@@ -72,6 +89,11 @@ onMounted(() => {
     const rect = event.target as SVGRectElement;
     select(rect)
       .attr('class', '');
+  };
+
+  const onBarClick = function (_e: MouseEvent, d: unknown) {
+    const monthIndex = monthIndicesMap.get((d as { data: { group: string } }).data.group);
+    detailMonth.value = monthIndex!;
   };
 
   setTimeout(() => {
@@ -136,7 +158,6 @@ onMounted(() => {
     const color = scaleOrdinal()
       // @ts-expect-error bad lib types
       .domain([...subgroups.values()])
-      // Add colors until 10
       .range([
         'hsl(219, 20%, 36%)',
         'hsl(219, 20%, 12%)',
@@ -144,7 +165,6 @@ onMounted(() => {
         'hsl(219, 20%, 48%)',
       ]);
 
-    //stack the data? --> stack per subgroup
     const stackedData = stack()
       // @ts-expect-error bad lib types
       .keys([...subgroups.values()])(data);
@@ -175,21 +195,40 @@ onMounted(() => {
       .attr('stroke', 'grey')
       .on('mouseover', mouseover)
       .on('mousemove', mousemove)
-      .on('mouseleave', mouseleave);
+      .on('mouseleave', mouseleave)
+      .on('click', onBarClick);
   }, 800);
 });
 </script>
 
 <template>
   <div class="chart-dividends-of-year">
-    <h2>Dividend Calendar</h2>
-    <div ref="chart" class="dividends-yearly"></div>
+    <div class="wrapper">
+      <h2>Dividend Calendar</h2>
+      <div ref="chart" class="dividends-yearly"></div>
+    </div>
+
+    <div class="detail-month">
+      <h2>Month Details</h2>
+      <div class="details">
+        <!-- <div class="fallback">
+          No Month selected
+        </div> -->
+        {{ getDetailMonthDividends }}
+      </div>
+    </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
+.chart-dividends-of-year {
+  display: flex;
+  gap: 1rem;
+}
+
 .dividends-yearly {
   min-block-size: 335px;
+  min-inline-size: 800px;
   position: relative;
   overflow-x: auto;
 
@@ -207,7 +246,6 @@ onMounted(() => {
   }
 
   &:deep(svg) {
-    margin-inline: auto;
     max-width: initial;
 
     .axis-y,
