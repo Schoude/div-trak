@@ -208,14 +208,18 @@ onMounted(() => {
       <div ref="chart" class="dividends-yearly"></div>
     </div>
 
-    <div class="detail-month">
-      <h2>Month Details</h2>
-      <div class="details">
-        <!-- <div class="fallback">
-          No Month selected
-        </div> -->
-        {{ getDetailMonthDividends }}
-      </div>
+    <div class="month-details">
+      <h2 class="heading">Month Details ({{ monthNamesMap.get(detailMonth) }})</h2>
+
+      <ul class="dividends-list">
+        <li class="dividend" v-for="dividend of getDetailMonthDividends" :key="dividend.id">
+          <div class="name">{{ dividend.instrumentName }}</div>
+          <div class="metadata">
+            <span class="payment"><b>{{ dividend.paymentFormatted }}</b> • </span>
+            <span class="date text-s">@ {{ new Date(dividend.paymentDate).toLocaleDateString() }}</span>
+          </div>
+        </li>
+      </ul>
     </div>
   </div>
 </template>
@@ -224,13 +228,14 @@ onMounted(() => {
 .chart-dividends-of-year {
   display: flex;
   gap: 1rem;
+  overflow-x: auto;
+  inline-size: 100%;
 }
 
 .dividends-yearly {
   min-block-size: 335px;
   min-inline-size: 800px;
   position: relative;
-  overflow-x: auto;
 
   &:deep(.tooltip) {
     opacity: 0;
@@ -259,6 +264,40 @@ onMounted(() => {
       text {
         font-family: var(--font-family);
       }
+    }
+
+    rect {
+      cursor: pointer;
+    }
+  }
+}
+
+.month-details {
+  min-inline-size: 400px;
+
+  .heading {
+    margin-block-end: .5rem;
+  }
+}
+
+.dividends-list {
+  padding: 0;
+  list-style: none;
+  display: flex;
+  gap: .75rem;
+  flex-wrap: wrap;
+  block-size: max-content;
+
+  .dividend {
+    block-size: max-content;
+    background-color: rgba(0, 0, 0, 0.6);
+    border: 1px solid var(--color-accent-1);
+    padding: 0.35rem .75rem;
+    line-height: 1;
+    border-radius: 8px;
+
+    .metadata {
+      margin-block-start: .25rem;
     }
   }
 }
