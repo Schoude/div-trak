@@ -2,12 +2,12 @@
 import OrdersList from '@/components/lists/OrdersList.vue';
 import OrderManager from '@/components/order/OrderManager.vue';
 import { usePortfolioStore } from '@/stores/portfolio-store';
-import type { Instrument } from '@/types/tr/instrument';
+import type { ETF, Stock } from '@/types/tr/instrument';
 import { computed } from 'vue';
 
 const props = defineProps<{
   isInDetailPortfolio: boolean;
-  instrument: Instrument;
+  instrument: Stock | ETF;
 }>();
 
 const portfolioStore = usePortfolioStore();

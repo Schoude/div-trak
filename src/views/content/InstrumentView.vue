@@ -46,6 +46,7 @@ function getInstrumentData (isin: string) {
 
   socket.sendMessage(`sub ${socket.runningEventId.value} {"type":"instrument","id":"${isin}","jurisdiction":"DE"}`);
   socket.sendMessage(`sub ${socket.runningEventId.value} {"type":"stockDetails","id":"${isin}","jurisdiction":"DE"}`);
+  socket.sendMessage(`sub ${socket.runningEventId.value} {"type":"etfDetails","id":"${isin}","jurisdiction":"DE"}`);
   socket.sendMessage(`sub ${socket.runningEventId.value} {"type":"ticker","id":"${isin}.LSX","jurisdiction":"DE"}`);
 }
 </script>
@@ -61,7 +62,7 @@ function getInstrumentData (isin: string) {
         <StockDetail :stock="instrumentData" :ticker="tickerData" :is-in-detail-portfolio="isInDetailPortfolio" />
       </template>
       <template v-if="isETF(instrumentData) && tickerData">
-        <FundDetail :etf="instrumentData" :ticker="tickerData" />
+        <FundDetail :etf="instrumentData" :ticker="tickerData" :is-in-detail-portfolio="isInDetailPortfolio" />
       </template>
     </template>
   </main>

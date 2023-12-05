@@ -4,7 +4,7 @@ import { useAuthStore } from '@/stores/auth';
 import { supabase } from '@/supabase/client';
 import type { ORDER_EXECUTION_TYPE, OrderNew, Portfolio } from '@/supabase/types/helpers';
 import type { User } from '@/types/auth';
-import type { Instrument } from '@/types/tr/instrument';
+import type { ETF, Stock } from '@/types/tr/instrument';
 import { computed, ref } from 'vue';
 
 const amountOrder = ref<number | null>(null);
@@ -15,7 +15,7 @@ const isSending = ref(false);
 
 const props = defineProps<{
   amountOwned: number;
-  instrument: Instrument;
+  instrument: Stock | ETF;
   portfolio: Portfolio;
   isInDetailPortfolio: boolean;
 }>();

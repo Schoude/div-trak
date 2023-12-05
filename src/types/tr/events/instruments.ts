@@ -3,7 +3,7 @@ export interface InstrumentEvent {
   dividends: any[];
   splits: Split[];
   name: string;
-  typeId: string;
+  typeId: 'stock' | 'fund';
   isin: string;
   shortName: string;
   intlSymbol: string;

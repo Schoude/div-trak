@@ -3,12 +3,12 @@ import ButtonAction from '@/components/buttons/ButtonAction.vue';
 import FormOrder from '@/components/forms/FormOrder.vue';
 import ModalBase from '@/components/modals/ModalBase.vue';
 import type { Portfolio } from '@/supabase/types/helpers';
-import type { Instrument } from '@/types/tr/instrument';
+import type { ETF, Stock } from '@/types/tr/instrument';
 import { ref } from 'vue';
 
 defineProps<{
   amountOwned: number;
-  instrument: Instrument;
+  instrument: Stock | ETF;
   portfolio: Portfolio;
   isInDetailPortfolio: boolean;
 }>();

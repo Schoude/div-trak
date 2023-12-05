@@ -83,8 +83,7 @@ export function useTRSocket () {
     // 4) Ticker of an instrument | "type":"ticker"
     if (isTickerEvent(eventData)) {
       ticker.setTicker(eventData.eventId, eventData.jsonObject);
-
-      // TODO: check if ticker really keeps sending events
+      
       return;
     }
 

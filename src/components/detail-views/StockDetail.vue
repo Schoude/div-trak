@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import AnalystRating from '@/components/instrument/AnalystRating.vue';
 import CompanyInfo from '@/components/instrument/CompanyInfo.vue';
+import InstrumentPortfolioInfo from '@/components/instrument/InstrumentPortfolioInfo.vue';
 import InstrumentPriceInfo from '@/components/instrument/InstrumentPriceInfo.vue';
+import DividendsList from '@/components/lists/DividendsList.vue';
 import EventsList from '@/components/lists/EventsList.vue';
 import TRAssetLoader from '@/components/loaders/TRAssetLoader.vue';
 import { usePortfolioStore } from '@/stores/portfolio-store';
@@ -10,8 +12,6 @@ import type { TickerEvent } from '@/types/tr/events/ticker';
 import { type Stock } from '@/types/tr/instrument';
 import { formatNumber } from '@/utils/intl/currency';
 import { computed } from 'vue';
-import InstrumentPortfolioInfo from '../instrument/InstrumentPortfolioInfo.vue';
-import DividendsList from '../lists/DividendsList.vue';
 
 const props = defineProps<{
   stock: Stock;
