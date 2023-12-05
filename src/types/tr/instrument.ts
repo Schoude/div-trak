@@ -1,9 +1,11 @@
 import type { InstrumentEvent } from '@/types/tr/events/instruments';
 import type { StockDetailsEvent } from '@/types/tr/events/stock-details';
+import type { ETFDetailsEvent } from './events/etf-details';
 
 export interface Instrument {
   instrument: InstrumentEvent;
   stockDetails: StockDetailsEvent;
+  etfDetails: ETFDetailsEvent;
   tickerEventId: number;
 }
 

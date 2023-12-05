@@ -2,6 +2,7 @@ import { useInstrumentsStore } from '@/stores/instruments';
 import { useNeonSearchStore } from '@/stores/neon-search';
 import { useTickerStore } from '@/stores/ticker';
 import {
+  isETFDetailsEvent,
   isInstrumentEvent,
   isNeonSearchEvent,
   isStockDetailsEvent,
@@ -86,7 +87,14 @@ export function useTRSocket () {
       });
     }
 
-    // 4) Ticker of an instrument | "type":"ticker"
+    // 4) Details of a fund | "type":"etfDetails"
+    if (isETFDetailsEvent(eventData)) {
+      instruments.upsertInstrument(eventData.jsonObject.isin, {
+        etfDetails: eventData.jsonObject,
+      });
+    }
+
+    // 5) Ticker of an instrument | "type":"ticker"
     if (isTickerEvent(eventData)) {
       ticker.setTicker(eventData.eventId, eventData.jsonObject);
 
