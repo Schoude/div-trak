@@ -88,7 +88,7 @@ export interface CalendarDividend extends Pick<Dividend, 'id' | 'paymentDate' | 
   instrumentName: string;
 }
 
-enum DividendType {
+export enum DividendType {
   Cash = 'cash',
   Unknown = 'unknown',
 }
@@ -101,7 +101,7 @@ export interface Event {
   dividend: Dividend | null;
 }
 
-enum Title {
+export enum Title {
   AnalystPresentation = 'Analyst  Presentation',
   Dividende = 'Dividende',
   EarningsCall = 'Earnings Call',
@@ -122,7 +122,7 @@ interface Tag {
   icon: string;
 }
 
-enum TagType {
+export enum TagType {
   Country = 'country',
   Sector = 'sector',
 }
