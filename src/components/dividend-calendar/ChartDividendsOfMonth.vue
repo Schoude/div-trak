@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { CalendarDividend } from '@/types/tr/events/stock-details';
-import { axisBottom, axisLeft, formatLocale, max, scaleBand, scaleLinear, scaleOrdinal, select } from 'd3';
+import { defaultFormat } from '@/utils/visus';
+import { axisBottom, axisLeft, max, scaleBand, scaleLinear, scaleOrdinal, select } from 'd3';
 import { onMounted, ref } from 'vue';
 
 const props = defineProps<{
@@ -17,13 +18,6 @@ const margin = {
 };
 const width = 250 - margin.left - margin.right;
 const height = 150 - margin.top - margin.bottom;
-
-const defaultFormat = formatLocale({
-  decimal: ',',
-  thousands: '.',
-  grouping: [3],
-  currency: ['', ' €']
-});
 
 onMounted(() => {
   const tooltip = select(chart.value)
