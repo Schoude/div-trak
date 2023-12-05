@@ -12,6 +12,11 @@ const chart = ref<HTMLElement | null>(null);
 
 const detailMonth = ref<number>(new Date().getUTCMonth());
 const getDetailMonthDividends = computed(() => props.dividends.at(detailMonth.value));
+const detailMonthAggregatedDividends = computed(() => formatNumber(getDetailMonthDividends.value?.reduce((acc, d) => {
+  acc += d.payment;
+
+  return acc;
+}, 0) ?? 0, { style: 'currency', currency: 'EUR' }));
 
 const margin = {
   top: 16,
@@ -210,7 +215,7 @@ onMounted(() => {
 
     <div class="month-details">
       <h2 class="heading">Month Details ({{ monthNamesMap.get(detailMonth) }})</h2>
-
+      <div class="dividends-aggretated text-s">Aggregated Dividends: {{ detailMonthAggregatedDividends }}</div>
       <ul class="dividends-list">
         <li class="dividend" v-for="dividend of getDetailMonthDividends" :key="dividend.id">
           <div class="name">{{ dividend.instrumentName }}</div>
@@ -276,7 +281,11 @@ onMounted(() => {
   min-inline-size: 400px;
 
   .heading {
-    margin-block-end: .5rem;
+    margin-block-end: .2rem;
+  }
+
+  .dividends-aggretated {
+    margin-block-end: .75rem;
   }
 }
 
