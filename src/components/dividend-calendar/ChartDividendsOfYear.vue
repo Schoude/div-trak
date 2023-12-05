@@ -165,15 +165,15 @@ onMounted(() => {
       .domain([...subgroups.values()])
       .range([
         // purple to pink
-        'hsl(281, 87%, 29%)',
-        'hsl(329, 91%, 41%)',
-        'hsl(333, 87%, 52%)',
-        'hsl(335, 98%, 57%)',
+        'hsl(281, 87%, 29%, .8)',
+        'hsl(329, 91%, 41%, .8)',
+        'hsl(333, 87%, 52%, .8)',
+        'hsl(335, 98%, 57%, .8)',
         // orange to yellow
-        'hsl(17, 96%, 64%)',
-        'hsl(29, 98%, 63%)',
-        'hsl(10, 96%, 62%)',
-        'hsl(38, 98%, 63%)',
+        'hsl(17, 96%, 64%, .8)',
+        'hsl(29, 98%, 63%, .8)',
+        'hsl(10, 96%, 62%, .8)',
+        'hsl(38, 98%, 63%, .8)',
       ]);
 
     const stackedData = stack()
@@ -279,6 +279,11 @@ onMounted(() => {
 
     rect {
       cursor: pointer;
+      transition: fill .25s ease-out;
+
+      &.hovered {
+        fill: #3d4a5b;
+      }
     }
   }
 }
