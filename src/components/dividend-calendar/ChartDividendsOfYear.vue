@@ -164,10 +164,16 @@ onMounted(() => {
       // @ts-expect-error bad lib types
       .domain([...subgroups.values()])
       .range([
-        'hsl(219, 20%, 36%)',
-        'hsl(219, 20%, 12%)',
-        'hsl(219, 20%, 24%)',
-        'hsl(219, 20%, 48%)',
+        // purple to pink
+        'hsl(281, 87%, 29%)',
+        'hsl(329, 91%, 41%)',
+        'hsl(333, 87%, 52%)',
+        'hsl(335, 98%, 57%)',
+        // orange to yellow
+        'hsl(17, 96%, 64%)',
+        'hsl(29, 98%, 63%)',
+        'hsl(10, 96%, 62%)',
+        'hsl(38, 98%, 63%)',
       ]);
 
     const stackedData = stack()
@@ -197,7 +203,7 @@ onMounted(() => {
         return !Number.isNaN(d[1]) ? y(d[0] as unknown as number) - y(d[1] as unknown as number) : 0;
       })
       .attr('width', xBottom.bandwidth())
-      .attr('stroke', 'grey')
+      .attr('stroke', '#ffffff99')
       .on('mouseover', mouseover)
       .on('mousemove', mousemove)
       .on('mouseleave', mouseleave)

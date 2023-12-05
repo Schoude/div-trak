@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { CalendarDividend } from '@/types/tr/events/stock-details';
-import { axisBottom, axisLeft, formatLocale, max, scaleBand, scaleLinear, select } from 'd3';
+import { axisBottom, axisLeft, formatLocale, max, scaleBand, scaleLinear, scaleOrdinal, select } from 'd3';
 import { onMounted, ref } from 'vue';
 
 const props = defineProps<{
@@ -89,6 +89,21 @@ onMounted(() => {
       .call(axisY)
       .attr('class', 'axis-y');
 
+      const color = scaleOrdinal()
+      .domain(props.dividends.map(d => d.instrumentName))
+      .range([
+        // orange to yellow
+        'hsl(17, 96%, 64%)',
+        'hsl(29, 98%, 63%)',
+        'hsl(10, 96%, 62%)',
+        'hsl(38, 98%, 63%)',
+        // purple to pink
+        'hsl(281, 87%, 29%)',
+        'hsl(329, 91%, 41%)',
+        'hsl(333, 87%, 52%)',
+        'hsl(335, 98%, 57%)',
+      ]);
+
     // Bars
     const bars = svg.selectAll('mybar')
       .data(props.dividends)
@@ -97,7 +112,9 @@ onMounted(() => {
       .attr('y', d => y(d.payment))
       .attr('width', x.bandwidth())
       .attr('height', d => height - y(d.payment))
-      .attr('fill', '#242b35');
+      .attr('fill', (d) => {
+        return color((d as unknown as { instrumentName: string }).instrumentName) as string;
+      });
 
     bars
       .on('mouseover', mouseover)
