@@ -12,7 +12,7 @@ const props = defineProps<{
 const chart = ref<HTMLElement | null>(null);
 
 const detailMonth = ref<number>(new Date().getUTCMonth());
-const getDetailMonthDividends = computed(() => props.dividends.at(detailMonth.value));
+const getDetailMonthDividends = computed(() => props.dividends.at(detailMonth.value)?.sort((a, b) => b.payment - a.payment));
 const detailMonthAggregatedDividends = computed(() => formatNumber(getDetailMonthDividends.value?.reduce((acc, d) => {
   acc += d.payment;
 
