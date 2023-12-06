@@ -13,7 +13,7 @@ const portfolioStore = usePortfolioStore();
 const year = ref(2023);
 
 const dividendsCalendarData = computed(() => {
-  const monthsMap = new Map<number, unknown[]>([
+  const monthsMap = new Map<number, CalendarDividend[]>([
     [1, []],
     [2, []],
     [3, []],
@@ -36,97 +36,167 @@ const dividendsCalendarData = computed(() => {
     }
 
     instrumentStore.getInstruments.forEach(instrument => {
-      // Get complete dividends of STOCK
-      const pastDividends = instrument.stockDetails?.dividends;
-      const eventDividends = instrument.stockDetails?.events.filter(event => event.dividend);
-      const dividendMap = new Map<string, Dividend>();
+      // ETF distributions
+      if (instrument.etfDetails) {
+        const distributionsOfCurrentMonth = instrument
+          .etfDetails
+          .distributions
+          .filter(dividend => dividend.paymentDate.includes(`${year.value}-${month.toString().padStart(2, '0')}`));
 
-      // Add newer dividends first
-      eventDividends
-        ?.filter(event => event.dividend != null)
-        .forEach(event => {
-          if (event.dividend) {
-            dividendMap.set(event.dividend.id, event.dividend);
-          }
-        });
+        const instrumentAmountAtCurrentMonth = portfolioStore.detailPortfolio!
+          .orders
+          .filter((order) => {
+            let keep = false;
 
-      if (instrument.stockDetails?.expectedDividend) {
-        dividendMap.set(instrument.stockDetails.expectedDividend.id, instrument.stockDetails.expectedDividend);
+            // Keep Orders of past years
+            if (order.isin === instrument.instrument?.isin &&
+              order.year < year.value) {
+              keep = true;
+            }
+
+            // Keep Orders from this year including the current month
+            if (order.isin === instrument.instrument?.isin && order.year == year.value && order.month <= month) {
+              keep = true;
+            }
+
+            return keep;
+          })
+          .reduce((acc, order) => {
+            acc += order.amount;
+
+            return acc;
+          }, 0);
+
+        if (distributionsOfCurrentMonth.length > 0 && instrumentAmountAtCurrentMonth > 0) {
+          console.log(distributionsOfCurrentMonth);
+          console.log(instrumentAmountAtCurrentMonth);
+
+          const distributionsWithPayment = distributionsOfCurrentMonth.map(distribution => {
+            const payment = distribution.amount * instrumentAmountAtCurrentMonth;
+
+            return {
+              // Dividend Information
+              id: crypto.randomUUID(),
+              paymentDate: distribution.paymentDate,
+              recordDate: distribution.recordDate,
+              exDate: distribution.exDate,
+              amount: distribution.amount,
+              amountFormatted: formatNumber(distribution.amount, { style: 'currency', currency: 'EUR' }),
+              // Payments
+              paymentDateTimestamp: new Date(distribution.paymentDate).getTime(),
+              amountOwned: instrumentAmountAtCurrentMonth,
+              sourceTax: null,
+              sourceTaxFormatted: '',
+              payment,
+              paymentFormatted: formatNumber(payment, { style: 'currency', currency: 'EUR' }),
+              // Instrument
+              isin: instrument.instrument?.isin,
+              instrumentName: instrument.instrument?.shortName,
+            } as CalendarDividend;
+          });
+
+          dividendsOfMonth.push(...distributionsWithPayment.sort((a, b) => a.paymentDateTimestamp - b.paymentDateTimestamp));
+
+          monthsMap.set(month, dividendsOfMonth);
+        }
+
+        return;
       }
 
-      // Then add already past dividends
-      pastDividends?.forEach(dividend => dividendMap.set(dividend.id, dividend));
+      // Stock dividends
+      if (instrument.stockDetails) {
+        // Get complete dividends of STOCK
+        const pastDividends = instrument.stockDetails?.dividends;
+        const eventDividends = instrument.stockDetails?.events.filter(event => event.dividend);
+        const dividendMap = new Map<string, Dividend>();
 
-      const dividendsOfCurrentMonth = [...dividendMap.values()]
-        .filter(dividend => dividend.paymentDate.includes(`${year.value}-${month.toString().padStart(2, '0')}`));
+        // Add newer dividends first
+        eventDividends
+          ?.filter(event => event.dividend != null)
+          .forEach(event => {
+            if (event.dividend) {
+              dividendMap.set(event.dividend.id, event.dividend);
+            }
+          });
 
-      const instrumentAmountAtCurrentMonth = portfolioStore.detailPortfolio!
-        .orders
-        .filter((order) => {
-          let keep = false;
+        if (instrument.stockDetails?.expectedDividend) {
+          dividendMap.set(instrument.stockDetails.expectedDividend.id, instrument.stockDetails.expectedDividend);
+        }
 
-          // Keep Orders of past years
-          if (order.isin === instrument.instrument?.isin &&
-            order.year < year.value) {
-            keep = true;
-          }
+        // Then add already past dividends
+        pastDividends?.forEach(dividend => dividendMap.set(dividend.id, dividend));
 
-          // Keep Orders from this year including the current month
-          if (order.isin === instrument.instrument?.isin && order.year == year.value && order.month <= month) {
-            keep = true;
-          }
+        const dividendsOfCurrentMonth = [...dividendMap.values()]
+          .filter(dividend => dividend.paymentDate.includes(`${year.value}-${month.toString().padStart(2, '0')}`));
 
-          return keep;
-        })
-        .reduce((acc, order) => {
-          acc += order.amount;
+        const instrumentAmountAtCurrentMonth = portfolioStore.detailPortfolio!
+          .orders
+          .filter((order) => {
+            let keep = false;
 
-          return acc;
-        }, 0);
+            // Keep Orders of past years
+            if (order.isin === instrument.instrument?.isin &&
+              order.year < year.value) {
+              keep = true;
+            }
 
-      if (dividendsOfCurrentMonth.length > 0 && instrumentAmountAtCurrentMonth > 0) {
-        const dividendsWihPayment = dividendsOfCurrentMonth.map(dividend => {
-          let sourceTax: number | null = null;
-          let payment = dividend.amount * instrumentAmountAtCurrentMonth;
+            // Keep Orders from this year including the current month
+            if (order.isin === instrument.instrument?.isin && order.year == year.value && order.month <= month) {
+              keep = true;
+            }
 
-          if (instrument.instrument?.company.countryOfOrigin === 'US' || instrument.stockDetails?.company.countryCode === 'US') {
-            sourceTax = payment * .15;
-            payment = payment - sourceTax;
-          }
+            return keep;
+          })
+          .reduce((acc, order) => {
+            acc += order.amount;
 
-          let formattedSourceTax = sourceTax != null
-            ? formatNumber(sourceTax, { style: 'currency', currency: 'EUR' })
-            : sourceTax;
+            return acc;
+          }, 0);
 
-          return {
-            // Dividend Information
-            id: dividend.id,
-            paymentDate: dividend.paymentDate,
-            recordDate: dividend.recordDate,
-            exDate: dividend.exDate,
-            amount: dividend.amount,
-            amountFormatted: formatNumber(dividend.amount, { style: 'currency', currency: 'EUR' }),
-            // Payments
-            paymentDateTimestamp: new Date(dividend.paymentDate).getTime(),
-            amountOwned: instrumentAmountAtCurrentMonth,
-            sourceTax,
-            sourceTaxFormatted: formattedSourceTax,
-            payment,
-            paymentFormatted: formatNumber(payment, { style: 'currency', currency: 'EUR' }),
-            // Instrument
-            isin: instrument.instrument?.isin,
-            instrumentName: instrument.instrument?.shortName,
-          } as CalendarDividend;
-        });
+        if (dividendsOfCurrentMonth.length > 0 && instrumentAmountAtCurrentMonth > 0) {
+          const dividendsWihPayment = dividendsOfCurrentMonth.map(dividend => {
+            let sourceTax: number | null = null;
+            let payment = dividend.amount * instrumentAmountAtCurrentMonth;
 
-        dividendsOfMonth.push(...dividendsWihPayment.sort((a, b) => a.paymentDateTimestamp - b.paymentDateTimestamp));
+            if (instrument.instrument?.company.countryOfOrigin === 'US' || instrument.stockDetails?.company.countryCode === 'US') {
+              sourceTax = payment * .15;
+              payment = payment - sourceTax;
+            }
 
-        monthsMap.set(month, dividendsOfMonth);
+            let formattedSourceTax = sourceTax != null
+              ? formatNumber(sourceTax, { style: 'currency', currency: 'EUR' })
+              : sourceTax;
+
+            return {
+              // Dividend Information
+              id: dividend.id,
+              paymentDate: dividend.paymentDate,
+              recordDate: dividend.recordDate,
+              exDate: dividend.exDate,
+              amount: dividend.amount,
+              amountFormatted: formatNumber(dividend.amount, { style: 'currency', currency: 'EUR' }),
+              // Payments
+              paymentDateTimestamp: new Date(dividend.paymentDate).getTime(),
+              amountOwned: instrumentAmountAtCurrentMonth,
+              sourceTax,
+              sourceTaxFormatted: formattedSourceTax,
+              payment,
+              paymentFormatted: formatNumber(payment, { style: 'currency', currency: 'EUR' }),
+              // Instrument
+              isin: instrument.instrument?.isin,
+              instrumentName: instrument.instrument?.shortName,
+            } as CalendarDividend;
+          });
+
+          dividendsOfMonth.push(...dividendsWihPayment.sort((a, b) => a.paymentDateTimestamp - b.paymentDateTimestamp));
+
+          monthsMap.set(month, dividendsOfMonth);
+        }
       }
     });
   }
 
-  return ([...monthsMap.values()] as unknown as CalendarDividend[][]);
+  return [...monthsMap.values()];
 });
 
 const getDividendsOfCurrentMonth = computed(() => {
