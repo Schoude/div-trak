@@ -17,12 +17,12 @@ export const useInstrumentsStore = defineStore('instruments', () => {
     instruments.value.set(isin, instrument);
   }
 
-  function getInstrument (isin: string) {
+  const getInstrument = computed(() => (isin: string) => {
     return instruments.value.get(isin);
-  }
+  });
 
   function fillInstrument (isin: string, portfolio: Portfolio) {
-    const instrument = getInstrument(isin);
+    const instrument = getInstrument.value(isin);
     if (!instrument) {
       return;
     }
@@ -63,7 +63,7 @@ export const useInstrumentsStore = defineStore('instruments', () => {
     instruments,
     getInstrument,
     upsertInstrument (isin: string, updateData: Partial<Instrument>) {
-      const toUpdate = this.getInstrument(isin);
+      const toUpdate = getInstrument.value(isin);
 
       if (!toUpdate) {
         setInstrument(isin, { ...updateData });

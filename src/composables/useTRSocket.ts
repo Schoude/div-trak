@@ -78,6 +78,8 @@ export function useTRSocket () {
       } else if (eventData.jsonObject.typeId === 'fund') {
         sendMessage(`sub ${runningEventId.value} {"type":"etfDetails","id":"${eventData.jsonObject.isin}","jurisdiction":"DE"}`);
       }
+
+      sendMessage(`sub ${runningEventId.value} {"type":"ticker","id":"${eventData.jsonObject.isin}.LSX","jurisdiction":"DE"}`);
     }
 
     // 3) Details of a stock | "type":"stockDetails"

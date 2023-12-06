@@ -1,6 +1,7 @@
+import type { ETFDetailsEvent } from '@/types/tr/events/etf-details';
 import type { InstrumentEvent } from '@/types/tr/events/instruments';
 import type { StockDetailsEvent } from '@/types/tr/events/stock-details';
-import type { ETFDetailsEvent } from './events/etf-details';
+import { computed } from 'vue';
 
 export interface Instrument {
   instrument: InstrumentEvent;
@@ -24,10 +25,10 @@ export type ETF = Omit<Instrument, 'stockDetails'>;
 export type StockFilled = InstrumentFilled;
 export type ETFFilled = Omit<InstrumentFilled, 'stockDetails'>;
 
-export function isStock (instrument: Partial<Instrument>): instrument is Stock {
+export const isStock = computed(() => (instrument: Partial<Instrument>): instrument is Stock => {
   return instrument.instrument?.typeId == 'stock';
-}
+});
 
-export function isETF (instrument: Partial<Instrument>): instrument is ETF {
+export const isETF = computed(() => (instrument: Partial<Instrument>): instrument is ETF => {
   return instrument.instrument?.typeId == 'fund';
-}
+});
