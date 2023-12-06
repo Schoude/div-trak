@@ -74,12 +74,24 @@ export function useTRSocket () {
       });
 
       if (eventData.jsonObject.typeId === 'stock') {
-        sendMessage(`sub ${runningEventId.value} {"type":"stockDetails","id":"${eventData.jsonObject.isin}","jurisdiction":"DE"}`);
+        runningEventId.value = runningEventId.value + 1;
+        sendMessage(
+          `sub ${runningEventId.value} {"type":"stockDetails","id":"${eventData.jsonObject.isin}","jurisdiction":"DE"}`,
+          { updateEventId: false },
+        );
       } else if (eventData.jsonObject.typeId === 'fund') {
-        sendMessage(`sub ${runningEventId.value} {"type":"etfDetails","id":"${eventData.jsonObject.isin}","jurisdiction":"DE"}`);
+        runningEventId.value = runningEventId.value + 1;
+        sendMessage(
+          `sub ${runningEventId.value} {"type":"etfDetails","id":"${eventData.jsonObject.isin}","jurisdiction":"DE"}`,
+          { updateEventId: false },
+        );
       }
 
-      sendMessage(`sub ${runningEventId.value} {"type":"ticker","id":"${eventData.jsonObject.isin}.LSX","jurisdiction":"DE"}`);
+      runningEventId.value = runningEventId.value + 1;
+      sendMessage(
+        `sub ${runningEventId.value} {"type":"ticker","id":"${eventData.jsonObject.isin}.LSX","jurisdiction":"DE"}`,
+        { updateEventId: false },
+      );
     }
 
     // 3) Details of a stock | "type":"stockDetails"
