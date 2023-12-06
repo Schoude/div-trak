@@ -66,7 +66,7 @@ const calculatedDividendPayments = computed<DividendWithPayment[]>(() => props.e
     <InstrumentPriceInfo :ticker="ticker" />
 
     <InstrumentPortfolioInfo :is-in-detail-portfolio="isInDetailPortfolio" :instrument="etf">
-      <template #dividends v-if="calculatedDividendPayments.length > 0">
+      <template #dividends v-if="calculatedDividendPayments?.length > 0">
         <DividendsList :dividends="calculatedDividendPayments" :frequency="paymentMonths" :yield="dividendYield">
           <template #title>
             Distributions in Portfolio <small>({{ portfolioStore.detailPortfolio?.name }})</small>
@@ -74,5 +74,13 @@ const calculatedDividendPayments = computed<DividendWithPayment[]>(() => props.e
         </DividendsList>
       </template>
     </InstrumentPortfolioInfo>
+
+    <!-- Only show if the instrument is NOT in the detail portfolio -->
+    <DividendsList v-if="props.etf.etfDetails?.distributions.length > 0 && !isInDetailPortfolio"
+      :dividends="props.etf.etfDetails?.distributions" :frequency="paymentMonths" :yield="dividendYield">
+      <template #title>
+        Dividends
+      </template>
+    </DividendsList>
   </section>
 </template>

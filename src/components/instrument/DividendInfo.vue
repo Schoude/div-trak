@@ -13,7 +13,7 @@ defineProps<{
       <div class="text-s"><b>{{ formatNumber(dividend.amount, {
         style: 'currency', currency: 'EUR', roundingMode: 'ceil'
       }) }}</b></div>
-      <div>Type: {{ dividend.type }}</div>
+      <div v-if="dividend.type">Type: {{ dividend.type }}</div>
     </div>
     <div class="text-s">Ex Date: {{ new Date(dividend.exDate).toLocaleDateString() }}</div>
     <div>Record Date: {{ new Date(dividend.recordDate).toLocaleDateString() }}</div>
