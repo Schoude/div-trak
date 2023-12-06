@@ -61,13 +61,13 @@ export interface Company {
 }
 
 export interface Dividend {
-  id: string;
+  id?: string;
   paymentDate: string;
   recordDate: string;
   exDate: string;
   amount: number;
-  yield: null;
-  type: DividendType;
+  yield?: null;
+  type?: DividendType;
 }
 
 export type DividendWithPayment = Dividend & {

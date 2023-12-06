@@ -33,16 +33,16 @@ const aggregatedDividends = computed(() => {
     ?.filter(event => event.dividend != null)
     .forEach(event => {
       if (event.dividend) {
-        dividendMap.set(event.dividend.id, event.dividend);
+        dividendMap.set(event.dividend.id!, event.dividend);
       }
     });
 
   if (props.stock.stockDetails?.expectedDividend) {
-    dividendMap.set(props.stock.stockDetails.expectedDividend.id, props.stock.stockDetails.expectedDividend);
+    dividendMap.set(props.stock.stockDetails.expectedDividend.id!, props.stock.stockDetails.expectedDividend);
   }
 
   // Then add already past dividends
-  pastDividends?.forEach(dividend => dividendMap.set(dividend.id, dividend));
+  pastDividends?.forEach(dividend => dividendMap.set(dividend.id!, dividend));
 
   // Sort newest to oldest
   return [...dividendMap.values()].sort((a, b) => new Date(b.paymentDate).getTime() - new Date(a.paymentDate).getTime());

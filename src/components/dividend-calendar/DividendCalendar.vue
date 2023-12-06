@@ -68,9 +68,6 @@ const dividendsCalendarData = computed(() => {
           }, 0);
 
         if (distributionsOfCurrentMonth.length > 0 && instrumentAmountAtCurrentMonth > 0) {
-          console.log(distributionsOfCurrentMonth);
-          console.log(instrumentAmountAtCurrentMonth);
-
           const distributionsWithPayment = distributionsOfCurrentMonth.map(distribution => {
             const payment = distribution.amount * instrumentAmountAtCurrentMonth;
 
@@ -115,16 +112,16 @@ const dividendsCalendarData = computed(() => {
           ?.filter(event => event.dividend != null)
           .forEach(event => {
             if (event.dividend) {
-              dividendMap.set(event.dividend.id, event.dividend);
+              dividendMap.set(event.dividend.id!, event.dividend);
             }
           });
 
         if (instrument.stockDetails?.expectedDividend) {
-          dividendMap.set(instrument.stockDetails.expectedDividend.id, instrument.stockDetails.expectedDividend);
+          dividendMap.set(instrument.stockDetails.expectedDividend.id!, instrument.stockDetails.expectedDividend);
         }
 
         // Then add already past dividends
-        pastDividends?.forEach(dividend => dividendMap.set(dividend.id, dividend));
+        pastDividends?.forEach(dividend => dividendMap.set(dividend.id!, dividend));
 
         const dividendsOfCurrentMonth = [...dividendMap.values()]
           .filter(dividend => dividend.paymentDate.includes(`${year.value}-${month.toString().padStart(2, '0')}`));
