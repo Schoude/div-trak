@@ -39,6 +39,8 @@ function startTicker (isin: string) {
 
     return;
   }
+
+  socket.sendMessage(`sub ${socket.runningEventId.value} {"type":"instrument","id":"${isin}","jurisdiction":"DE"}`);
 }
 
 startTicker(isin.value);

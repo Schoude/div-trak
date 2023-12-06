@@ -18,7 +18,6 @@ authStore.user?.portfolios.forEach(portfolio => {
     }
 
     socket.sendMessage(`sub ${socket.runningEventId.value} {"type":"instrument","id":"${isin}","jurisdiction":"DE"}`);
-    socket.sendMessage(`sub ${socket.runningEventId.value} {"type":"ticker","id":"${isin}.LSX","jurisdiction":"DE"}`);
   });
 });
 </script>
