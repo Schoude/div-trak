@@ -40,7 +40,10 @@ defineProps<{
     <div class="description">
       <div class="tags">
         <TagText v-for="(tag, index) of tags" :key="index">
-          {{ tag.name }}
+          <div class="inner">
+            <img :class="{ inverted: tag.type !== 'country' }" :src="tag.icon" :alt="tag.name">
+            <span>{{ tag.name }}</span>
+          </div>
         </TagText>
       </div>
       <p class="text">{{ company?.description }}</p>
@@ -92,6 +95,20 @@ h2 {
   gap: .35rem;
   flex-wrap: wrap;
   margin-block: .35rem;
+
+  .inner {
+    display: flex;
+    align-items: center;
+    gap: .35rem;
+
+    img {
+      inline-size: 0.75rem;
+
+      &.inverted {
+        filter: invert(1);
+      }
+    }
+  }
 }
 
 .description {

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import TagText from '@/components/display/TagText.vue';
 import InstrumentPortfolioInfo from '@/components/instrument/InstrumentPortfolioInfo.vue';
 import InstrumentPriceInfo from '@/components/instrument/InstrumentPriceInfo.vue';
 import DividendsList from '@/components/lists/DividendsList.vue';
@@ -82,5 +83,43 @@ const calculatedDividendPayments = computed<DividendWithPayment[]>(() => props.e
         Dividends
       </template>
     </DividendsList>
+
+    <div class="tags">
+      <TagText v-for="tag of etf.instrument.tags" :key="tag.id">
+        <div class="inner">
+          <img :src="tag.icon" :alt="tag.name">
+          <span>{{ tag.name }}</span>
+        </div>
+      </TagText>
+    </div>
+
+    <p class="description text-s">{{ etf.instrument.company.description }}</p>
   </section>
 </template>
+
+<style lang="scss" scoped>
+.tags {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+  margin-block: 0.35rem;
+
+  .inner {
+    display: flex;
+    align-items: center;
+    gap: .35rem;
+
+    img {
+      inline-size: 0.75rem;
+
+      &.inverted {
+        filter: invert(1);
+      }
+    }
+  }
+}
+
+p {
+  max-inline-size: 120ch;
+}
+</style>
