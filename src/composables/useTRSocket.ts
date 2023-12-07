@@ -2,12 +2,12 @@ import { useInstrumentsStore } from '@/stores/instruments';
 import { useNeonSearchStore } from '@/stores/neon-search';
 import { useTickerStore } from '@/stores/ticker';
 import {
-  type EventType,
   isETFDetailsEvent,
   isInstrumentEvent,
   isNeonSearchEvent,
   isStockDetailsEvent,
   isTickerEvent,
+  type EventType,
 } from '@/types/tr/events';
 import { extractJsonAndEventId } from '@/utils/ws-events';
 import { ref } from 'vue';
