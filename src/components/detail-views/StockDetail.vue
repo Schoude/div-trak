@@ -120,11 +120,12 @@ const calculatedDividendPayments = computed<DividendWithPayment[]>(() => aggrega
       </template>
     </DividendsList>
 
-    <AnalystRating :analyst-rating="stock.stockDetails?.analystRating" :current-price="+ticker.bid.price" />
+    <AnalystRating v-if="stock.stockDetails?.analystRating" :analyst-rating="stock.stockDetails?.analystRating"
+      :current-price="+ticker.bid.price" />
 
-    <EventsList :events="stock.stockDetails?.events" />
+    <EventsList v-if="stock.stockDetails?.events" :events="stock.stockDetails.events" />
 
-    <CompanyInfo :company="stock.stockDetails?.company" :tags="stock.instrument.tags" />
+    <CompanyInfo v-if="stock.stockDetails?.company" :company="stock.stockDetails.company" :tags="stock.instrument.tags" />
   </section>
 </template>
 

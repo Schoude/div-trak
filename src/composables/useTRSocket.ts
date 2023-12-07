@@ -2,12 +2,12 @@ import { useInstrumentsStore } from '@/stores/instruments';
 import { useNeonSearchStore } from '@/stores/neon-search';
 import { useTickerStore } from '@/stores/ticker';
 import {
+  type EventType,
   isETFDetailsEvent,
   isInstrumentEvent,
   isNeonSearchEvent,
   isStockDetailsEvent,
   isTickerEvent,
-  type EventType,
 } from '@/types/tr/events';
 import { extractJsonAndEventId } from '@/utils/ws-events';
 import { ref } from 'vue';
@@ -70,11 +70,12 @@ export function useTRSocket () {
     if (isInstrumentEvent(eventData)) {
       instruments.upsertInstrument(eventData.jsonObject.isin, {
         instrument: eventData.jsonObject,
-        tickerEventId: eventData.eventId + 2,
+        tickerEventId: eventData.eventId + 3,
       });
 
       if (eventData.jsonObject.typeId === 'stock') {
         runningEventId.value = runningEventId.value + 1;
+
         sendMessage(
           `sub ${runningEventId.value} {"type":"stockDetails","id":"${eventData.jsonObject.isin}","jurisdiction":"DE"}`,
           { updateEventId: false },
@@ -92,6 +93,8 @@ export function useTRSocket () {
         `sub ${runningEventId.value} {"type":"ticker","id":"${eventData.jsonObject.isin}.LSX","jurisdiction":"DE"}`,
         { updateEventId: false },
       );
+
+      runningEventId.value = runningEventId.value + 1;
     }
 
     // 3) Details of a stock | "type":"stockDetails"
