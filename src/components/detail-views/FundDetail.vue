@@ -87,7 +87,7 @@ const calculatedDividendPayments = computed<DividendWithPayment[]>(() => props.e
     <div class="tags">
       <TagText v-for="tag of etf.instrument.tags" :key="tag.id">
         <div class="inner">
-          <img :src="tag.icon" :alt="tag.name">
+          <img :class="{ inverted: tag.type !== 'country' }" :src="tag.icon" :alt="tag.name">
           <span>{{ tag.name }}</span>
         </div>
       </TagText>
