@@ -80,6 +80,7 @@ export interface CalendarDividend extends Pick<Dividend, 'id' | 'paymentDate' | 
   amountFormatted: string;
   paymentDateTimestamp: number;
   amountOwned: number;
+  hasForecast: boolean;
   sourceTax: number | null;
   sourceTaxFormatted: string;
   payment: number;

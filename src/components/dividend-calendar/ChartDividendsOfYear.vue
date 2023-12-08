@@ -187,7 +187,8 @@ onMounted(() => {
       <h2 class="heading">Month Details ({{ monthNamesMap.get(detailMonth) }})</h2>
       <div class="dividends-aggretated text-s">Aggregated Dividends: {{ detailMonthAggregatedDividends }}</div>
       <ul class="dividends-list">
-        <li class="dividend" v-for="dividend of getDetailMonthDividends" :key="dividend.id">
+        <li class="dividend" :class="{ forecast: dividend.hasForecast }" v-for="dividend of getDetailMonthDividends"
+          :key="dividend.id" :title="dividend.hasForecast ? 'Includes forecast orders' : ''">
           <div class="name">{{ dividend.instrumentName }}</div>
           <div class="metadata">
             <span class="payment"><b>{{ dividend.paymentFormatted }}</b> • </span>
@@ -282,6 +283,22 @@ onMounted(() => {
 
     .metadata {
       margin-block-start: .25rem;
+    }
+
+    &.forecast {
+      position: relative;
+      padding-inline-start: 1.2rem;
+
+      &::after {
+        position: absolute;
+        top: 8px;
+        left: 6px;
+        content: "";
+        width: 8px;
+        height: 8px;
+        background-color: rgb(253, 185, 68);
+        border-radius: 50%;
+      }
     }
   }
 }

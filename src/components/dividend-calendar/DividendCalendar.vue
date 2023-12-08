@@ -62,14 +62,15 @@ const dividendsCalendarData = computed(() => {
             return keep;
           })
           .reduce((acc, order) => {
-            acc += order.amount;
+            acc.amount += order.amount;
+            acc.hasForecast = order.execution_type === 'forecast';
 
             return acc;
-          }, 0);
+          }, { amount: 0, hasForecast: false });
 
-        if (distributionsOfCurrentMonth.length > 0 && instrumentAmountAtCurrentMonth > 0) {
+        if (distributionsOfCurrentMonth.length > 0 && instrumentAmountAtCurrentMonth.amount > 0) {
           const distributionsWithPayment = distributionsOfCurrentMonth.map(distribution => {
-            const payment = distribution.amount * instrumentAmountAtCurrentMonth;
+            const payment = distribution.amount * instrumentAmountAtCurrentMonth.amount;
 
             return {
               // Dividend Information
@@ -81,7 +82,8 @@ const dividendsCalendarData = computed(() => {
               amountFormatted: formatNumber(distribution.amount, { style: 'currency', currency: 'EUR' }),
               // Payments
               paymentDateTimestamp: new Date(distribution.paymentDate).getTime(),
-              amountOwned: instrumentAmountAtCurrentMonth,
+              amountOwned: instrumentAmountAtCurrentMonth.amount,
+              hasForecast: instrumentAmountAtCurrentMonth.hasForecast,
               sourceTax: null,
               sourceTaxFormatted: '',
               payment,
@@ -145,15 +147,16 @@ const dividendsCalendarData = computed(() => {
             return keep;
           })
           .reduce((acc, order) => {
-            acc += order.amount;
+            acc.amount += order.amount;
+            acc.hasForecast = order.execution_type === 'forecast';
 
             return acc;
-          }, 0);
+          }, { amount: 0, hasForecast: false });
 
-        if (dividendsOfCurrentMonth.length > 0 && instrumentAmountAtCurrentMonth > 0) {
+        if (dividendsOfCurrentMonth.length > 0 && instrumentAmountAtCurrentMonth.amount > 0) {
           const dividendsWihPayment = dividendsOfCurrentMonth.map(dividend => {
             let sourceTax: number | null = null;
-            let payment = dividend.amount * instrumentAmountAtCurrentMonth;
+            let payment = dividend.amount * instrumentAmountAtCurrentMonth.amount;
 
             if (instrument.instrument?.company.countryOfOrigin === 'US' || instrument.stockDetails?.company.countryCode === 'US') {
               sourceTax = payment * .15;
@@ -174,7 +177,8 @@ const dividendsCalendarData = computed(() => {
               amountFormatted: formatNumber(dividend.amount, { style: 'currency', currency: 'EUR' }),
               // Payments
               paymentDateTimestamp: new Date(dividend.paymentDate).getTime(),
-              amountOwned: instrumentAmountAtCurrentMonth,
+              amountOwned: instrumentAmountAtCurrentMonth.amount,
+              hasForecast: instrumentAmountAtCurrentMonth.hasForecast,
               sourceTax,
               sourceTaxFormatted: formattedSourceTax,
               payment,

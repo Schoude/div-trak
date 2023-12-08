@@ -39,7 +39,7 @@ export async function getUserPortfolios (id: number) {
   return result.data;
 }
 
-export async function getUserSessionFromToken(token: string) {
+export async function getUserSessionFromToken (token: string) {
   const supabaseClient = createClient<Database>(
     Deno.env.get('SUPABASE_URL') ?? '',
     Deno.env.get('SUPABASE_ANON_KEY') ?? '',
