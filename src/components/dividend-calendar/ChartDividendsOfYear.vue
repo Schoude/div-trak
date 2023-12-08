@@ -3,9 +3,10 @@ import type { CalendarDividend } from '@/types/tr/events/stock-details';
 import { formatNumber } from '@/utils/intl/currency';
 import { defaultFormat, monthIndicesMap, monthNamesMap } from '@/utils/visus';
 import { axisBottom, axisLeft, max, scaleBand, scaleLinear, scaleOrdinal, select, stack } from 'd3';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 
 const props = defineProps<{
+  year: number;
   dividends: CalendarDividend[][];
 }>();
 
@@ -28,7 +29,19 @@ const margin = {
 const width = 1200 - margin.left - margin.right;
 const height = 280 - margin.top - margin.bottom;
 
-onMounted(() => {
+function drawChart () {
+  const svgEl = chart.value?.querySelector('svg');
+
+  if (svgEl) {
+    svgEl.remove();
+  }
+
+  const tooltipEl = chart.value?.querySelector('.tooltip');
+
+  if (tooltipEl) {
+    tooltipEl.remove();
+  }
+
   const tooltip = select(chart.value)
     .append('div')
     .attr('class', 'tooltip text-s');
@@ -173,13 +186,21 @@ onMounted(() => {
     .on('mousemove', mousemove)
     .on('mouseleave', mouseleave)
     .on('click', onBarClick);
+}
+
+onMounted(() => {
+  drawChart();
+});
+
+watch(() => props.year, () => {
+  drawChart();
 });
 </script>
 
 <template>
   <div class="chart-dividends-of-year">
     <div class="wrapper">
-      <h2>Dividend Calendar</h2>
+      <h2>Dividend Calendar ({{ year }})</h2>
       <div ref="chart" class="dividends-yearly"></div>
     </div>
 

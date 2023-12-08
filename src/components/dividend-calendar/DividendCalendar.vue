@@ -4,12 +4,19 @@ import { usePortfolioStore } from '@/stores/portfolio-store';
 import type { CalendarDividend, Dividend } from '@/types/tr/events/stock-details';
 import { formatNumber } from '@/utils/intl/currency';
 import { computed, ref } from 'vue';
+import ButtonAction from '../buttons/ButtonAction.vue';
 import ChartDividendsOfYear from './ChartDividendsOfYear.vue';
 
 const instrumentStore = useInstrumentsStore();
 const portfolioStore = usePortfolioStore();
 
-const year = ref(2023);
+const year = ref(new Date().getUTCFullYear());
+const nextYear = computed(() => year.value + 1);
+const selectedYear = ref(year.value);
+
+function onYearSelectClick (year: number) {
+  selectedYear.value = year;
+}
 
 const dividendsCalendarData = computed(() => {
   const monthsMap = new Map<number, CalendarDividend[]>([
@@ -40,7 +47,7 @@ const dividendsCalendarData = computed(() => {
         const distributionsOfCurrentMonth = instrument
           .etfDetails
           .distributions
-          .filter(dividend => dividend.paymentDate.includes(`${year.value}-${month.toString().padStart(2, '0')}`));
+          .filter(dividend => dividend.paymentDate.includes(`${selectedYear.value}-${month.toString().padStart(2, '0')}`));
 
         const instrumentAmountAtCurrentMonth = portfolioStore.detailPortfolio!
           .orders
@@ -49,12 +56,12 @@ const dividendsCalendarData = computed(() => {
 
             // Keep Orders of past years
             if (order.isin === instrument.instrument?.isin &&
-              order.year < year.value) {
+              order.year < selectedYear.value) {
               keep = true;
             }
 
             // Keep Orders from this year including the current month
-            if (order.isin === instrument.instrument?.isin && order.year == year.value && order.month <= month) {
+            if (order.isin === instrument.instrument?.isin && order.year == selectedYear.value && order.month <= month) {
               keep = true;
             }
 
@@ -125,7 +132,7 @@ const dividendsCalendarData = computed(() => {
         pastDividends?.forEach(dividend => dividendMap.set(dividend.id!, dividend));
 
         const dividendsOfCurrentMonth = [...dividendMap.values()]
-          .filter(dividend => dividend.paymentDate.includes(`${year.value}-${month.toString().padStart(2, '0')}`));
+          .filter(dividend => dividend.paymentDate.includes(`${selectedYear.value}-${month.toString().padStart(2, '0')}`));
 
         const instrumentAmountAtCurrentMonth = portfolioStore.detailPortfolio!
           .orders
@@ -134,12 +141,12 @@ const dividendsCalendarData = computed(() => {
 
             // Keep Orders of past years
             if (order.isin === instrument.instrument?.isin &&
-              order.year < year.value) {
+              order.year < selectedYear.value) {
               keep = true;
             }
 
             // Keep Orders from this year including the current month
-            if (order.isin === instrument.instrument?.isin && order.year == year.value && order.month <= month) {
+            if (order.isin === instrument.instrument?.isin && order.year == selectedYear.value && order.month <= month) {
               keep = true;
             }
 
@@ -202,7 +209,15 @@ const dividendsCalendarData = computed(() => {
 
 <template>
   <div class="dividend-calendar">
-    <ChartDividendsOfYear :dividends="dividendsCalendarData" />
+    <div class="year-selection">
+      <ButtonAction class="button-year-select text-xs" variant="dawn" @click="onYearSelectClick(year)">
+        This Year ({{ year }})
+      </ButtonAction>
+      <ButtonAction class="button-year-select text-xs" variant="dusk" @click="onYearSelectClick(nextYear)">
+        Next Year ({{ nextYear }})
+      </ButtonAction>
+    </div>
+    <ChartDividendsOfYear :year="selectedYear" :dividends="dividendsCalendarData" />
   </div>
 </template>
 
@@ -210,5 +225,17 @@ const dividendsCalendarData = computed(() => {
 .dividend-calendar {
   margin-block-start: 1.125rem;
   margin-block-end: 2.125rem;
+}
+
+.year-selection {
+  display: flex;
+  gap: 1rem;
+  margin-block-end: 1.125rem;
+}
+
+.button-year-select {
+  block-size: 1.75rem;
+  padding-inline: .75rem;
+  inline-size: fit-content;
 }
 </style>
