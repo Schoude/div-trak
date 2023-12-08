@@ -69,7 +69,7 @@ const calculatedDividendPayments = computed<DividendWithPayment[]>(() => props.e
 
     <InstrumentPriceInfo :ticker="ticker" />
 
-    <ChartInstrument v-if="aggregateHistoryStore.aggregateHistory" :ticker="aggregateHistoryStore.aggregateHistory" />
+    <ChartInstrument v-if="aggregateHistoryStore.aggregateHistory" :history="aggregateHistoryStore.aggregateHistory" />
 
     <template v-if="portfolioStore">
       <InstrumentPortfolioInfo :is-in-detail-portfolio="isInDetailPortfolio" :instrument="etf">

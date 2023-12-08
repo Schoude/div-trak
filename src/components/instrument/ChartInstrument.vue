@@ -1,23 +1,63 @@
 <script setup lang="ts">
-import type { AggregateHistoryEvent } from '@/types/tr/events/aggregate-history';
+import { useAggretatesStore } from '@/stores/aggregates';
+import type { AggregateHistoryEvent, RangeHistory } from '@/types/tr/events/aggregate-history';
 import { defaultFormat, timeformat } from '@/utils/visus';
-import { axisBottom, axisLeft, format, max, min, scaleBand, scaleLinear, scaleLog, schemeSet1, select, utcFormat, utcMinutes } from 'd3';
-import { onMounted, ref, watch } from 'vue';
+import { axisBottom, axisLeft, format, max, min, scaleBand, scaleLinear, scaleLog, schemeSet1, select, utcDays, utcFormat, utcHours, utcMinutes } from 'd3';
+import { computed, nextTick, onMounted, ref, watch } from 'vue';
 
 const props = defineProps<{
-  ticker: AggregateHistoryEvent;
+  history: AggregateHistoryEvent;
 }>();
+
+const aggregatesStore = useAggretatesStore();
 
 const chart = ref<HTMLElement | null>(null);
 
 const margin = {
-  top: 16,
+  top: 5,
   right: 0,
   bottom: 24,
-  left: 50,
+  left: 65,
 };
 const width = 1200 - margin.left - margin.right;
 const height = 360 - margin.top - margin.bottom;
+
+const getXDomain = computed(() => {
+  let xDomain = [];
+
+  switch (aggregatesStore.range) {
+    case '1d': {
+      xDomain = utcMinutes(
+        new Date(props.history.aggregates.at(0)!.time),
+        new Date(props.history.expectedClosingTime),
+        props.history.resolution / 1000 / 60,
+      );
+
+      break;
+    }
+
+    case '5d':
+    case '1m': {
+      xDomain = utcHours(new Date(props.history.aggregates.at(0)!.time),
+        new Date(props.history.expectedClosingTime),
+        props.history.resolution / 1000 / 60 / 60);
+
+      break;
+    }
+
+    case '6m':
+    case '1y':
+    case 'max': {
+      xDomain = utcDays(new Date(props.history.aggregates.at(0)!.time),
+        new Date(props.history.expectedClosingTime),
+        props.history.resolution / 1000 / 60 / 60 / 24);
+      break;
+    }
+  }
+
+  return xDomain;
+},
+);
 
 function drawChart () {
   const svgEl = chart.value?.querySelector('svg');
@@ -37,8 +77,8 @@ function drawChart () {
   const y = scaleLog()
     // @ts-expect-error bad lib types
     .domain([
-      min(props.ticker.aggregates, d => +d.low),
-      max(props.ticker.aggregates, d => +d.high),
+      min(props.history.aggregates, d => +d.low),
+      max(props.history.aggregates, d => +d.high),
     ])
     .rangeRound([height, margin.top]);
 
@@ -53,15 +93,9 @@ function drawChart () {
 
 
   // X-Axis
-  // Minutes in 10 minute interval
-  const xDomain = utcMinutes(
-    new Date(props.ticker.aggregates.at(0)!.time),
-    new Date(props.ticker.expectedClosingTime),
-    props.ticker.resolution / 1000 / 60,
-  );
   const x = scaleBand()
     // @ts-expect-error bad lib types
-    .domain(xDomain)
+    .domain(getXDomain.value)
     .range([0, width])
     .padding(0.45);
 
@@ -77,7 +111,7 @@ function drawChart () {
     .attr('stroke', 'black')
     .selectAll('g')
     .enter()
-    .data(props.ticker.aggregates)
+    .data(props.history.aggregates)
     .join('g')
     // @ts-expect-error bad lib types
     .attr('transform', d => `translate(${x(d.time)},0)`);
@@ -109,22 +143,65 @@ Low: ${formatValue(+d.low)}
 High: ${formatValue(+d.high)}`);
 }
 
+function onSetRangeClick (newRange: RangeHistory) {
+  // @ts-expect-error bad dom api
+  document.startViewTransition(async () => {
+    aggregatesStore.setRange(newRange);
+    await nextTick();
+  });
+}
+
 onMounted(() => {
   drawChart();
 });
 
-watch(() => props.ticker, () => {
+watch(() => props.history, () => {
   drawChart();
 });
 </script>
 
 <template>
   <div class="chart-instrument">
+    <div class="action-ranges">
+      <button class="button-range-select" :class="{ active: aggregatesStore.range === '1d' }" type="button"
+        @click="onSetRangeClick('1d')">1D</button>
+      <button class="button-range-select" :class="{ active: aggregatesStore.range === '5d' }" type="button"
+        @click="onSetRangeClick('5d')">1W</button>
+      <button class="button-range-select" :class="{ active: aggregatesStore.range === '1m' }" type="button"
+        @click="onSetRangeClick('1m')">1M</button>
+      <button class="button-range-select" :class="{ active: aggregatesStore.range === '6m' }" type="button"
+        @click="onSetRangeClick('6m')">6M</button>
+      <button class="button-range-select" :class="{ active: aggregatesStore.range === '1y' }" type="button"
+        @click="onSetRangeClick('1y')">1Y</button>
+      <button class="button-range-select" :class="{ active: aggregatesStore.range === 'max' }" type="button"
+        @click="onSetRangeClick('max')">MAX</button>
+    </div>
     <div ref="chart" class="chart"></div>
   </div>
 </template>
 
 <style scoped lang="scss">
+.chart-instrument {
+  margin-block-start: 1rem;
+}
+
+.action-ranges {
+  display: flex;
+  gap: 1rem;
+}
+
+.button-range-select {
+  padding: .25rem;
+  line-height: 1;
+  transition: background-color .25s ease-out;
+  border-radius: 8px;
+
+  &.active,
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
 .chart {
   &:deep(svg) {
     .tick {
