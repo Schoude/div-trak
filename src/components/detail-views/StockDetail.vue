@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AnalystRating from '@/components/instrument/AnalystRating.vue';
+import ChartInstrument from '@/components/instrument/ChartInstrument.vue';
 import CompanyInfo from '@/components/instrument/CompanyInfo.vue';
 import InstrumentPortfolioInfo from '@/components/instrument/InstrumentPortfolioInfo.vue';
 import InstrumentPriceInfo from '@/components/instrument/InstrumentPriceInfo.vue';
@@ -12,6 +13,7 @@ import type { TickerEvent } from '@/types/tr/events/ticker';
 import { type Stock } from '@/types/tr/instrument';
 import { formatNumber } from '@/utils/intl/currency';
 import { computed } from 'vue';
+import { aggregateHistory } from '../instrument/aggregateHistory';
 
 const props = defineProps<{
   stock: Stock;
@@ -102,6 +104,8 @@ const calculatedDividendPayments = computed<DividendWithPayment[]>(() => aggrega
 
     <InstrumentPriceInfo :ticker="ticker" />
 
+    <ChartInstrument :ticker="aggregateHistory" />
+
     <template v-if="portfolioStore.detailPortfolio">
       <InstrumentPortfolioInfo :is-in-detail-portfolio="isInDetailPortfolio" :instrument="stock">
         <template #dividends v-if="calculatedDividendPayments.length > 0">
@@ -138,7 +142,7 @@ const calculatedDividendPayments = computed<DividendWithPayment[]>(() => aggrega
 }
 
 .reminder-select-portfolio {
-  margin-block: 0.5rem; 
+  margin-block: 0.5rem;
   text-align: center;
 }
 </style>

@@ -1,10 +1,10 @@
-import { formatLocale } from 'd3';
+import { formatLocale, timeFormatLocale } from 'd3';
 
 export const defaultFormat = formatLocale({
   decimal: ',',
   thousands: '.',
   grouping: [3],
-  currency: ['', ' €']
+  currency: ['', ' €'],
 });
 export const monthNamesMap = new Map([
   [0, 'Jan'],
@@ -34,3 +34,47 @@ export const monthIndicesMap = new Map([
   ['Nov', 10],
   ['Dec', 11],
 ]);
+export const timeformat = timeFormatLocale({
+  dateTime: '%x, %X',
+  date: '%-m/%-d/%Y',
+  time: '%-H:%M:%S %p',
+  periods: ['12', '24'],
+  days: [
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+  ],
+  shortDays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+  months: [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ],
+  shortMonths: [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ],
+});
