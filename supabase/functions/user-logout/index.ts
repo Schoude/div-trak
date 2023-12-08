@@ -27,12 +27,12 @@ Deno.serve(async (req) => {
   if (session.error) {
     return new Response(
       JSON.stringify({
-        error: 'Unauthorized'
+        error: 'Unauthorized',
       }),
       {
         headers: {
           ...corsHeaders,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         status: 401,
       },
@@ -49,12 +49,12 @@ Deno.serve(async (req) => {
   if (sessionDeleted.error) {
     return new Response(
       JSON.stringify({
-        error: 'Unauthorized'
+        error: 'Unauthorized',
       }),
       {
         headers: {
           ...corsHeaders,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         status: 401,
       },
@@ -63,12 +63,12 @@ Deno.serve(async (req) => {
 
   return new Response(
     JSON.stringify({
-      message: 'Logout successful'
+      message: 'Logout successful',
     }),
     {
       headers: {
         ...corsHeaders,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
       status: 200,
     },

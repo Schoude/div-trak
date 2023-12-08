@@ -11,7 +11,7 @@ export function formatNumber (
     style: 'decimal' | 'currency',
     currency?: 'EUR' | 'USD',
     roundingMode?: 'ceil' | 'floor',
-  } = { roundingMode:'ceil', style: 'currency' }
+  } = { roundingMode:'ceil', style: 'currency' },
 ) {
   const formatOptions: NumberFormatOptions = {
     style: options.style,

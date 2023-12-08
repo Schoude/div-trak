@@ -12,6 +12,6 @@ export const useTickerStore = defineStore('ticker', () => {
     },
     getTicker: computed(() => (eventId: number) => {
       return ticker.value.get(eventId);
-    })
+    }),
   };
 });

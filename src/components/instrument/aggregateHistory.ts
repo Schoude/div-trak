@@ -25,7 +25,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '54.94',
           'close': '55.37',
           'volume': 0,
-          'adjValue': '55.37'
+          'adjValue': '55.37',
       },
       {
           'time': 1702017600000,
@@ -34,7 +34,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.34',
           'close': '55.45',
           'volume': 0,
-          'adjValue': '55.45'
+          'adjValue': '55.45',
       },
       {
           'time': 1702018200000,
@@ -43,7 +43,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.38',
           'close': '55.39',
           'volume': 0,
-          'adjValue': '55.39'
+          'adjValue': '55.39',
       },
       {
           'time': 1702018800000,
@@ -52,7 +52,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.24',
           'close': '55.32',
           'volume': 0,
-          'adjValue': '55.32'
+          'adjValue': '55.32',
       },
       {
           'time': 1702019400000,
@@ -61,7 +61,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.2',
           'close': '55.31',
           'volume': 0,
-          'adjValue': '55.31'
+          'adjValue': '55.31',
       },
       {
           'time': 1702020000000,
@@ -70,7 +70,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.31',
           'close': '55.35',
           'volume': 0,
-          'adjValue': '55.35'
+          'adjValue': '55.35',
       },
       {
           'time': 1702020600000,
@@ -79,7 +79,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.34',
           'close': '55.34',
           'volume': 0,
-          'adjValue': '55.34'
+          'adjValue': '55.34',
       },
       {
           'time': 1702021200000,
@@ -88,7 +88,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.23',
           'close': '55.41',
           'volume': 0,
-          'adjValue': '55.41'
+          'adjValue': '55.41',
       },
       {
           'time': 1702021800000,
@@ -97,7 +97,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.41',
           'close': '55.41',
           'volume': 0,
-          'adjValue': '55.41'
+          'adjValue': '55.41',
       },
       {
           'time': 1702022400000,
@@ -106,7 +106,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.38',
           'close': '55.38',
           'volume': 0,
-          'adjValue': '55.38'
+          'adjValue': '55.38',
       },
       {
           'time': 1702023000000,
@@ -115,7 +115,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.37',
           'close': '55.38',
           'volume': 0,
-          'adjValue': '55.38'
+          'adjValue': '55.38',
       },
       {
           'time': 1702023600000,
@@ -124,7 +124,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.33',
           'close': '55.36',
           'volume': 0,
-          'adjValue': '55.36'
+          'adjValue': '55.36',
       },
       {
           'time': 1702024200000,
@@ -133,7 +133,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.36',
           'close': '55.39',
           'volume': 0,
-          'adjValue': '55.39'
+          'adjValue': '55.39',
       },
       {
           'time': 1702024800000,
@@ -142,7 +142,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.38',
           'close': '55.38',
           'volume': 0,
-          'adjValue': '55.38'
+          'adjValue': '55.38',
       },
       {
           'time': 1702025400000,
@@ -151,7 +151,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.15',
           'close': '55.22',
           'volume': 0,
-          'adjValue': '55.22'
+          'adjValue': '55.22',
       },
       {
           'time': 1702026000000,
@@ -160,7 +160,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.44',
           'close': '55.66',
           'volume': 0,
-          'adjValue': '55.66'
+          'adjValue': '55.66',
       },
       {
           'time': 1702026600000,
@@ -169,7 +169,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.56',
           'close': '55.68',
           'volume': 0,
-          'adjValue': '55.68'
+          'adjValue': '55.68',
       },
       {
           'time': 1702027200000,
@@ -178,7 +178,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.67',
           'close': '55.67',
           'volume': 0,
-          'adjValue': '55.67'
+          'adjValue': '55.67',
       },
       {
           'time': 1702027800000,
@@ -187,7 +187,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.53',
           'close': '55.72',
           'volume': 0,
-          'adjValue': '55.72'
+          'adjValue': '55.72',
       },
       {
           'time': 1702028400000,
@@ -196,7 +196,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.73',
           'close': '55.73',
           'volume': 0,
-          'adjValue': '55.73'
+          'adjValue': '55.73',
       },
       {
           'time': 1702029000000,
@@ -205,7 +205,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.58',
           'close': '55.73',
           'volume': 0,
-          'adjValue': '55.73'
+          'adjValue': '55.73',
       },
       {
           'time': 1702029600000,
@@ -214,7 +214,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.7',
           'close': '55.73',
           'volume': 0,
-          'adjValue': '55.73'
+          'adjValue': '55.73',
       },
       {
           'time': 1702030200000,
@@ -223,7 +223,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.67',
           'close': '55.7',
           'volume': 0,
-          'adjValue': '55.7'
+          'adjValue': '55.7',
       },
       {
           'time': 1702030800000,
@@ -232,7 +232,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.57',
           'close': '55.71',
           'volume': 0,
-          'adjValue': '55.71'
+          'adjValue': '55.71',
       },
       {
           'time': 1702031400000,
@@ -241,7 +241,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.71',
           'close': '55.71',
           'volume': 0,
-          'adjValue': '55.71'
+          'adjValue': '55.71',
       },
       {
           'time': 1702032000000,
@@ -250,7 +250,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.7',
           'close': '55.71',
           'volume': 0,
-          'adjValue': '55.71'
+          'adjValue': '55.71',
       },
       {
           'time': 1702032600000,
@@ -259,7 +259,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.68',
           'close': '55.71',
           'volume': 0,
-          'adjValue': '55.71'
+          'adjValue': '55.71',
       },
       {
           'time': 1702033200000,
@@ -268,7 +268,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.7',
           'close': '55.7',
           'volume': 0,
-          'adjValue': '55.7'
+          'adjValue': '55.7',
       },
       {
           'time': 1702033800000,
@@ -277,7 +277,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.7',
           'close': '55.71',
           'volume': 0,
-          'adjValue': '55.71'
+          'adjValue': '55.71',
       },
       {
           'time': 1702034400000,
@@ -286,7 +286,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.68',
           'close': '55.71',
           'volume': 0,
-          'adjValue': '55.71'
+          'adjValue': '55.71',
       },
       {
           'time': 1702035000000,
@@ -295,7 +295,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.68',
           'close': '55.71',
           'volume': 0,
-          'adjValue': '55.71'
+          'adjValue': '55.71',
       },
       {
           'time': 1702035600000,
@@ -304,7 +304,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.71',
           'close': '55.73',
           'volume': 0,
-          'adjValue': '55.73'
+          'adjValue': '55.73',
       },
       {
           'time': 1702036200000,
@@ -313,7 +313,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.73',
           'close': '55.73',
           'volume': 0,
-          'adjValue': '55.73'
+          'adjValue': '55.73',
       },
       {
           'time': 1702036800000,
@@ -322,7 +322,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.43',
           'close': '55.43',
           'volume': 0,
-          'adjValue': '55.43'
+          'adjValue': '55.43',
       },
       {
           'time': 1702037400000,
@@ -331,7 +331,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.43',
           'close': '55.44',
           'volume': 0,
-          'adjValue': '55.44'
+          'adjValue': '55.44',
       },
       {
           'time': 1702038000000,
@@ -340,7 +340,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.43',
           'close': '55.44',
           'volume': 0,
-          'adjValue': '55.44'
+          'adjValue': '55.44',
       },
       {
           'time': 1702038600000,
@@ -349,7 +349,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.42',
           'close': '55.44',
           'volume': 0,
-          'adjValue': '55.44'
+          'adjValue': '55.44',
       },
       {
           'time': 1702039200000,
@@ -358,7 +358,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.43',
           'close': '55.46',
           'volume': 0,
-          'adjValue': '55.46'
+          'adjValue': '55.46',
       },
       {
           'time': 1702039800000,
@@ -367,7 +367,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.45',
           'close': '55.65',
           'volume': 0,
-          'adjValue': '55.65'
+          'adjValue': '55.65',
       },
       {
           'time': 1702040400000,
@@ -376,7 +376,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.64',
           'close': '55.65',
           'volume': 0,
-          'adjValue': '55.65'
+          'adjValue': '55.65',
       },
       {
           'time': 1702041000000,
@@ -385,7 +385,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.65',
           'close': '55.67',
           'volume': 0,
-          'adjValue': '55.67'
+          'adjValue': '55.67',
       },
       {
           'time': 1702041600000,
@@ -394,7 +394,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.67',
           'close': '55.68',
           'volume': 0,
-          'adjValue': '55.68'
+          'adjValue': '55.68',
       },
       {
           'time': 1702042200000,
@@ -403,7 +403,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.54',
           'close': '55.61',
           'volume': 0,
-          'adjValue': '55.61'
+          'adjValue': '55.61',
       },
       {
           'time': 1702042800000,
@@ -412,7 +412,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.56',
           'close': '55.7',
           'volume': 0,
-          'adjValue': '55.7'
+          'adjValue': '55.7',
       },
       {
           'time': 1702043400000,
@@ -421,7 +421,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.68',
           'close': '55.71',
           'volume': 0,
-          'adjValue': '55.71'
+          'adjValue': '55.71',
       },
       {
           'time': 1702044000000,
@@ -430,7 +430,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.58',
           'close': '55.71',
           'volume': 0,
-          'adjValue': '55.71'
+          'adjValue': '55.71',
       },
       {
           'time': 1702044600000,
@@ -439,7 +439,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.64',
           'close': '55.71',
           'volume': 0,
-          'adjValue': '55.71'
+          'adjValue': '55.71',
       },
       {
           'time': 1702045200000,
@@ -448,7 +448,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.4',
           'close': '55.53',
           'volume': 0,
-          'adjValue': '55.53'
+          'adjValue': '55.53',
       },
       {
           'time': 1702045800000,
@@ -457,7 +457,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '54.99',
           'close': '55.55',
           'volume': 0,
-          'adjValue': '55.55'
+          'adjValue': '55.55',
       },
       {
           'time': 1702046400000,
@@ -466,7 +466,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.3',
           'close': '55.47',
           'volume': 0,
-          'adjValue': '55.47'
+          'adjValue': '55.47',
       },
       {
           'time': 1702047000000,
@@ -475,7 +475,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.33',
           'close': '55.38',
           'volume': 0,
-          'adjValue': '55.38'
+          'adjValue': '55.38',
       },
       {
           'time': 1702047600000,
@@ -484,7 +484,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.2',
           'close': '55.22',
           'volume': 0,
-          'adjValue': '55.22'
+          'adjValue': '55.22',
       },
       {
           'time': 1702048200000,
@@ -493,7 +493,7 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.16',
           'close': '55.29',
           'volume': 0,
-          'adjValue': '55.29'
+          'adjValue': '55.29',
       },
       {
           'time': 1702048800000,
@@ -502,9 +502,9 @@ export const aggregateHistory: AggregateHistory = {
           'low': '55.28',
           'close': '55.28',
           'volume': 0,
-          'adjValue': null
-      }
+          'adjValue': null,
+      },
   ],
   'resolution': 600000,
-  'lastAggregateEndTime': 1702048800000
+  'lastAggregateEndTime': 1702048800000,
 };

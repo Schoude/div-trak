@@ -60,7 +60,7 @@ async function onOrderClick (type: 'sell' | 'buy') {
         token: authStore.sessionToken,
         alreadyInPortfolio: props.isInDetailPortfolio,
         order: newOrder,
-      }
+      },
     });
 
     if (newOrderRes.error) throw newOrderRes.error;

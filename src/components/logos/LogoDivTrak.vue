@@ -4,7 +4,7 @@ import { computed } from 'vue';
 const props = withDefaults(defineProps<{
   width?: number
 }>(), {
-  width: 50
+  width: 50,
 });
 
 const dropShadowStyle = computed(() => {

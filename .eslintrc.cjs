@@ -6,10 +6,10 @@ module.exports = {
   'extends': [
     'plugin:vue/vue3-essential',
     'eslint:recommended',
-    '@vue/eslint-config-typescript'
+    '@vue/eslint-config-typescript',
   ],
   parserOptions: {
-    ecmaVersion: 'latest'
+    ecmaVersion: 'latest',
   },
   rules: {
     quotes: ['error', 'single'],
@@ -17,11 +17,11 @@ module.exports = {
     'object-curly-spacing': ['error', 'always'],
     'array-bracket-spacing': ['error', 'never'],
     'comma-dangle': ['error', {
-      'arrays': 'only-multiline',
-      'objects': 'only-multiline',
-      'imports': 'only-multiline',
-      'exports': 'only-multiline',
-      'functions': 'only-multiline'
+      'arrays': 'always-multiline',
+      'objects': 'always-multiline',
+      'imports': 'always-multiline',
+      'exports': 'always-multiline',
+      'functions': 'always-multiline',
     }],
     'space-before-function-paren': [
       'error',
@@ -31,9 +31,9 @@ module.exports = {
         asyncArrow: 'always',
       },
     ],
-    'newline-before-return': 'error'
+    'newline-before-return': 'error',
   },
   ignorePatterns: [
-    '*.html'
-  ]
+    '*.html',
+  ],
 };

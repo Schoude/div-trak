@@ -58,9 +58,9 @@ async function onDeletionConfirmClick () {
         orderToDelete: {
           id: orderToDelete.value?.id,
           portfolioId: props.portfolio.id,
-          isin: orderToDelete.value?.isin
+          isin: orderToDelete.value?.isin,
         },
-      }
+      },
     });
 
     if (deleteOrderResponse.error) throw deleteOrderResponse.error;

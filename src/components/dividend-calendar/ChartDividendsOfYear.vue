@@ -24,7 +24,7 @@ const margin = {
   top: 16,
   right: 0,
   bottom: 24,
-  left: 60
+  left: 60,
 };
 const width = 1200 - margin.left - margin.right;
 const height = 280 - margin.top - margin.bottom;
@@ -86,7 +86,7 @@ function drawChart () {
     .dividends
     .map((dividendsOfMonth, index) => {
       const dataPoint: Record<string, string | number> = {
-        group: monthNamesMap.get(index)!
+        group: monthNamesMap.get(index)!,
       };
 
       dividendsOfMonth.forEach(dividend => {

@@ -7,7 +7,7 @@ const search = useNeonSearchStore();
 
 defineEmits([
   'hide',
-  'hide:navigation'
+  'hide:navigation',
 ]);
 </script>
 

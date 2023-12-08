@@ -2,6 +2,7 @@
 import FundDetail from '@/components/detail-views/FundDetail.vue';
 import StockDetail from '@/components/detail-views/StockDetail.vue';
 import { useTRSocket } from '@/composables/useTRSocket';
+import { useAggretatesStore } from '@/stores/aggregates';
 import { useInstrumentsStore } from '@/stores/instruments';
 import { usePortfolioStore } from '@/stores/portfolio-store';
 import { useTickerStore } from '@/stores/ticker';
@@ -22,6 +23,7 @@ const isInDetailPortfolio = computed(() => portfolioStore.detailPortfolio?.isins
 
 watchEffect(() => {
   isin.value = router.currentRoute.value.params.isin as string;
+  useAggretatesStore().isin = isin.value;
 });
 
 onBeforeRouteLeave(() => {
@@ -32,7 +34,7 @@ onBeforeRouteUpdate((guard) => {
   startTicker(guard.params.isin as string);
 });
 
-function startTicker (isin: string) {
+function startTicker(isin: string) {
   if (instruments.getInstrument(isin)) {
     // Re-sub for existing ticker of the instrument
     socket.sendMessage(`sub ${instrumentData.value?.tickerEventId} {"type":"ticker","id":"${isin}.LSX","jurisdiction":"DE"}`, { updateEventId: false });

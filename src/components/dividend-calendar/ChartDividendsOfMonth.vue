@@ -14,7 +14,7 @@ const margin = {
   top: 16,
   right: 0,
   bottom: 16,
-  left: 60
+  left: 60,
 };
 const width = 250 - margin.left - margin.right;
 const height = 150 - margin.top - margin.bottom;

@@ -9,7 +9,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits([
-  'hide:navigation'
+  'hide:navigation',
 ]);
 
 const router = useRouter();

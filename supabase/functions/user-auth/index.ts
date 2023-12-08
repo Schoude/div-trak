@@ -27,7 +27,7 @@ Deno.serve(async (req) => {
   if (session.error) {
     return new Response(
       JSON.stringify({
-        error: 'Unauthorized'
+        error: 'Unauthorized',
       }),
       {
         headers: { 'Content-Type': 'application/json' },
@@ -66,7 +66,7 @@ Deno.serve(async (req) => {
   if (user.error) {
     return new Response(
       JSON.stringify({
-        error: 'Unauthorized'
+        error: 'Unauthorized',
       }),
       {
         headers: { 'Content-Type': 'application/json' },
@@ -83,7 +83,7 @@ Deno.serve(async (req) => {
     {
       headers: {
         ...corsHeaders,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
       status: 200,
     },

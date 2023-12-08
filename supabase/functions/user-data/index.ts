@@ -79,7 +79,7 @@ Deno.serve(async (req) => {
   }), {
     headers: {
       ...corsHeaders,
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
     status: 200,
   });
