@@ -66,15 +66,18 @@ const calculatedDividendPayments = computed<DividendWithPayment[]>(() => props.e
 
     <InstrumentPriceInfo :ticker="ticker" />
 
-    <InstrumentPortfolioInfo :is-in-detail-portfolio="isInDetailPortfolio" :instrument="etf">
-      <template #dividends v-if="calculatedDividendPayments?.length > 0">
-        <DividendsList :dividends="calculatedDividendPayments" :frequency="paymentMonths" :yield="dividendYield">
-          <template #title>
-            Distributions in Portfolio <small>({{ portfolioStore.detailPortfolio?.name }})</small>
-          </template>
-        </DividendsList>
-      </template>
-    </InstrumentPortfolioInfo>
+    <template v-if="portfolioStore">
+      <InstrumentPortfolioInfo :is-in-detail-portfolio="isInDetailPortfolio" :instrument="etf">
+        <template #dividends v-if="calculatedDividendPayments?.length > 0">
+          <DividendsList :dividends="calculatedDividendPayments" :frequency="paymentMonths" :yield="dividendYield">
+            <template #title>
+              Distributions in Portfolio <small>({{ portfolioStore.detailPortfolio?.name }})</small>
+            </template>
+          </DividendsList>
+        </template>
+      </InstrumentPortfolioInfo>
+    </template>
+    <p v-else class="reminder-select-portfolio text-l">Please, select a portfolio to place orders.</p>
 
     <!-- Only show if the instrument is NOT in the detail portfolio -->
     <DividendsList v-if="props.etf.etfDetails?.distributions.length > 0 && !isInDetailPortfolio"
@@ -121,5 +124,10 @@ const calculatedDividendPayments = computed<DividendWithPayment[]>(() => props.e
 
 p {
   max-inline-size: 120ch;
+}
+
+.reminder-select-portfolio {
+  margin-block: 0.5rem; 
+  text-align: center;
 }
 </style>
