@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import TagText from '@/components/display/TagText.vue';
+import ChartInstrument from '@/components/instrument/ChartInstrument.vue';
 import InstrumentPortfolioInfo from '@/components/instrument/InstrumentPortfolioInfo.vue';
 import InstrumentPriceInfo from '@/components/instrument/InstrumentPriceInfo.vue';
 import DividendsList from '@/components/lists/DividendsList.vue';
 import TRAssetLoader from '@/components/loaders/TRAssetLoader.vue';
+import { useAggretatesStore } from '@/stores/aggregates';
 import { usePortfolioStore } from '@/stores/portfolio-store';
 import type { DividendWithPayment } from '@/types/tr/events/stock-details';
 import type { TickerEvent } from '@/types/tr/events/ticker';
@@ -18,6 +20,7 @@ const props = defineProps<{
 }>();
 
 const portfolioStore = usePortfolioStore();
+const aggregateHistoryStore = useAggretatesStore();
 
 const dividendYield = computed(() => `${formatNumber(((props.etf.etfDetails?.metrics?.yield ?? 0) * 100), { style: 'decimal', roundingMode: 'floor' })} %`);
 
@@ -65,6 +68,8 @@ const calculatedDividendPayments = computed<DividendWithPayment[]>(() => props.e
     <h1 class="text-l">{{ etf.instrument.shortName }}</h1>
 
     <InstrumentPriceInfo :ticker="ticker" />
+
+    <ChartInstrument v-if="aggregateHistoryStore.aggregateHistory" :ticker="aggregateHistoryStore.aggregateHistory" />
 
     <template v-if="portfolioStore">
       <InstrumentPortfolioInfo :is-in-detail-portfolio="isInDetailPortfolio" :instrument="etf">
@@ -127,7 +132,7 @@ p {
 }
 
 .reminder-select-portfolio {
-  margin-block: 0.5rem; 
+  margin-block: 0.5rem;
   text-align: center;
 }
 </style>

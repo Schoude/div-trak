@@ -9,8 +9,8 @@ const props = defineProps<{
   currentPrice: number;
 }>();
 
-const upwardsMobility = computed(() => formatNumber((1 - props.currentPrice / props.analystRating?.targetPrice.high) * 100, { style: 'decimal', roundingMode: 'floor' }));
-const downwardsMobility = computed(() => formatNumber((1 - props.currentPrice / props.analystRating?.targetPrice.low) * 100, { style: 'decimal', roundingMode: 'floor' }));
+const upwardsMobility = computed(() => formatNumber((1 - props.currentPrice / props.analystRating?.targetPrice?.high) * 100, { style: 'decimal', roundingMode: 'floor' }));
+const downwardsMobility = computed(() => formatNumber((1 - props.currentPrice / props.analystRating?.targetPrice?.low) * 100, { style: 'decimal', roundingMode: 'floor' }));
 </script>
 
 <template>
@@ -19,20 +19,20 @@ const downwardsMobility = computed(() => formatNumber((1 - props.currentPrice / 
       <h2 class="text-m">Recommendations</h2>
 
       <div class="grid">
-        <div v-if="analystRating?.recommendations.outperform > 0" class="outperform recommendation">
-          Outperform: {{ analystRating.recommendations.outperform }}
+        <div v-if="analystRating?.recommendations?.outperform > 0" class="outperform recommendation">
+          Outperform: {{ analystRating.recommendations?.outperform }}
         </div>
-        <div v-if="analystRating?.recommendations.buy > 0" class="buy recommendation">
-          Buy: {{ analystRating.recommendations.buy }}
+        <div v-if="analystRating?.recommendations?.buy > 0" class="buy recommendation">
+          Buy: {{ analystRating.recommendations?.buy }}
         </div>
-        <div v-if="analystRating?.recommendations.hold > 0" class="hold recommendation">
-          Hold: {{ analystRating.recommendations.hold }}
+        <div v-if="analystRating?.recommendations?.hold > 0" class="hold recommendation">
+          Hold: {{ analystRating.recommendations?.hold }}
         </div>
-        <div v-if="analystRating?.recommendations.sell > 0" class="sell recommendation">
-          Sell: {{ analystRating.recommendations.sell }}
+        <div v-if="analystRating?.recommendations?.sell > 0" class="sell recommendation">
+          Sell: {{ analystRating.recommendations?.sell }}
         </div>
-        <div v-if="analystRating?.recommendations.underperform > 0" class="underperform recommendation">
-          Underperform: {{ analystRating.recommendations.underperform }}
+        <div v-if="analystRating?.recommendations?.underperform > 0" class="underperform recommendation">
+          Underperform: {{ analystRating.recommendations?.underperform }}
         </div>
       </div>
     </div>
