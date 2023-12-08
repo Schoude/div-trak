@@ -26,7 +26,7 @@ const margin = {
   left: 60
 };
 const width = 1200 - margin.left - margin.right;
-const height = 320 - margin.top - margin.bottom;
+const height = 280 - margin.top - margin.bottom;
 
 onMounted(() => {
   const tooltip = select(chart.value)
@@ -204,7 +204,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .dividends-yearly {
-  min-block-size: 335px;
+  min-block-size: 315px;
   overflow-x: auto;
   inline-size: 100%;
   position: relative;
@@ -250,7 +250,7 @@ onMounted(() => {
 }
 
 .month-details {
-  min-inline-size: 400px;
+  inline-size: 100%;
   margin-block-start: 1.5rem;
 
   .heading {
