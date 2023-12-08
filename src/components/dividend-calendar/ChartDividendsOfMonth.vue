@@ -123,7 +123,8 @@ onMounted(() => {
     <ul class="dividends-list">
       <li class="dividend" :class="{ forecast: dividend.hasForecast }" v-for="dividend of dividends" :key="dividend.id"
         :title="dividend.hasForecast ? 'Includes forecast orders' : ''">
-        <div class="name">{{ dividend.instrumentName }}</div>
+        <RouterLink class="name" :to="{ name: 'instrument', params: { isin: dividend.isin } }">{{ dividend.instrumentName }}
+        </RouterLink>
         <div class="metadata">
           <span class="payment"><b>{{ dividend.paymentFormatted }}</b> • </span>
           <span class="date text-s">@ {{ new Date(dividend.paymentDate).toLocaleDateString() }}</span>
@@ -195,6 +196,12 @@ onMounted(() => {
     padding: 0.35rem .75rem;
     line-height: 1;
     border-radius: 8px;
+
+    .name {
+      &:hover {
+        text-decoration: underline;
+      }
+    }
 
     .metadata {
       margin-block-start: .25rem;
