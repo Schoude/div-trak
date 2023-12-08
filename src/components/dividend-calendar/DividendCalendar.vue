@@ -3,7 +3,7 @@ import { useInstrumentsStore } from '@/stores/instruments';
 import { usePortfolioStore } from '@/stores/portfolio-store';
 import type { CalendarDividend, Dividend } from '@/types/tr/events/stock-details';
 import { formatNumber } from '@/utils/intl/currency';
-import { computed, ref } from 'vue';
+import { computed, nextTick, ref } from 'vue';
 import ButtonAction from '../buttons/ButtonAction.vue';
 import ChartDividendsOfYear from './ChartDividendsOfYear.vue';
 
@@ -15,7 +15,11 @@ const nextYear = computed(() => year.value + 1);
 const selectedYear = ref(year.value);
 
 function onYearSelectClick (year: number) {
-  selectedYear.value = year;
+  // @ts-expect-error krigt amal eure DOM API types auf die kedde
+  document.startViewTransition(async () => {
+    selectedYear.value = year;
+    await nextTick();
+  });
 }
 
 const dividendsCalendarData = computed(() => {
