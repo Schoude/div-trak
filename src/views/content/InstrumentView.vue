@@ -34,7 +34,7 @@ onBeforeRouteUpdate((guard) => {
   startTicker(guard.params.isin as string);
 });
 
-function startTicker(isin: string) {
+function startTicker (isin: string) {
   if (instruments.getInstrument(isin)) {
     // Re-sub for existing ticker of the instrument
     socket.sendMessage(`sub ${instrumentData.value?.tickerEventId} {"type":"ticker","id":"${isin}.LSX","jurisdiction":"DE"}`, { updateEventId: false });

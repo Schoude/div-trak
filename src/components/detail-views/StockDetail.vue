@@ -7,13 +7,13 @@ import InstrumentPriceInfo from '@/components/instrument/InstrumentPriceInfo.vue
 import DividendsList from '@/components/lists/DividendsList.vue';
 import EventsList from '@/components/lists/EventsList.vue';
 import TRAssetLoader from '@/components/loaders/TRAssetLoader.vue';
+import { useAggretatesStore } from '@/stores/aggregates';
 import { usePortfolioStore } from '@/stores/portfolio-store';
 import type { Dividend, DividendWithPayment } from '@/types/tr/events/stock-details';
 import type { TickerEvent } from '@/types/tr/events/ticker';
 import { type Stock } from '@/types/tr/instrument';
 import { formatNumber } from '@/utils/intl/currency';
 import { computed } from 'vue';
-import { aggregateHistory } from '../instrument/aggregateHistory';
 
 const props = defineProps<{
   stock: Stock;
@@ -22,6 +22,7 @@ const props = defineProps<{
 }>();
 
 const portfolioStore = usePortfolioStore();
+const aggregateHistoryStore = useAggretatesStore();
 
 const dividendYield = computed(() => `${formatNumber(props.stock.stockDetails.company.dividendYieldSnapshot * 100, { style: 'decimal', roundingMode: 'floor' })} %`);
 
@@ -104,7 +105,7 @@ const calculatedDividendPayments = computed<DividendWithPayment[]>(() => aggrega
 
     <InstrumentPriceInfo :ticker="ticker" />
 
-    <ChartInstrument :ticker="aggregateHistory" />
+    <ChartInstrument v-if="aggregateHistoryStore.aggregateHistory" :ticker="aggregateHistoryStore.aggregateHistory" />
 
     <template v-if="portfolioStore.detailPortfolio">
       <InstrumentPortfolioInfo :is-in-detail-portfolio="isInDetailPortfolio" :instrument="stock">

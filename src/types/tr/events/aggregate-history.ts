@@ -8,7 +8,7 @@ export interface Ticker {
   adjValue: string | null;
 }
 
-export interface AggregateHistory {
+export interface AggregateHistoryEvent {
   aggregates: Ticker[];
   resolution: number;
   lastAggregateEndTime: number;

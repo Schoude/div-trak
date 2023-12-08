@@ -1,7 +1,9 @@
+import { useAggretatesStore } from '@/stores/aggregates';
 import { useInstrumentsStore } from '@/stores/instruments';
 import { useNeonSearchStore } from '@/stores/neon-search';
 import { useTickerStore } from '@/stores/ticker';
 import {
+  isAggregateHistoryEvent,
   isETFDetailsEvent,
   isInstrumentEvent,
   isNeonSearchEvent,
@@ -30,6 +32,7 @@ export function useTRSocket () {
   const neonSearch = useNeonSearchStore();
   const instruments = useInstrumentsStore();
   const ticker = useTickerStore();
+  const aggregateHistory = useAggretatesStore();
 
   function sendMessage (
     message: string,
@@ -116,6 +119,11 @@ export function useTRSocket () {
       ticker.setTicker(eventData.eventId, eventData.jsonObject);
 
       return;
+    }
+
+    // 6) Aggregate history of an instrument | "type":"aggregateHistoryLight"
+    if (isAggregateHistoryEvent(eventData)) {
+      aggregateHistory.setAggregateHistory(eventData.jsonObject);
     }
 
     sendMessage(`unsub ${eventData?.eventId}`, { updateEventId: false });

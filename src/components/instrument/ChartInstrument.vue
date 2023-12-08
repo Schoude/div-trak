@@ -1,11 +1,11 @@
 <script setup lang="ts">
+import type { AggregateHistoryEvent } from '@/types/tr/events/aggregate-history';
 import { defaultFormat, timeformat } from '@/utils/visus';
 import { axisBottom, axisLeft, format, max, min, scaleBand, scaleLinear, scaleLog, schemeSet1, select, utcFormat, utcMinutes } from 'd3';
-import { onMounted, ref } from 'vue';
-import type { AggregateHistory } from './aggregateHistory';
+import { onMounted, ref, watch } from 'vue';
 
 const props = defineProps<{
-  ticker: AggregateHistory;
+  ticker: AggregateHistoryEvent;
 }>();
 
 const chart = ref<HTMLElement | null>(null);
@@ -19,7 +19,13 @@ const margin = {
 const width = 1200 - margin.left - margin.right;
 const height = 360 - margin.top - margin.bottom;
 
-function drawChart () {
+function drawChart() {
+  const svgEl = chart.value?.querySelector('svg');
+
+  if (svgEl) {
+    svgEl.remove();
+  }
+
   const svg = select(chart.value)
     .append('svg')
     .attr('width', width + margin.left + margin.right)
@@ -51,7 +57,7 @@ function drawChart () {
   const xDomain = utcMinutes(
     new Date(props.ticker.aggregates.at(0)!.time),
     new Date(props.ticker.expectedClosingTime),
-    10,
+    props.ticker.resolution / 1000 / 60,
   );
   const x = scaleBand()
     // @ts-expect-error bad lib types
@@ -104,6 +110,10 @@ High: ${formatValue(+d.high)}`);
 }
 
 onMounted(() => {
+  drawChart();
+});
+
+watch(() => props.ticker, () => {
   drawChart();
 });
 </script>

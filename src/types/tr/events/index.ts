@@ -1,10 +1,11 @@
+import type { AggregateHistoryEvent } from '@/types/tr/events/aggregate-history';
 import type { ETFDetailsEvent } from '@/types/tr/events/etf-details';
 import type { InstrumentEvent } from '@/types/tr/events/instruments';
 import type { NeonSearchEvent } from '@/types/tr/events/neon-search';
 import type { StockDetailsEvent } from '@/types/tr/events/stock-details';
 import type { TickerEvent } from '@/types/tr/events/ticker';
 
-export type EventType = NeonSearchEvent | InstrumentEvent | StockDetailsEvent | ETFDetailsEvent | TickerEvent;
+export type EventType = NeonSearchEvent | InstrumentEvent | StockDetailsEvent | ETFDetailsEvent | TickerEvent | AggregateHistoryEvent;
 
 export interface EventReturnvalue<T = EventType> {
   eventId: number;
@@ -33,4 +34,8 @@ export function isETFDetailsEvent (event: {eventId: number; jsonObject: EventTyp
 
 export function isTickerEvent (event: {eventId: number; jsonObject: EventType;}): event is EventReturnvalue<TickerEvent>  {
   return (event.jsonObject as TickerEvent).qualityId != null;
+}
+
+export function isAggregateHistoryEvent (event: {eventId: number; jsonObject: EventType;}): event is EventReturnvalue<AggregateHistoryEvent> {
+  return (event.jsonObject as AggregateHistoryEvent).aggregates != null;
 }
