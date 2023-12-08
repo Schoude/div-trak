@@ -10,20 +10,21 @@ export const useAggretatesStore = defineStore('aggretates', () => {
   const aggregateHistory = ref<AggregateHistoryEvent | null>(null);
   const socket = useTRSocket();
 
+  function sendEvent () {
+    const query =
+    `sub ${aggregateHistoryId.value} {"type":"aggregateHistoryLight","range":"${range.value}","id":"${isin.value}.LSX"}`;
+  socket.sendMessage(query, { updateEventId: false });
+  aggregateHistoryId.value = aggregateHistoryId.value + 1;
+  }
+
   watch(isin, () => {
     range.value = '1d';
 
-    const query =
-      `sub ${aggregateHistoryId.value} {"type":"aggregateHistoryLight","range":"${range.value}","id":"${isin.value}.LSX"}`;
-    socket.sendMessage(query, { updateEventId: false });
-    aggregateHistoryId.value = aggregateHistoryId.value + 1;
+    sendEvent();
   });
 
   watch(range, () => {
-    const query =
-      `sub ${aggregateHistoryId.value} {"type":"aggregateHistoryLight","range":"${range.value}","id":"${isin.value}.LSX"}`;
-    socket.sendMessage(query, { updateEventId: false });
-    aggregateHistoryId.value = aggregateHistoryId.value + 1;
+    sendEvent();
   });
 
   return {

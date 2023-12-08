@@ -188,6 +188,7 @@ watch(() => props.history, () => {
 .action-ranges {
   display: flex;
   gap: 1rem;
+  margin-block-end: 1rem;
 }
 
 .button-range-select {
@@ -204,6 +205,8 @@ watch(() => props.history, () => {
 
 .chart {
   &:deep(svg) {
+    margin-inline: auto;
+
     .tick {
       text {
         font-size: 13px;
