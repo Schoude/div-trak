@@ -251,7 +251,7 @@ onMounted(() => {
 
 .month-details {
   inline-size: 100%;
-  margin-block-start: 1.5rem;
+  margin-block-start: 1rem;
 
   .heading {
     margin-block-end: .2rem;
