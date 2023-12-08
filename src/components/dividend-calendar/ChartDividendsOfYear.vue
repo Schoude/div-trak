@@ -25,7 +25,7 @@ const margin = {
   bottom: 24,
   left: 60
 };
-const width = 800 - margin.left - margin.right;
+const width = 1200 - margin.left - margin.right;
 const height = 320 - margin.top - margin.bottom;
 
 onMounted(() => {
@@ -185,11 +185,12 @@ onMounted(() => {
 
     <div class="month-details">
       <h2 class="heading">Month Details ({{ monthNamesMap.get(detailMonth) }})</h2>
-      <div class="dividends-aggretated text-s">Aggregated Dividends: {{ detailMonthAggregatedDividends }}</div>
+      <div class="dividends-aggretated">Aggregated Dividends: {{ detailMonthAggregatedDividends }}</div>
       <ul class="dividends-list">
         <li class="dividend" :class="{ forecast: dividend.hasForecast }" v-for="dividend of getDetailMonthDividends"
           :key="dividend.id" :title="dividend.hasForecast ? 'Includes forecast orders' : ''">
-          <RouterLink class="name" :to="{ name: 'instrument', params: { isin: dividend.isin } }">{{ dividend.instrumentName }}
+          <RouterLink class="name" :to="{ name: 'instrument', params: { isin: dividend.isin } }">{{
+            dividend.instrumentName }}
           </RouterLink>
           <div class="metadata">
             <span class="payment"><b>{{ dividend.paymentFormatted }}</b> • </span>
@@ -202,16 +203,10 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
-.chart-dividends-of-year {
-  display: flex;
-  gap: 1rem;
-  overflow-x: auto;
-  inline-size: 100%;
-}
-
 .dividends-yearly {
   min-block-size: 335px;
-  min-inline-size: 800px;
+  overflow-x: auto;
+  inline-size: 100%;
   position: relative;
 
   &:deep(.tooltip) {
@@ -256,6 +251,7 @@ onMounted(() => {
 
 .month-details {
   min-inline-size: 400px;
+  margin-block-start: 1.5rem;
 
   .heading {
     margin-block-end: .2rem;

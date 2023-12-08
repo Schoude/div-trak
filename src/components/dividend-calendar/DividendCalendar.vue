@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import ChartDividendsOfMonth from '@/components/dividend-calendar/ChartDividendsOfMonth.vue';
 import { useInstrumentsStore } from '@/stores/instruments';
 import { usePortfolioStore } from '@/stores/portfolio-store';
 import type { CalendarDividend, Dividend } from '@/types/tr/events/stock-details';
@@ -199,32 +198,10 @@ const dividendsCalendarData = computed(() => {
 
   return [...monthsMap.values()];
 });
-
-const getDividendsOfCurrentMonth = computed(() => {
-  const currentMonth = new Date().getUTCMonth();
-  const dividendsOfCurrentMonth = dividendsCalendarData.value[currentMonth]!.sort((a, b) => b.payment - a.payment);
-
-  const aggregatedAmount = dividendsOfCurrentMonth.reduce((acc, dividend) => {
-    acc += dividend.payment;
-
-    return acc;
-  }, 0);
-
-  return {
-    aggregatedAmount: formatNumber(aggregatedAmount, { style: 'currency', currency: 'EUR' }),
-    dividends: dividendsOfCurrentMonth,
-  };
-});
 </script>
 
 <template>
   <div class="dividend-calendar">
-    <div class="current-month">
-      <h2 class="aggregated-amount">Payment this month: {{ getDividendsOfCurrentMonth.aggregatedAmount }}</h2>
-
-      <ChartDividendsOfMonth :dividends="getDividendsOfCurrentMonth.dividends" />
-    </div>
-
     <ChartDividendsOfYear :dividends="dividendsCalendarData" />
   </div>
 </template>
@@ -232,14 +209,6 @@ const getDividendsOfCurrentMonth = computed(() => {
 <style lang="scss" scoped>
 .dividend-calendar {
   margin-block-start: 1.125rem;
-  margin-block-end: 2.125rem;
-}
-
-.aggregated-amount {
-  margin-block-end: 1rem;
-}
-
-.current-month {
   margin-block-end: 2.125rem;
 }
 </style>
