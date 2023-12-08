@@ -1,8 +1,24 @@
 <script setup lang="ts">
 import { useAggretatesStore } from '@/stores/aggregates';
 import type { AggregateHistoryEvent, RangeHistory } from '@/types/tr/events/aggregate-history';
-import { defaultFormat, timeformat } from '@/utils/visus';
-import { axisBottom, axisLeft, format, max, min, scaleBand, scaleLinear, scaleLog, schemeSet1, select, utcDays, utcFormat, utcHours, utcMinutes } from 'd3';
+import { defaultFormat } from '@/utils/visus';
+import {
+axisBottom,
+axisLeft,
+format,
+max,
+min,
+scaleBand,
+scaleLinear,
+scaleLog,
+scaleTime,
+schemeSet1,
+select,
+utcDays,
+utcFormat,
+utcHours,
+utcMinutes,
+} from 'd3';
 import { computed, nextTick, onMounted, ref, watch } from 'vue';
 
 const props = defineProps<{
@@ -15,14 +31,14 @@ const chart = ref<HTMLElement | null>(null);
 
 const margin = {
   top: 5,
-  right: 0,
+  right: 20,
   bottom: 24,
   left: 65,
 };
 const width = 1200 - margin.left - margin.right;
 const height = 360 - margin.top - margin.bottom;
 
-const getXDomain = computed(() => {
+const getXDomainBandScale = computed(() => {
   let xDomain = [];
 
   switch (aggregatesStore.range) {
@@ -56,8 +72,16 @@ const getXDomain = computed(() => {
   }
 
   return xDomain;
-},
-);
+});
+
+const xTime = computed(() => {
+  return scaleTime([
+    new Date(props.history.aggregates.at(0)!.time),
+    new Date(props.history.expectedClosingTime)],
+    [0, width],
+  )
+    .nice();
+});
 
 function drawChart () {
   const svgEl = chart.value?.querySelector('svg');
@@ -69,7 +93,7 @@ function drawChart () {
   const svg = select(chart.value)
     .append('svg')
     .attr('width', width + margin.left + margin.right)
-    .attr('height', height + margin.top + margin.bottom)
+    .attr('height', height + margin.top + margin.bottom + 10)
     .append('g')
     .attr('transform', `translate(${margin.left},${margin.top})`);
 
@@ -85,24 +109,33 @@ function drawChart () {
   svg.append('g')
     .call(axisLeft(y)
       .tickFormat(defaultFormat.format('$.2f'))
-      .tickValues(scaleLinear().domain(y.domain()).ticks()))
+      .tickValues(
+        scaleLinear()
+          .domain(y.domain())
+          .ticks(5),
+      ))
     .call(g => g.selectAll('.tick line').clone()
       .attr('stroke-opacity', 0.2)
       .attr('x2', width))
     .call(g => g.select('.domain').remove());
 
-
-  // X-Axis
-  const x = scaleBand()
+  // X-Axis for candles
+  const xBand = scaleBand()
     // @ts-expect-error bad lib types
-    .domain(getXDomain.value)
+    .domain(getXDomainBandScale.value)
     .range([0, width])
     .padding(0.45);
 
   svg.append('g')
-    .attr('transform', `translate(0,${height})`)
-    // @ts-expect-error bad lib types
-    .call(axisBottom(x).tickFormat(timeformat.format('%H:%M')))
+    .call(axisBottom(xBand))
+    .call(g => g.selectAll('.tick').remove())
+    .call(g => g.select('.domain').remove());
+
+  // X-Axis for time labels
+  svg.append('g')
+    .attr('transform', `translate(0,${height + 10})`)
+    .attr('class', 'axis-time')
+    .call(axisBottom(xTime.value))
     .call(g => g.select('.domain').remove());
 
   // Candles
@@ -114,7 +147,7 @@ function drawChart () {
     .data(props.history.aggregates)
     .join('g')
     // @ts-expect-error bad lib types
-    .attr('transform', d => `translate(${x(d.time)},0)`);
+    .attr('transform', d => `translate(${xBand(d.time)},0)`);
 
   // Whiskers
   g.append('line')
@@ -126,7 +159,7 @@ function drawChart () {
   g.append('line')
     .attr('y1', d => y(+d.open))
     .attr('y2', d => y(+d.close))
-    .attr('stroke-width', x.bandwidth())
+    .attr('stroke-width', xBand.bandwidth())
     .attr('stroke', d => d.open > d.close ? schemeSet1[0]
       : d.close > d.open ? schemeSet1[2]
         : schemeSet1[8]);
