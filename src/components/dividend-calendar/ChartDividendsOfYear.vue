@@ -3,7 +3,7 @@ import type { CalendarDividend } from '@/types/tr/events/stock-details';
 import { formatNumber } from '@/utils/intl/currency';
 import { defaultFormat, monthIndicesMap, monthNamesMap } from '@/utils/visus';
 import { axisBottom, axisLeft, max, scaleBand, scaleLinear, scaleOrdinal, select, stack } from 'd3';
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, nextTick, onMounted, ref, watch } from 'vue';
 
 const props = defineProps<{
   year: number;
@@ -77,7 +77,11 @@ function drawChart () {
 
   const onBarClick = function (_e: MouseEvent, d: unknown) {
     const monthIndex = monthIndicesMap.get((d as { data: { group: string } }).data.group);
-    detailMonth.value = monthIndex!;
+    // @ts-expect-error bad dom types
+    document.startViewTransition(async () => {
+      detailMonth.value = monthIndex!;
+      await nextTick();
+    });
   };
 
   // START data setup
