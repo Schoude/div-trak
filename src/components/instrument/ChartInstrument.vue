@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useAggretatesStore } from '@/stores/aggregates';
 import type { AggregateHistoryEvent, RangeHistory } from '@/types/tr/events/aggregate-history';
+import type { TickerEvent } from '@/types/tr/events/ticker';
 import { defaultFormat } from '@/utils/visus';
 import {
 axisBottom,
@@ -22,6 +23,7 @@ utcMinutes,
 import { computed, nextTick, onMounted, ref, watch } from 'vue';
 
 const props = defineProps<{
+  ticker: TickerEvent;
   history: AggregateHistoryEvent;
 }>();
 
@@ -189,6 +191,10 @@ onMounted(() => {
 });
 
 watch(() => props.history, () => {
+  drawChart();
+});
+
+watch(() => props.ticker, () => {
   drawChart();
 });
 </script>

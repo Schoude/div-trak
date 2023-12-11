@@ -107,7 +107,8 @@ const calculatedDividendPayments = computed<DividendWithPayment[]>(() => aggrega
 
     <InstrumentPriceInfo :ticker="ticker" />
 
-    <ChartInstrument v-if="aggregateHistoryStore.aggregateHistory" :history="aggregateHistoryStore.aggregateHistory" />
+    <ChartInstrument v-if="aggregateHistoryStore.aggregateHistory" :history="aggregateHistoryStore.aggregateHistory"
+      :ticker="ticker" />
 
     <template v-if="portfolioStore.detailPortfolio">
       <InstrumentPortfolioInfo :is-in-detail-portfolio="isInDetailPortfolio" :instrument="stock">
