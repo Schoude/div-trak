@@ -19,17 +19,18 @@ function onClose () {
 
 <template>
   <dialog class="modal-base" ref="modalBase">
-    <header>
-      <div class="title text-m">
-        <slot name="title" />
-      </div>
-      <button class="btn-close" type="button" title="Close the modal" @click="onClose">
-        <IconClose />
-      </button>
-    </header>
+    <div class="inner">
+      <header>
+        <div class="title text-m">
+          <slot name="title" />
+        </div>
+        <button class="btn-close" type="button" title="Close the modal" @click="onClose">
+          <IconClose />
+        </button>
+      </header>
 
-    <slot name="content" />
-
+      <slot name="content" />
+    </div>
   </dialog>
 </template>
 
@@ -90,6 +91,12 @@ $movementY: 8px;
     background-color: rgb(0 0 0 / 0);
     backdrop-filter: blur(0);
   }
+}
+
+.inner {
+  block-size: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr;
 }
 
 header {

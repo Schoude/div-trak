@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import ButtonAction from '@/components/buttons/ButtonAction.vue';
 import AnalystRating from '@/components/instrument/AnalystRating.vue';
 import ChartInstrument from '@/components/instrument/ChartInstrument.vue';
 import CompanyInfo from '@/components/instrument/CompanyInfo.vue';
@@ -7,6 +8,7 @@ import InstrumentPriceInfo from '@/components/instrument/InstrumentPriceInfo.vue
 import DividendsList from '@/components/lists/DividendsList.vue';
 import EventsList from '@/components/lists/EventsList.vue';
 import TRAssetLoader from '@/components/loaders/TRAssetLoader.vue';
+import ModalDividendHistory from '@/components/modals/ModalDividendHistory.vue';
 import { useAggretatesStore } from '@/stores/aggregates';
 import { usePortfolioStore } from '@/stores/portfolio-store';
 import type { AggregateHistoryEvent } from '@/types/tr/events/aggregate-history';
@@ -14,8 +16,7 @@ import type { Dividend, DividendWithPayment } from '@/types/tr/events/stock-deta
 import type { TickerEvent } from '@/types/tr/events/ticker';
 import { type Stock } from '@/types/tr/instrument';
 import { formatNumber } from '@/utils/intl/currency';
-import { computed } from 'vue';
-import ButtonAction from '../buttons/ButtonAction.vue';
+import { computed, ref } from 'vue';
 
 const props = defineProps<{
   stock: Stock;
@@ -23,6 +24,8 @@ const props = defineProps<{
   isInDetailPortfolio: boolean;
   history: AggregateHistoryEvent | null;
 }>();
+
+const modalIframe = ref<typeof ModalDividendHistory | null>(null);
 
 const portfolioStore = usePortfolioStore();
 const aggregateHistoryStore = useAggretatesStore();
@@ -100,6 +103,10 @@ const calculatedDividendPayments = computed<DividendWithPayment[]>(() => aggrega
     paymentAmount: formatNumber(paymentAmount, { style: 'currency', currency: 'EUR' }),
   };
 }));
+
+function onOpenIframeModalClick () {
+  modalIframe.value?.onOpenIframeModalOpen();
+}
 </script>
 
 <template>
@@ -121,9 +128,13 @@ const calculatedDividendPayments = computed<DividendWithPayment[]>(() => aggrega
             </template>
 
             <template #action-dividendhistory>
-              <ButtonAction type="button" class="button-dividendhistory-modal" variant="dusk">
+              <ButtonAction type="button" class="button-dividendhistory-modal" variant="dusk"
+                @click="onOpenIframeModalClick">
                 Compare with dividendhistory.org
               </ButtonAction>
+
+              <ModalDividendHistory ref="modalIframe" :stock-name="stock.instrument.shortName" />
+
             </template>
           </DividendsList>
         </template>
