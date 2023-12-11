@@ -2,14 +2,14 @@ import type { Tag } from '@/types/tr/events/instruments';
 
 export interface SectorData {
   sector: Tag;
-  instruments: Instrument;
+  instruments: { name: string }[];
 }
 
 export interface TreemapStructure {
   name: string;
   count: number;
   children?: {
-    name: string,
+    name: string;
     count: number;
   }[];
 }
