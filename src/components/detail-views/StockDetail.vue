@@ -15,6 +15,7 @@ import type { TickerEvent } from '@/types/tr/events/ticker';
 import { type Stock } from '@/types/tr/instrument';
 import { formatNumber } from '@/utils/intl/currency';
 import { computed } from 'vue';
+import ButtonAction from '../buttons/ButtonAction.vue';
 
 const props = defineProps<{
   stock: Stock;
@@ -26,6 +27,7 @@ const props = defineProps<{
 const portfolioStore = usePortfolioStore();
 const aggregateHistoryStore = useAggretatesStore();
 
+const isUSStock = computed(() => props.stock.instrument.company.countryOfOrigin === 'US' || props.stock.stockDetails?.company.countryCode === 'US');
 const dividendYield = computed(() => `${formatNumber(props.stock.stockDetails.company.dividendYieldSnapshot * 100, { style: 'decimal', roundingMode: 'floor' })} %`);
 
 const aggregatedDividends = computed(() => {
@@ -82,7 +84,7 @@ const calculatedDividendPayments = computed<DividendWithPayment[]>(() => aggrega
 
   let paymentAmount = dividend.amount * orderAmountExDate;
 
-  if (props.stock.instrument.company.countryOfOrigin === 'US' || props.stock.stockDetails?.company.countryCode === 'US') {
+  if (isUSStock.value) {
     sourceTax = paymentAmount * .15;
     paymentAmount = paymentAmount - sourceTax;
   }
@@ -117,6 +119,12 @@ const calculatedDividendPayments = computed<DividendWithPayment[]>(() => aggrega
             <template #title>
               Dividends in Portfolio <small>({{ portfolioStore.detailPortfolio?.name }})</small>
             </template>
+
+            <template #action-dividendhistory v-if="isUSStock">
+              <ButtonAction type="button" class="button-dividendhistory-modal" variant="dusk">
+                Compare with dividendhistory.org Dividends
+              </ButtonAction>
+            </template>
           </DividendsList>
         </template>
       </InstrumentPortfolioInfo>
@@ -148,5 +156,15 @@ const calculatedDividendPayments = computed<DividendWithPayment[]>(() => aggrega
 .reminder-select-portfolio {
   margin-block: 0.5rem;
   text-align: center;
+}
+
+.button-dividendhistory-modal {
+  display: inline-block;
+  block-size: 1.75rem;
+  font-size: .7rem;
+  margin-block-end: 0.75rem;
+  inline-size: fit-content;
+  padding-inline: .5rem;
+  margin-inline-start: 1rem;
 }
 </style>

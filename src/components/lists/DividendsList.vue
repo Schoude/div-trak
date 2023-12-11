@@ -18,6 +18,9 @@ defineProps<{
     <TagText class="frequency">
       {{ frequency }} • {{ yield }}
     </TagText>
+
+    <slot name="action-dividendhistory" />
+
     <ul>
       <DividendListItem v-for="dividend of dividends" :key="dividend.id" :dividend="dividend" />
     </ul>
