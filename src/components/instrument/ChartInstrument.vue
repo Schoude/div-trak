@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useAggretatesStore } from '@/stores/aggregates';
-import type { AggregateHistoryEvent, RangeHistory } from '@/types/tr/events/aggregate-history';
+import type { AggregateHistoryEvent, RangeHistory, Ticker } from '@/types/tr/events/aggregate-history';
 import type { TickerEvent } from '@/types/tr/events/ticker';
 import { defaultFormat, timeformat } from '@/utils/visus';
 import {
@@ -38,6 +38,9 @@ const margin = {
 };
 const width = 1200 - margin.left - margin.right;
 const height = 360 - margin.top - margin.bottom;
+
+const formatDate = timeformat.format('%H:%M %B %-d, %Y');
+const formatValue = defaultFormat.format('$.2f');
 
 const getXDomainBandScale = computed(() => {
   let xDomain = [];
@@ -90,6 +93,43 @@ function drawChart () {
   if (svgEl) {
     svgEl.remove();
   }
+
+  const tooltipEl = chart.value?.querySelector('.tooltip');
+
+  if (tooltipEl) {
+    tooltipEl.remove();
+  }
+
+  const tooltip = select(chart.value)
+    .append('div')
+    .attr('class', 'tooltip text-s');
+
+  const mousemove = function (event: MouseEvent) {
+    tooltip
+      .style('transform', 'translate(3%, -105%)')
+      .style('left', `${event.x}px`)
+      .style('top', `${event.y}px`);
+  };
+
+  const mouseover = function (event: MouseEvent, d: Ticker) {
+    const value = `${formatDate(new Date(d.time))}\nOpen: ${formatValue(+d.open)}\nClose: ${formatValue(+d.close)} (${format('+.2%')(1 - (+d.open / +d.close))})\nLow: ${formatValue(+d.low)}\nHigh: ${formatValue(+d.high)}`;
+    tooltip
+      .html(value)
+      .style('opacity', 1);
+
+    const candleLine = event.target as SVGLineElement;
+    select(candleLine)
+      .attr('class', 'candle hovered');
+  };
+
+  const mouseleave = function (event: MouseEvent) {
+    tooltip
+      .style('opacity', 0);
+
+    const candleLine = event.target as SVGLineElement;
+    select(candleLine)
+      .attr('class', 'candle');
+  };
 
   const svg = select(chart.value)
     .append('svg')
@@ -152,29 +192,23 @@ function drawChart () {
 
   // Whiskers
   g.append('line')
+    .attr('class', 'whisker')
     .attr('y1', d => y(+d.low))
     .attr('y2', d => y(+d.high))
     .attr('stroke', 'white');
 
   // Candle
   g.append('line')
+    .attr('class', 'candle')
     .attr('y1', d => y(+d.open))
     .attr('y2', d => y(+d.close))
     .attr('stroke-width', xBand.bandwidth())
     .attr('stroke', d => d.open > d.close ? schemeSet1[0]
       : d.close > d.open ? schemeSet1[2]
-        : schemeSet1[8]);
-
-  // Information
-  const formatDate = timeformat.format('%H:%M %B %-d, %Y');
-  const formatValue = defaultFormat.format('$.2f');
-
-  g.append('title')
-    .text(d => `${formatDate(new Date(d.time))}
-Open: ${formatValue(+d.open)}
-Close: ${formatValue(+d.close)} (${format('+.2%')(1 - (+d.open / +d.close))})
-Low: ${formatValue(+d.low)}
-High: ${formatValue(+d.high)}`);
+        : schemeSet1[8])
+    .on('mouseover', mouseover)
+    .on('mousemove', mousemove)
+    .on('mouseleave', mouseleave);
 }
 
 function onSetRangeClick (newRange: RangeHistory) {
@@ -221,6 +255,20 @@ watch(() => props.ticker, () => {
 <style scoped lang="scss">
 .chart-instrument {
   margin-block-start: 1rem;
+
+  &:deep(.tooltip) {
+    opacity: 0;
+    position: fixed;
+    white-space: nowrap;
+    background-color: #0a080b;
+    border: 1px solid rgb(48, 48, 48);
+    padding: 0.55rem 0.85rem;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    transition: opacity .25s ease-out;
+    pointer-events: none;
+    white-space: pre-wrap;
+  }
 }
 
 .action-ranges {
@@ -252,6 +300,13 @@ watch(() => props.ticker, () => {
       }
     }
 
+    .candle {
+      transition: stroke .25s ease-out;
+
+      &.hovered {
+        stroke: #3d4a5b;
+      }
+    }
   }
 }
 </style>
