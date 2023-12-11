@@ -14,7 +14,7 @@ import {
 import { extractJsonAndEventId } from '@/utils/ws-events';
 import { ref } from 'vue';
 
-const socket = ref(new WebSocket('wss://api.traderepublic.com/'));
+const socket = ref(new WebSocket(import.meta.env.VITE_TR_SOCKET_URL));
 
 socket.value.onopen = () => {
   socket.value?.send(
