@@ -61,9 +61,9 @@ function drawChart () {
     .enter()
     .append('rect')
     // @ts-expect-error bad lib types
-    .attr('y', d => d.y0)
-    // @ts-expect-error bad lib types
     .attr('x', d => d.x0)
+    // @ts-expect-error bad lib types
+    .attr('y', d => d.y0)
     // @ts-expect-error bad lib types
     .attr('width', d => d.x1 - d.x0)
     // @ts-expect-error bad lib types
