@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import DividendCalendar from '@/components/dividend-calendar/DividendCalendar.vue';
 import InstrumentListItem from '@/components/lists/InstrumentListItem.vue';
+import SectorsInPortfolio from '@/components/portfolio/SectorsInPortfolio.vue';
 import { useTRSocket } from '@/composables/useTRSocket';
 import { useInstrumentsStore } from '@/stores/instruments';
 import { usePortfolioStore } from '@/stores/portfolio-store';
@@ -65,6 +66,8 @@ onBeforeRouteLeave(() => {
           :key="instrument?.instrument?.shortName" />
       </ul>
     </div>
+
+    <SectorsInPortfolio v-if="portfolioStore.instruments" :instruments="portfolioStore.instruments" />
   </main>
 </template>
 
