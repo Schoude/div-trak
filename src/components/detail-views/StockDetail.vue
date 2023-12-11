@@ -9,6 +9,7 @@ import EventsList from '@/components/lists/EventsList.vue';
 import TRAssetLoader from '@/components/loaders/TRAssetLoader.vue';
 import { useAggretatesStore } from '@/stores/aggregates';
 import { usePortfolioStore } from '@/stores/portfolio-store';
+import type { AggregateHistoryEvent } from '@/types/tr/events/aggregate-history';
 import type { Dividend, DividendWithPayment } from '@/types/tr/events/stock-details';
 import type { TickerEvent } from '@/types/tr/events/ticker';
 import { type Stock } from '@/types/tr/instrument';
@@ -19,6 +20,7 @@ const props = defineProps<{
   stock: Stock;
   ticker: TickerEvent;
   isInDetailPortfolio: boolean;
+  history: AggregateHistoryEvent | null;
 }>();
 
 const portfolioStore = usePortfolioStore();

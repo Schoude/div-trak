@@ -7,6 +7,7 @@ import DividendsList from '@/components/lists/DividendsList.vue';
 import TRAssetLoader from '@/components/loaders/TRAssetLoader.vue';
 import { useAggretatesStore } from '@/stores/aggregates';
 import { usePortfolioStore } from '@/stores/portfolio-store';
+import type { AggregateHistoryEvent } from '@/types/tr/events/aggregate-history';
 import type { DividendWithPayment } from '@/types/tr/events/stock-details';
 import type { TickerEvent } from '@/types/tr/events/ticker';
 import type { ETF } from '@/types/tr/instrument';
@@ -17,6 +18,7 @@ const props = defineProps<{
   etf: ETF;
   ticker: TickerEvent;
   isInDetailPortfolio: boolean;
+  history: AggregateHistoryEvent | null;
 }>();
 
 const portfolioStore = usePortfolioStore();

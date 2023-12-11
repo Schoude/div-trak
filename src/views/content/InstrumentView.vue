@@ -20,6 +20,7 @@ const isin = ref('');
 const instrumentData = computed(() => instruments.getInstrument(isin.value));
 const tickerData = computed(() => ticker.getTicker(instrumentData.value?.tickerEventId!));
 const isInDetailPortfolio = computed(() => portfolioStore.detailPortfolio?.isins.includes(isin.value) ?? false);
+const aggregateHistoryStore = useAggretatesStore();
 
 watchEffect(() => {
   isin.value = router.currentRoute.value.params.isin as string;
@@ -56,10 +57,10 @@ startTicker(isin.value);
 
     <template v-else>
       <template v-if="isStock(instrumentData) && tickerData">
-        <StockDetail :stock="instrumentData" :ticker="tickerData" :is-in-detail-portfolio="isInDetailPortfolio" />
+        <StockDetail :stock="instrumentData" :ticker="tickerData" :is-in-detail-portfolio="isInDetailPortfolio" :history="aggregateHistoryStore.aggregateHistory" />
       </template>
       <template v-if="isETF(instrumentData) && tickerData">
-        <FundDetail :etf="instrumentData" :ticker="tickerData" :is-in-detail-portfolio="isInDetailPortfolio" />
+        <FundDetail :etf="instrumentData" :ticker="tickerData" :is-in-detail-portfolio="isInDetailPortfolio" :history="aggregateHistoryStore.aggregateHistory" />
       </template>
     </template>
   </main>
