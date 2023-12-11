@@ -18,7 +18,7 @@ const socket = ref(new WebSocket(import.meta.env.VITE_TR_SOCKET_URL));
 
 socket.value.onopen = () => {
   socket.value?.send(
-    'connect 29 {"locale":"de","platformId":"webtrading","platformVersion":"chrome - 119.0.0","clientId":"app.traderepublic.com","clientVersion":"1.27.5"}',
+    `connect 29 {"locale":"de","platformId":"webtrading","platformVersion":"chrome - 119.0.0","clientId":"${import.meta.env.VITE_TR_CLIENT_ID}","clientVersion":"1.27.5"}`,
   );
 };
 

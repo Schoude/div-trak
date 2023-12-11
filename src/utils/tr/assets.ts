@@ -1,4 +1,4 @@
-const TR_IMAGE_ASSETS_BASE = 'https://assets.traderepublic.com';
+const TR_IMAGE_ASSETS_BASE = import.meta.env.VITE_TR_IMAGE_ASSETS_BASE;
 const TR_IMAGE_DARK = '/dark.min.svg';
 // const TR_IMAGE_LIGHT = '/light.min.svg';
 
