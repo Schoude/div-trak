@@ -2,7 +2,7 @@
 import { useAggretatesStore } from '@/stores/aggregates';
 import type { AggregateHistoryEvent, RangeHistory } from '@/types/tr/events/aggregate-history';
 import type { TickerEvent } from '@/types/tr/events/ticker';
-import { defaultFormat } from '@/utils/visus';
+import { defaultFormat, timeformat } from '@/utils/visus';
 import {
 axisBottom,
 axisLeft,
@@ -16,7 +16,6 @@ scaleTime,
 schemeSet1,
 select,
 utcDays,
-utcFormat,
 utcHours,
 utcMinutes,
 } from 'd3';
@@ -167,7 +166,7 @@ function drawChart () {
         : schemeSet1[8]);
 
   // Information
-  const formatDate = utcFormat('%B %-d, %Y');
+  const formatDate = timeformat.format('%H:%M %B %-d, %Y');
   const formatValue = defaultFormat.format('$.2f');
 
   g.append('title')
