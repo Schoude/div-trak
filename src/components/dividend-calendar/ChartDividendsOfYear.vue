@@ -229,7 +229,7 @@ watch(() => props.year, () => {
 
 <style lang="scss" scoped>
 .dividends-yearly {
-  min-block-size: 315px;
+  min-block-size: 300px;
   overflow-x: auto;
   inline-size: 100%;
   position: relative;

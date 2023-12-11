@@ -11,11 +11,11 @@ const chart = ref<HTMLElement | null>(null);
 const margin = {
   top: 5,
   right: 0,
-  bottom: 16,
+  bottom: 0,
   left: 0,
 };
 const width = 1200 - margin.left - margin.right;
-const height = 300 - margin.top - margin.bottom;
+const height = 200 - margin.top - margin.bottom;
 
 function drawChart () {
   const svgEl = chart.value?.querySelector('svg');
@@ -107,7 +107,12 @@ onMounted(() => {
 }
 
 .chart {
+  inline-size: 100%;
+  overflow-x: auto;
+
   &:deep(svg) {
+    max-inline-size: initial;
+
     text {
       font-size: 10px;
       font-family: var(--font-family);

@@ -33,7 +33,7 @@ const chart = ref<HTMLElement | null>(null);
 const margin = {
   top: 5,
   right: 20,
-  bottom: 24,
+  bottom: 32,
   left: 65,
 };
 const width = 1200 - margin.left - margin.right;
@@ -290,7 +290,11 @@ watch(() => props.ticker, () => {
 }
 
 .chart {
+  inline-size: 100%;
+  overflow-x: auto;
+
   &:deep(svg) {
+    max-inline-size: initial;
     margin-inline: auto;
 
     .tick {
