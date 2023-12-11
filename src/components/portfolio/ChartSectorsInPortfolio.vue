@@ -15,7 +15,7 @@ const margin = {
   left: 0,
 };
 const width = 1200 - margin.left - margin.right;
-const height = 200 - margin.top - margin.bottom;
+const height = 160 - margin.top - margin.bottom;
 
 function drawChart () {
   const svgEl = chart.value?.querySelector('svg');

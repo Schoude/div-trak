@@ -120,9 +120,9 @@ const calculatedDividendPayments = computed<DividendWithPayment[]>(() => aggrega
               Dividends in Portfolio <small>({{ portfolioStore.detailPortfolio?.name }})</small>
             </template>
 
-            <template #action-dividendhistory v-if="isUSStock">
+            <template #action-dividendhistory>
               <ButtonAction type="button" class="button-dividendhistory-modal" variant="dusk">
-                Compare with dividendhistory.org Dividends
+                Compare with dividendhistory.org
               </ButtonAction>
             </template>
           </DividendsList>
@@ -159,12 +159,9 @@ const calculatedDividendPayments = computed<DividendWithPayment[]>(() => aggrega
 }
 
 .button-dividendhistory-modal {
-  display: inline-block;
   block-size: 1.75rem;
   font-size: .7rem;
-  margin-block-end: 0.75rem;
   inline-size: fit-content;
-  padding-inline: .5rem;
-  margin-inline-start: 1rem;
+  padding-inline: .65rem;
 }
 </style>

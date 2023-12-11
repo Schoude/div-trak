@@ -15,11 +15,13 @@ defineProps<{
     <h2 class="text-m">
       <slot name="title" />
     </h2>
-    <TagText class="frequency">
-      {{ frequency }} • {{ yield }}
-    </TagText>
 
-    <slot name="action-dividendhistory" />
+    <div class="wrapper">
+      <TagText class="frequency">
+        {{ frequency }} • {{ yield }}
+      </TagText>
+      <slot name="action-dividendhistory" />
+    </div>
 
     <ul>
       <DividendListItem v-for="dividend of dividends" :key="dividend.id" :dividend="dividend" />
@@ -32,13 +34,12 @@ defineProps<{
   margin-block: 1.35rem;
 }
 
-h2,
-.frequency {
+h2 {
   margin-block-end: 0.35rem;
 }
 
 .frequency {
-  display: inline-block;
+  block-size: max-content;
 }
 
 ul {
@@ -48,5 +49,13 @@ ul {
   display: flex;
   gap: .5rem;
   overflow-x: auto;
+}
+
+.wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  margin-block-end: 0.7rem;
 }
 </style>
