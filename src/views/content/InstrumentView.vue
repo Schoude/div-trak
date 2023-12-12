@@ -8,7 +8,7 @@ import { usePortfolioStore } from '@/stores/portfolio-store';
 import { useTickerStore } from '@/stores/ticker';
 import type { Ticker } from '@/types/tr/events/aggregate-history';
 import { isETF, isStock } from '@/types/tr/instrument';
-import { computed, ref, watch, watchEffect } from 'vue';
+import { computed, onUnmounted, ref, watch, watchEffect } from 'vue';
 import { onBeforeRouteLeave, onBeforeRouteUpdate, useRouter } from 'vue-router';
 
 const socket = useTRSocket();
@@ -81,6 +81,11 @@ onBeforeRouteLeave(() => {
 
 onBeforeRouteUpdate((guard) => {
   startTicker(guard.params.isin as string);
+  aggregateHistoryStore.aggregateHistory = null;
+});
+
+onUnmounted(() => {
+  aggregateHistoryStore.aggregateHistory = null;
 });
 
 function startTicker (isin: string) {
