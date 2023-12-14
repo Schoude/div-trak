@@ -16,7 +16,7 @@ defineProps<{
       <div v-if="dividend.type">Type: {{ dividend.type }}</div>
     </div>
     <div class="text-s">Ex Date: {{ new Date(dividend.exDate).toLocaleDateString() }}</div>
-    <div>Record Date: {{ new Date(dividend.recordDate).toLocaleDateString() }}</div>
+    <div>Record Date: {{ dividend.recordDate ? new Date(dividend.recordDate).toLocaleDateString() : 'n. a.' }}</div>
     <div class="text-s"><b>Payment Date: {{ new Date(dividend.paymentDate).toLocaleDateString() }}</b></div>
   </div>
 </template>

@@ -1,22 +1,27 @@
 <script setup lang="ts">
+import ButtonAction from '@/components/buttons/ButtonAction.vue';
+import InputText from '@/components/inputs/InputText.vue';
+import DividendListItem from '@/components/lists/DividendListItem.vue';
 import ModalBase from '@/components/modals/ModalBase.vue';
+import { supabase } from '@/supabase/client';
+import type { DividendsCrawlReturnType } from '@/supabase/types/functions';
+import type { Dividend } from '@/types/tr/events/stock-details';
 import { computed, nextTick, ref, watch } from 'vue';
-import ButtonAction from '../buttons/ButtonAction.vue';
-import InputText from '../inputs/InputText.vue';
 
 const root = ref<typeof ModalBase | null>(null);
 const modalIsOpen = ref(false);
 
+const baseUrl = 'https://dividendhistory.org/payout';
 const symbolToCrawl = ref('');
 const isLoading = ref(false);
 const crawlCompleted = ref(false);
-const crawledDividends = ref([]);
+const crawledDividends = ref<Dividend[]>([]);
 
 watch(symbolToCrawl, () => {
   symbolToCrawl.value = symbolToCrawl.value.toUpperCase();
 });
 
-defineProps<{
+const props = defineProps<{
   stockName: string;
 }>();
 
@@ -26,6 +31,7 @@ defineExpose({
 
 const canCrawlDividends = computed(() => !isLoading.value && symbolToCrawl.value !== '');
 const canConfirmDividends = computed(() => !isLoading.value && crawlCompleted.value && crawledDividends.value.length > 0);
+const urlToCrawl = computed(() => `${baseUrl}/${symbolToCrawl.value}`);
 
 function onOpenIframeModalOpen () {
   root.value?.$el.showModal();
@@ -42,17 +48,39 @@ function onOpenIframeModalClose () {
   resetValues();
 }
 
-function onCrawlSubmit () {
+async function onCrawlSubmit () {
   isLoading.value = true;
-  console.log('onCrawlSubmit');
+  try {
+    const crawlDividendsResponse = await supabase.functions.invoke<DividendsCrawlReturnType>('dividends-crawl', {
+      body: {
+        url: urlToCrawl.value,
+      },
+    });
 
-  // @ts-expect-error bad DOM types
-  document.startViewTransition(async () => {
-    crawlCompleted.value = true;
-    await nextTick();
-  });
+    if (crawlDividendsResponse.error) throw crawlDividendsResponse.error;
 
-  isLoading.value = false;
+    if (crawlDividendsResponse.data) {
+      // @ts-expect-error bad DOM types
+      document.startViewTransition(async () => {
+        // Set values for successful crawl
+        crawlCompleted.value = true;
+        crawledDividends.value = crawlDividendsResponse.data.estimatedDividends;
+
+        await nextTick();
+      });
+    } else throw new Error('Response has no data: Function: order-delete');
+
+    if (!crawlDividendsResponse.data?.estimatedDividends) {
+      console.error(`Error crawling the estimated dividends for ${props.stockName} (${symbolToCrawl.value})`);
+
+      return;
+    }
+
+  } catch (error) {
+    console.error(error);
+  } finally {
+    isLoading.value = false;
+  }
 }
 
 function resetValues () {
@@ -68,20 +96,34 @@ function resetValues () {
     <template #title>dividendhistory.org | {{ stockName }}</template>
     <template #content>
       <div v-if="modalIsOpen" class="inner">
+        <!-- TODO: move into component -->
         <div v-if="!crawlCompleted" class="dividend-finder">
-          <iframe src="https://dividendhistory.org/payout" frameborder="0"></iframe>
+          <iframe :src="baseUrl" frameborder="0"></iframe>
+
           <form class="form-crawl-dividends" @submit.prevent="onCrawlSubmit">
-            <InputText id="symbol-name" v-model.trim="symbolToCrawl" placeholder="Symbol to crawl i.e. MSFT" />
+            <InputText id="symbol-name" v-model.trim="symbolToCrawl" placeholder="Symbol to crawl i.e. MSFT"
+              autocomplete="off" />
             <ButtonAction variant="dawn" :disabled="!canCrawlDividends">
               Crawl Dividends
             </ButtonAction>
           </form>
         </div>
 
+        <!-- TODO: move into component -->
         <div v-else class="dividend-confirmation">
-          <ButtonAction variant="dawn" :disabled="!canConfirmDividends">
-            Confirm dividends
-          </ButtonAction>
+          <div class="crawled-dividends">
+            <ul>
+              <DividendListItem v-for="dividend of crawledDividends" :dividend="dividend" :key="dividend.id">
+                <template #action>
+                  <div class="confirmation">
+                    <ButtonAction variant="dawn" :disabled="!canConfirmDividends">
+                      Confirm dividend
+                    </ButtonAction>
+                  </div>
+                </template>
+              </DividendListItem>
+            </ul>
+          </div>
         </div>
       </div>
     </template>
@@ -122,6 +164,28 @@ iframe {
     grid-template-rows: 1fr;
     grid-template-columns: 15% 1fr;
     gap: 2rem;
+  }
+}
+
+.dividend-confirmation {
+  flex: 1;
+  display: flex;
+
+  .crawled-dividends {
+    display: grid;
+    place-content: center;
+    flex: 1;
+
+    ul {
+      padding: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .confirmation {
+      margin-block-start: .5rem;
+    }
   }
 }
 </style>

@@ -26,6 +26,8 @@ const isPastDividend = computed(() => {
       </template>
 
       <DividendInfo v-if="dividend" :dividend="dividend" />
+
+      <slot name="action"></slot>
     </div>
   </li>
 </template>
@@ -37,6 +39,7 @@ const isPastDividend = computed(() => {
   padding: 0.35rem 0.55rem;
   border-radius: 8px;
   box-shadow: var(--shadow);
+  list-style: none;
 
   &.past {
     border: 1px solid var(--color-bullish);
