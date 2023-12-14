@@ -54,6 +54,12 @@ Deno.serve(async (req) => {
     JSON.stringify({
       estimatedDividends: [...dividends.values()],
     }),
-    { headers: { 'Content-Type': 'application/json' } },
+    {
+      headers: {
+        ...corsHeaders,
+        'Content-Type': 'application/json',
+      },
+      status: 200,
+    },
   );
 });

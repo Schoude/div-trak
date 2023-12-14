@@ -65,7 +65,18 @@ Deno.serve(async (req) => {
     const newSession: DbResult<typeof newSessionQ> = await newSessionQ;
 
     if (newSession.data?.token == null) {
-      throw new Error('Session token not generated.');
+      return new Response(
+        JSON.stringify({
+          error: 'Session token not generated.',
+        }),
+        {
+          headers: {
+            ...corsHeaders,
+            'Content-Type': 'application/json',
+          },
+          status: 500,
+        },
+      );
     }
 
     token = newSession.data.token;

@@ -36,7 +36,10 @@ Deno.serve(async (req) => {
         error: 'Unauthorized',
       }),
       {
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          ...corsHeaders,
+          'Content-Type': 'application/json',
+        },
         status: 401,
       },
     );
@@ -59,7 +62,10 @@ Deno.serve(async (req) => {
           error: 'Server Error',
         }),
         {
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            ...corsHeaders,
+            'Content-Type': 'application/json',
+          },
           status: 500,
         },
       );
@@ -85,7 +91,10 @@ Deno.serve(async (req) => {
           error: 'Server Error',
         }),
         {
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            ...corsHeaders,
+            'Content-Type': 'application/json',
+          },
           status: 500,
         },
       );
@@ -105,7 +114,10 @@ Deno.serve(async (req) => {
         error: 'Server Error',
       }),
       {
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          ...corsHeaders,
+          'Content-Type': 'application/json',
+        },
         status: 500,
       },
     );
@@ -135,7 +147,10 @@ Deno.serve(async (req) => {
         error: 'Server Error',
       }),
       {
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          ...corsHeaders,
+          'Content-Type': 'application/json',
+        },
         status: 500,
       },
     );

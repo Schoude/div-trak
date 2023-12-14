@@ -30,7 +30,10 @@ Deno.serve(async (req) => {
         error: 'Unauthorized',
       }),
       {
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          ...corsHeaders,
+          'Content-Type': 'application/json',
+        },
         status: 401,
       },
     );
@@ -69,7 +72,10 @@ Deno.serve(async (req) => {
         error: 'Unauthorized',
       }),
       {
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          ...corsHeaders,
+          'Content-Type': 'application/json',
+        },
         status: 401,
       },
     );
