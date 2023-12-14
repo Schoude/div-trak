@@ -5,9 +5,9 @@ defineProps<{
 </script>
 
 <template>
-<button class="button-action" :class="[variant]">
-  <slot />
-</button>
+  <button class="button-action" :class="[variant]">
+    <slot />
+  </button>
 </template>
 
 <style lang='scss' scoped>
@@ -29,8 +29,14 @@ defineProps<{
   &.dawn {
     background-image: var(--gradient-dawn);
   }
+
   &.dusk {
     background-image: var(--gradient-dusk);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    filter: grayscale(1);
   }
 }
 </style>
