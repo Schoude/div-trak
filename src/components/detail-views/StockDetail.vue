@@ -133,7 +133,8 @@ function onOpenIframeModalClick () {
                 Compare with dividendhistory.org
               </ButtonAction>
 
-              <ModalDividendHistory ref="modalIframe" :stock-name="stock.instrument.shortName" />
+              <ModalDividendHistory ref="modalIframe" :stock-name="stock.instrument.shortName"
+                :isin="stock.instrument.isin" />
 
             </template>
           </DividendsList>

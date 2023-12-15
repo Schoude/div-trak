@@ -1,10 +1,10 @@
 <script setup lang="ts">
+import ButtonAction from '@/components/buttons/ButtonAction.vue';
+import InputText from '@/components/inputs/InputText.vue';
 import { supabase } from '@/supabase/client';
 import type { DividendsCrawlReturnType } from '@/supabase/types/functions';
 import type { Dividend } from '@/types/tr/events/stock-details';
 import { computed, nextTick, onUnmounted, ref, watch } from 'vue';
-import ButtonAction from '../buttons/ButtonAction.vue';
-import InputText from '../inputs/InputText.vue';
 
 const props = defineProps<{
   isLoading: boolean;

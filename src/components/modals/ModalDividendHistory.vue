@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import ButtonAction from '@/components/buttons/ButtonAction.vue';
-import DividendListItem from '@/components/lists/DividendListItem.vue';
+import DividendScrapedConfirmation from '@/components/dividends/DividendScrapedConfirmation.vue';
+import DividendScraper from '@/components/dividends/DividendScraper.vue';
 import ModalBase from '@/components/modals/ModalBase.vue';
 import type { Dividend } from '@/types/tr/events/stock-details';
-import { computed, ref } from 'vue';
-import DividendScraper from '../dividends/DividendScraper.vue';
+import { ref } from 'vue';
 
 const root = ref<typeof ModalBase | null>(null);
 const modalIsOpen = ref(false);
@@ -15,13 +14,12 @@ const scrapedDividends = ref<Dividend[]>([]);
 
 defineProps<{
   stockName: string;
+  isin: string;
 }>();
 
 defineExpose({
   onOpenIframeModalOpen,
 });
-
-const canConfirmDividends = computed(() => !isLoading.value && scrapeCompleted.value && scrapedDividends.value.length > 0);
 
 function onOpenIframeModalOpen () {
   root.value?.$el.showModal();
@@ -54,22 +52,7 @@ function resetValues () {
           @loading="e => isLoading = e" @scrape-completed="e => scrapeCompleted = e"
           @update:scraped-dividends="e => scrapedDividends = e" />
 
-        <!-- TODO: move into component -->
-        <div v-else class="dividend-confirmation">
-          <div class="crawled-dividends">
-            <ul>
-              <DividendListItem v-for="dividend of scrapedDividends" :dividend="dividend" :key="dividend.id">
-                <template #action>
-                  <div class="confirmation">
-                    <ButtonAction variant="dawn" :disabled="!canConfirmDividends">
-                      Confirm dividend
-                    </ButtonAction>
-                  </div>
-                </template>
-              </DividendListItem>
-            </ul>
-          </div>
-        </div>
+        <DividendScrapedConfirmation v-else :is-loading="isLoading" :scraped-dividends="scrapedDividends" :isin="isin" />
       </div>
     </template>
   </ModalBase>
@@ -95,25 +78,7 @@ iframe {
   flex: 1;
 }
 
-.dividend-confirmation {
+.dividend-scraped-confirmation {
   flex: 1;
-  display: flex;
-
-  .crawled-dividends {
-    display: grid;
-    place-content: center;
-    flex: 1;
-
-    ul {
-      padding: 0;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-
-    .confirmation {
-      margin-block-start: .5rem;
-    }
-  }
 }
 </style>
