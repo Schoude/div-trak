@@ -4,7 +4,7 @@ import { defineStore } from 'pinia';
 import { readonly, ref, watch } from 'vue';
 
 export const useAggretatesStore = defineStore('aggretates', () => {
-  const isin = ref<string | null>();
+  const isin = ref<string | null>(null);
   const aggregateHistoryId = ref(100);
   const range = ref<RangeHistory>('1d');
   const aggregateHistory = ref<AggregateHistoryEvent | null>(null);
@@ -18,6 +18,10 @@ export const useAggretatesStore = defineStore('aggretates', () => {
   }
 
   watch(isin, () => {
+    if (!isin.value) {
+      return;
+    }
+
     range.value = '1d';
 
     sendEvent();

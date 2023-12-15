@@ -82,10 +82,12 @@ onBeforeRouteLeave(() => {
 onBeforeRouteUpdate((guard) => {
   startTicker(guard.params.isin as string);
   aggregateHistoryStore.aggregateHistory = null;
+  aggregateHistoryStore.isin = null;
 });
 
 onUnmounted(() => {
   aggregateHistoryStore.aggregateHistory = null;
+  aggregateHistoryStore.isin = null;
 });
 
 function startTicker (isin: string) {
