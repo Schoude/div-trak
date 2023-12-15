@@ -42,6 +42,7 @@ export interface Database {
           id: number
           information: string | null
           isin: string
+          isin_ex_date: string
           payment_date: string
           record_date: string | null
           type: string | null
@@ -54,6 +55,7 @@ export interface Database {
           id?: number
           information?: string | null
           isin: string
+          isin_ex_date: string
           payment_date: string
           record_date?: string | null
           type?: string | null
@@ -66,6 +68,7 @@ export interface Database {
           id?: number
           information?: string | null
           isin?: string
+          isin_ex_date?: string
           payment_date?: string
           record_date?: string | null
           type?: string | null
