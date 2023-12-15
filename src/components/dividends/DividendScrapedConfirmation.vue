@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import ButtonAction from '@/components/buttons/ButtonAction.vue';
 import DividendListItem from '@/components/lists/DividendListItem.vue';
-import { supabase } from '@/supabase/client';
-import type { DbResult } from '@/supabase/types/helpers';
-import { DividendType, type Dividend } from '@/types/tr/events/stock-details';
+import { useDividendsScrapedStore } from '@/stores/dividends-scraped';
+import { type Dividend } from '@/types/tr/events/stock-details';
 import { computed } from 'vue';
 
 const props = defineProps<{
@@ -12,38 +11,18 @@ const props = defineProps<{
   isin: string;
 }>();
 
+const dividendsScrapedStore = useDividendsScrapedStore();
+
 const canConfirmDividends = computed(() => !props.isLoading && props.scrapedDividends.length > 0);
 
 async function onConfirmDividendClick (dividend: Dividend) {
-  const upsertScrapedDividendQuery = supabase
-    .from('dividends_scraped')
-    .upsert({
-      isin: props.isin,
-      isin_ex_date: `${props.isin}-${dividend.exDate}`,
-      ex_date: dividend.exDate,
-      record_date: dividend.recordDate,
-      payment_date: dividend.paymentDate,
-      amount: dividend.amount,
-      information: dividend.information,
-      type: DividendType.Cash,
-    }, {
-      onConflict: 'isin_ex_date',
-    })
-    .select()
-    .single();
-
-  const uptedPortfolioResult: DbResult<typeof upsertScrapedDividendQuery> =
-    await upsertScrapedDividendQuery;
-
-  if (uptedPortfolioResult.error) {
-    console.error(uptedPortfolioResult.error);
-
-    return;
+  try {
+    await dividendsScrapedStore.addNewDividend(dividend, props.isin);
+  } catch (error) {
+    console.error(error);
+  } finally {
+    console.log(dividendsScrapedStore._scrapedDividendsArray);
   }
-
-  // TODO: add to to seperate pinia store dividends-scraped. they should be merged into the other dividend arrays
-  // and also loaded after use login
-  console.log(uptedPortfolioResult.data);
 }
 </script>
 

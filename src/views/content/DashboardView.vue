@@ -2,11 +2,14 @@
 import ListPortfolios from '@/components/display/ListPortfolios.vue';
 import { useTRSocket } from '@/composables/useTRSocket';
 import { useAuthStore } from '@/stores/auth';
+import { useDividendsScrapedStore } from '@/stores/dividends-scraped';
 import { useInstrumentsStore } from '@/stores/instruments';
+import { onBeforeMount } from 'vue';
 import { onBeforeRouteLeave } from 'vue-router';
 const authStore = useAuthStore();
 const instrumentStore = useInstrumentsStore();
 const socket = useTRSocket();
+const dividendsScrapedStore = useDividendsScrapedStore();
 
 authStore.user?.portfolios.forEach(portfolio => {
   portfolio.isins.forEach(isin => {
@@ -20,6 +23,14 @@ authStore.user?.portfolios.forEach(portfolio => {
 
     socket.sendMessage(`sub ${socket.runningEventId.value} {"type":"instrument","id":"${isin}","jurisdiction":"DE"}`);
   });
+});
+
+onBeforeMount(async () => {
+  try {
+    await dividendsScrapedStore.loadScrapedDividends();
+  } catch (error) {
+    console.error(error);
+  }
 });
 
 onBeforeRouteLeave(() => {
