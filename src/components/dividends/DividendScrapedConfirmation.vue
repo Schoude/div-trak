@@ -41,6 +41,7 @@ const canConfirmDividends = computed(() => !props.isLoading && props.scrapedDivi
 
 .confirmation-disclaimer {
   margin-block-end: .65rem;
+  padding-inline: 1rem;
 }
 
 .scraped-dividends {
