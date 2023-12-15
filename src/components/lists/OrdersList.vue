@@ -1,13 +1,13 @@
 <script setup lang="ts">
+import ButtonAction from '@/components/buttons/ButtonAction.vue';
+import OrderListItem from '@/components/lists/OrderListItem.vue';
+import ModalBase from '@/components/modals/ModalBase.vue';
 import { useAuthStore } from '@/stores/auth';
 import { useInstrumentsStore } from '@/stores/instruments';
 import { supabase } from '@/supabase/client';
 import type { Order, Portfolio } from '@/supabase/types/helpers';
 import type { User } from '@/types/auth';
 import { computed, ref } from 'vue';
-import ButtonAction from '../buttons/ButtonAction.vue';
-import ModalBase from '../modals/ModalBase.vue';
-import OrderListItem from './OrderListItem.vue';
 
 const props = defineProps<{
   orders: Order[];

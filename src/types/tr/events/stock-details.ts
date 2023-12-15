@@ -62,6 +62,7 @@ export interface Company {
 
 export interface Dividend {
   id?: string;
+  isin?: string | null;
   paymentDate: string;
   recordDate: string | null;
   exDate: string;

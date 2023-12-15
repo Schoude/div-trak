@@ -32,8 +32,8 @@ const portfolioStore = usePortfolioStore();
 const aggregateHistoryStore = useAggretatesStore();
 const dividendsScrapedStore = useDividendsScrapedStore();
 
-const isUSStock = computed(() => props.stock.instrument.company.countryOfOrigin === 'US' || props.stock.stockDetails?.company.countryCode === 'US');
-const dividendYield = computed(() => `${formatNumber(props.stock.stockDetails.company.dividendYieldSnapshot * 100, { style: 'decimal', roundingMode: 'floor' })} %`);
+const isUSStock = computed(() => props.stock.instrument.company?.countryOfOrigin === 'US' || props.stock.stockDetails?.company?.countryCode === 'US');
+const dividendYield = computed(() => `${formatNumber(props.stock.stockDetails.company?.dividendYieldSnapshot * 100, { style: 'decimal', roundingMode: 'floor' })} %`);
 
 const aggregatedDividends = computed(() => {
   const pastDividends = props.stock.stockDetails?.dividends;
@@ -45,6 +45,7 @@ const aggregatedDividends = computed(() => {
   estimatedDividends.map(estimatedDividend => {
     dividendMap.set(estimatedDividend.isin_ex_date, {
       id: estimatedDividend.isin_ex_date,
+      isin: estimatedDividend.isin,
       paymentDate: estimatedDividend.payment_date,
       recordDate: null,
       exDate: estimatedDividend.ex_date,
@@ -75,7 +76,7 @@ const aggregatedDividends = computed(() => {
 });
 
 const paymentMonths = computed(() => {
-  const frequency = props.stock.stockDetails.dividendFrequency;
+  const frequency = props.stock.stockDetails?.dividendFrequency;
 
   const monthsWithPayments = new Set();
 
