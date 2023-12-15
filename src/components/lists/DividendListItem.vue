@@ -1,10 +1,15 @@
 <script setup lang='ts'>
+import IconDelete from '@/components/icons/IconDelete.vue';
+import DividendInfo from '@/components/instrument/DividendInfo.vue';
 import type { Dividend, DividendWithPayment } from '@/types/tr/events/stock-details';
 import { computed } from 'vue';
-import DividendInfo from '../instrument/DividendInfo.vue';
 
 const props = defineProps<{
   dividend: Dividend | DividendWithPayment;
+}>();
+
+defineEmits<{
+  'delete:estimated-dividend': [estimatedDividend: Dividend],
 }>();
 
 const isPastDividend = computed(() => {
@@ -13,10 +18,12 @@ const isPastDividend = computed(() => {
 
   return now >= paymentDate ? 'past' : '';
 });
+
+const isEstimationDividend = computed(() => props.dividend.information === 'estimation');
 </script>
 
 <template>
-  <li class="dividend-list-item" :class="isPastDividend">
+  <li class="dividend-list-item" :class="[isPastDividend, dividend.information]">
     <div class="inner">
       <template v-if="'paymentAmount' in dividend">
         <div><b>{{ dividend.paymentAmount }}</b> • <small>({{ dividend.amountAtExDate }} pcs.)</small></div>
@@ -29,6 +36,11 @@ const isPastDividend = computed(() => {
 
       <slot name="action"></slot>
     </div>
+
+    <button v-if="isEstimationDividend" class="button-estimated-dividend-delete" type="button"
+      title="Delete estimated dividend" @click="$emit('delete:estimated-dividend', dividend)">
+      <IconDelete />
+    </button>
   </li>
 </template>
 
@@ -40,13 +52,39 @@ const isPastDividend = computed(() => {
   border-radius: 8px;
   box-shadow: var(--shadow);
   list-style: none;
+  position: relative;
 
   &.past {
     border: 1px solid var(--color-bullish);
+  }
+
+  &.estimation {
+    border: 1px solid rgb(233, 230, 39);
   }
 }
 
 .inner {
   inline-size: 220px;
+}
+
+.button-estimated-dividend-delete {
+  position: absolute;
+  inset-block-start: .48rem;
+  inset-inline-end: .48rem;
+  transition: scale 150ms ease-out;
+
+  &:hover,
+  &:focus-visible {
+    scale: 1.08;
+
+    .icon-delete {
+      fill: var(--color-bearish);
+    }
+  }
+
+  .icon-delete {
+    transition: fill 250ms ease-out;
+    fill: rgba(255, 255, 255, 0.3);
+  }
 }
 </style>

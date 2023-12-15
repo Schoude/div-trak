@@ -7,7 +7,7 @@ defineProps<{
 }>();
 
 defineEmits<{
-  (event: 'delete', order: Order): void
+  delete: [order: Order],
 }>();
 </script>
 
@@ -19,7 +19,7 @@ defineEmits<{
       <div class="text-xs">{{ order.execution_type }}</div>
     </div>
 
-    <button class="button-order-delete" type="button" title="Hide search results" @click="$emit('delete', order)">
+    <button class="button-order-delete" type="button" title="Delete order" @click="$emit('delete', order)">
       <IconDelete />
     </button>
   </li>
