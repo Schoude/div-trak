@@ -1,16 +1,11 @@
 import type { PostgrestError } from '@supabase/supabase-js';
-import type { Database } from './database';
+import type { Enums, Tables } from './database';
 
 export type DbResult<T> = T extends PromiseLike<infer U> ? U : never;
 export type DbResultOk<T> = T extends PromiseLike<{ data: infer U }>
   ? Exclude<U, null>
   : never;
 export type DbResultErr = PostgrestError;
-
-export type Tables<T extends keyof Database['public']['Tables']> =
-  Database['public']['Tables'][T]['Row'];
-
-export type Enums<T extends keyof Database['public']['Enums']> = Database['public']['Enums'][T];
 
 export type ORDER_EXECUTION_TYPE = Enums<'order_execution_type'>;
 
