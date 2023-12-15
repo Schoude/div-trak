@@ -39,7 +39,7 @@ export const useDividendsScrapedStore = defineStore('dividends-scraped', () => {
           );
         });
     },
-    async addNewDividend (dividend: Dividend, isin: string) {
+    async addNewDividend (dividend: Dividend, isin: string): Promise<DividendScraped> {
       const upsertScrapedDividendQuery = supabase
         .from('dividends_scraped')
         .upsert({
@@ -69,6 +69,8 @@ export const useDividendsScrapedStore = defineStore('dividends-scraped', () => {
         upsertScrapedDividendResult.data.isin_ex_date,
         upsertScrapedDividendResult.data,
       );
+
+      return upsertScrapedDividendResult.data;
     },
     _scrapedDividendsArray: readonly(scrapedDividendsArray),
     getScrapedDividendsByISIN: computed(() => {

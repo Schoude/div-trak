@@ -3,7 +3,7 @@ import DividendScrapedConfirmation from '@/components/dividends/DividendScrapedC
 import DividendScraper from '@/components/dividends/DividendScraper.vue';
 import ModalBase from '@/components/modals/ModalBase.vue';
 import type { Dividend } from '@/types/tr/events/stock-details';
-import { ref } from 'vue';
+import { nextTick, ref } from 'vue';
 
 const root = ref<typeof ModalBase | null>(null);
 const modalIsOpen = ref(false);
@@ -26,7 +26,7 @@ function onOpenIframeModalOpen () {
   modalIsOpen.value = true;
 }
 
-function onOpenIframeModalClose () {
+function onIframeModalClose () {
   if (isLoading.value) {
     return;
   }
@@ -41,10 +41,18 @@ function resetValues () {
   scrapeCompleted.value = false;
   scrapedDividends.value = [];
 }
+
+function onUpdateScrapedDividendAdded (addedDividendExDate: string) {
+  // @ts-expect-error bad dom types
+  document.startViewTransition(async () => {
+    scrapedDividends.value = scrapedDividends.value.filter(dividend => dividend.exDate !== addedDividendExDate);
+    await nextTick();
+  });
+}
 </script>
 
 <template>
-  <ModalBase class="modal-dividend-history" ref="root" @close="onOpenIframeModalClose" @open="onOpenIframeModalOpen">
+  <ModalBase class="modal-dividend-history" ref="root" @close="onIframeModalClose" @open="onOpenIframeModalOpen">
     <template #title>dividendhistory.org | {{ stockName }}</template>
     <template #content>
       <div v-if="modalIsOpen" class="inner">
@@ -52,7 +60,8 @@ function resetValues () {
           @loading="e => isLoading = e" @scrape-completed="e => scrapeCompleted = e"
           @update:scraped-dividends="e => scrapedDividends = e" />
 
-        <DividendScrapedConfirmation v-else :is-loading="isLoading" :scraped-dividends="scrapedDividends" :isin="isin" />
+        <DividendScrapedConfirmation v-else :is-loading="isLoading" :scraped-dividends="scrapedDividends" :isin="isin"
+          @update:scraped-dividend-added="onUpdateScrapedDividendAdded($event)" @close="onIframeModalClose" />
       </div>
     </template>
   </ModalBase>

@@ -11,17 +11,40 @@ const props = defineProps<{
   isin: string;
 }>();
 
+const emit = defineEmits<{
+  loading: [isLoading: boolean];
+  close: [],
+  'update:scraped-dividend-added': [exData: string];
+}>();
+
 const dividendsScrapedStore = useDividendsScrapedStore();
 
 const canConfirmDividends = computed(() => !props.isLoading && props.scrapedDividends.length > 0);
+const scrapedDividendsSortedByDate = computed(() => props.scrapedDividends
+  .map(dividend => {
+    return {
+      ...dividend,
+      sortBy: new Date(dividend.paymentDate).getTime(),
+    };
+  })
+  .sort((a, b) => a.sortBy - b.sortBy),
+);
 
 async function onConfirmDividendClick (dividend: Dividend) {
+  if (props.isLoading) {
+    return;
+  }
+
   try {
-    await dividendsScrapedStore.addNewDividend(dividend, props.isin);
+    emit('loading', true);
+
+    const addNewDividend = await dividendsScrapedStore.addNewDividend(dividend, props.isin);
+
+    emit('update:scraped-dividend-added', addNewDividend.ex_date);
   } catch (error) {
     console.error(error);
   } finally {
-    console.log(dividendsScrapedStore._scrapedDividendsArray);
+    emit('loading', false);
   }
 }
 </script>
@@ -29,21 +52,28 @@ async function onConfirmDividendClick (dividend: Dividend) {
 <template>
   <div class="dividend-scraped-confirmation">
     <div class="scraped-dividends">
-      <p class="confirmation-disclaimer">
-        Confirm the scraped dividends for instrument {{ isin }}.
-      </p>
-      <ul>
-        <DividendListItem v-for="dividend of scrapedDividends" :dividend="dividend" :key="dividend.id">
-          <template #action>
-            <div class="confirmation">
-              <ButtonAction class="button-dividend-confirm" variant="dawn" :disabled="!canConfirmDividends"
-                @click="onConfirmDividendClick(dividend)">
-                Confirm dividend
-              </ButtonAction>
-            </div>
-          </template>
-        </DividendListItem>
-      </ul>
+      <template v-if="scrapedDividends.length > 0">
+        <p class="confirmation-disclaimer">
+          Confirm the scraped dividends for instrument {{ isin }}.
+        </p>
+        <ul>
+          <DividendListItem v-for="dividend of scrapedDividendsSortedByDate" :dividend="dividend" :key="dividend.id">
+            <template #action>
+              <div class="confirmation">
+                <ButtonAction class="button-dividend-confirm" variant="dawn" :disabled="!canConfirmDividends"
+                  @click="onConfirmDividendClick(dividend)">
+                  Confirm dividend
+                </ButtonAction>
+              </div>
+            </template>
+          </DividendListItem>
+        </ul>
+      </template>
+      <template v-else>
+        <ButtonAction class="button-close" variant="dusk" @click="$emit('close')">
+          Close modal
+        </ButtonAction>
+      </template>
     </div>
   </div>
 </template>
@@ -80,5 +110,11 @@ async function onConfirmDividendClick (dividend: Dividend) {
 .button-dividend-confirm {
   block-size: 1.75rem;
   font-size: .85rem;
+}
+
+.button-close {
+  block-size: 2rem;
+  font-size: .85rem;
+  padding-inline: 1rem;
 }
 </style>
