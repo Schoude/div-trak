@@ -29,15 +29,14 @@ const ordersOfInstrument = computed(() => portfolioStore.detailPortfolio
 
 <template>
   <div class="instrument-portfolio-info">
-    <OrderManager :amount-owned="amountOwned" :instrument="instrument" :portfolio="portfolioStore.detailPortfolio!"
-      :is-in-detail-portfolio="isInDetailPortfolio" />
+    <OrderManager v-if="portfolioStore.detailPortfolio" :amount-owned="amountOwned" :instrument="instrument"
+      :portfolio="portfolioStore.detailPortfolio!" :is-in-detail-portfolio="isInDetailPortfolio" />
 
     <template v-if="isInDetailPortfolio">
       <slot name="dividends" />
 
       <OrdersList v-if="ordersOfInstrument" :orders="ordersOfInstrument" :portfolio="portfolioStore.detailPortfolio!" />
     </template>
-
   </div>
 </template>
 
