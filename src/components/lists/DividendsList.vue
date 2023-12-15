@@ -3,6 +3,7 @@ import ButtonAction from '@/components/buttons/ButtonAction.vue';
 import TagText from '@/components/display/TagText.vue';
 import DividendListItem from '@/components/lists/DividendListItem.vue';
 import ModalBase from '@/components/modals/ModalBase.vue';
+import { useDividendsScrapedStore } from '@/stores/dividends-scraped';
 import { useInstrumentsStore } from '@/stores/instruments';
 import type { Dividend } from '@/types/tr/events/stock-details';
 import { formatNumber } from '@/utils/intl/currency';
@@ -15,6 +16,7 @@ defineProps<{
 }>();
 
 const instruments = useInstrumentsStore();
+const dividendsScrapedStore = useDividendsScrapedStore();
 
 const modalConfirmation = ref<typeof ModalBase | null>(null);
 const estimatedDividendToDelete = ref<Dividend | null>(null);
@@ -47,6 +49,15 @@ async function onDeletionConfirmClick () {
   }
 
   isSending.value = true;
+
+  try {
+    await dividendsScrapedStore.deleteEstimatedDividend(`${estimatedDividendToDelete.value?.isin}-${estimatedDividendToDelete.value?.exDate}`);
+    clearAndClose();
+  } catch (error) {
+    console.error(error);
+  } finally {
+    isSending.value = false;
+  }
 }
 </script>
 
@@ -77,10 +88,15 @@ async function onDeletionConfirmClick () {
 
           <div class="dividend-description text-m">
             <div class="instrument">{{ estimatedDividendToDeleteInstrument?.instrument?.shortName }}</div>
-            <div class="text-s amount">Amount paid: {{ formatNumber(estimatedDividendToDelete?.amount!, { style: 'currency', currency: 'USD' })
+            <div class="text-s amount">Amount paid: {{ formatNumber(estimatedDividendToDelete?.amount!, {
+              style:
+                'currency', currency: 'USD'
+            })
             }} </div>
-            <div class="text-s ex-date">Ex Date: {{ new Date(estimatedDividendToDelete?.exDate!).toLocaleDateString() }}</div>
-            <div class="text-s payment-date">Payment Date: {{ new Date(estimatedDividendToDelete?.paymentDate!).toLocaleDateString() }}
+            <div class="text-s ex-date">Ex Date: {{ new Date(estimatedDividendToDelete?.exDate!).toLocaleDateString() }}
+            </div>
+            <div class="text-s payment-date">Payment Date: {{ new
+              Date(estimatedDividendToDelete?.paymentDate!).toLocaleDateString() }}
             </div>
           </div>
 
@@ -150,5 +166,4 @@ ul {
 
 .modal-base {
   max-inline-size: 500px;
-}
-</style>
+}</style>

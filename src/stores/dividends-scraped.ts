@@ -3,7 +3,7 @@ import type { Tables } from '@/supabase/types/database';
 import type { DbResult } from '@/supabase/types/helpers';
 import { type Dividend } from '@/types/tr/events/stock-details';
 import { defineStore } from 'pinia';
-import { computed, reactive, readonly } from 'vue';
+import { computed, nextTick, reactive, readonly } from 'vue';
 
 type DividendScraped = Tables<'dividends_scraped'>;
 
@@ -39,7 +39,10 @@ export const useDividendsScrapedStore = defineStore('dividends-scraped', () => {
           );
         });
     },
-    async addNewDividend (dividend: Dividend, isin: string): Promise<DividendScraped> {
+    async addNewDividend (
+      dividend: Dividend,
+      isin: string,
+    ): Promise<DividendScraped> {
       const upsertScrapedDividendQuery = supabase
         .from('dividends_scraped')
         .upsert({
@@ -71,6 +74,26 @@ export const useDividendsScrapedStore = defineStore('dividends-scraped', () => {
       );
 
       return upsertScrapedDividendResult.data;
+    },
+    async deleteEstimatedDividend (isinExDate: string) {
+      const deleteEstimatedDividendQuery = supabase
+        .from('dividends_scraped')
+        .delete()
+        .eq('isin_ex_date', isinExDate);
+
+      const deleteEstimatedDividendQueryResult: DbResult<
+        typeof deleteEstimatedDividendQuery
+      > = await deleteEstimatedDividendQuery;
+
+      if (deleteEstimatedDividendQueryResult.error) {
+        throw deleteEstimatedDividendQueryResult.error;
+      }
+
+      // @ts-expect-error bad dom types
+      document.startViewTransition(async () => {
+        scrapedDividends.delete(isinExDate);
+        await nextTick();
+      });
     },
     _scrapedDividendsArray: readonly(scrapedDividendsArray),
     getScrapedDividendsByISIN: computed(() => {
