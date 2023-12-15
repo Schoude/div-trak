@@ -10,6 +10,7 @@ import EventsList from '@/components/lists/EventsList.vue';
 import TRAssetLoader from '@/components/loaders/TRAssetLoader.vue';
 import ModalDividendHistory from '@/components/modals/ModalDividendHistory.vue';
 import { useAggretatesStore } from '@/stores/aggregates';
+import { useDividendsScrapedStore } from '@/stores/dividends-scraped';
 import { usePortfolioStore } from '@/stores/portfolio-store';
 import type { AggregateHistoryEvent } from '@/types/tr/events/aggregate-history';
 import type { Dividend, DividendWithPayment } from '@/types/tr/events/stock-details';
@@ -29,6 +30,7 @@ const modalIframe = ref<typeof ModalDividendHistory | null>(null);
 
 const portfolioStore = usePortfolioStore();
 const aggregateHistoryStore = useAggretatesStore();
+const dividendsScrapedStore = useDividendsScrapedStore();
 
 const isUSStock = computed(() => props.stock.instrument.company.countryOfOrigin === 'US' || props.stock.stockDetails?.company.countryCode === 'US');
 const dividendYield = computed(() => `${formatNumber(props.stock.stockDetails.company.dividendYieldSnapshot * 100, { style: 'decimal', roundingMode: 'floor' })} %`);
@@ -36,9 +38,23 @@ const dividendYield = computed(() => `${formatNumber(props.stock.stockDetails.co
 const aggregatedDividends = computed(() => {
   const pastDividends = props.stock.stockDetails?.dividends;
   const eventDividends = props.stock.stockDetails?.events.filter(event => event.dividend);
+  const estimatedDividends = dividendsScrapedStore.getScrapedDividendsByISIN(props.stock.instrument.isin);
   const dividendMap = new Map<string, Dividend>();
 
-  // Add newer dividends first
+  // Add estimated dividends
+  estimatedDividends.map(estimatedDividend => {
+    dividendMap.set(estimatedDividend.isin_ex_date, {
+      id: estimatedDividend.isin_ex_date,
+      paymentDate: estimatedDividend.payment_date,
+      recordDate: null,
+      exDate: estimatedDividend.ex_date,
+      amount: estimatedDividend.amount,
+      information: estimatedDividend.information,
+      type: estimatedDividend.type,
+    });
+  });
+
+  // Add newer dividends
   eventDividends
     ?.filter(event => event.dividend != null)
     .forEach(event => {
@@ -51,7 +67,7 @@ const aggregatedDividends = computed(() => {
     dividendMap.set(props.stock.stockDetails.expectedDividend.id!, props.stock.stockDetails.expectedDividend);
   }
 
-  // Then add already past dividends
+  // Add already past dividends
   pastDividends?.forEach(dividend => dividendMap.set(dividend.id!, dividend));
 
   // Sort newest to oldest

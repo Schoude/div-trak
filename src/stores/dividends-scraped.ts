@@ -1,7 +1,7 @@
 import { supabase } from '@/supabase/client';
 import type { Tables } from '@/supabase/types/database';
 import type { DbResult } from '@/supabase/types/helpers';
-import { DividendType, type Dividend } from '@/types/tr/events/stock-details';
+import { type Dividend } from '@/types/tr/events/stock-details';
 import { defineStore } from 'pinia';
 import { computed, reactive, readonly } from 'vue';
 
@@ -50,7 +50,7 @@ export const useDividendsScrapedStore = defineStore('dividends-scraped', () => {
           payment_date: dividend.paymentDate,
           amount: dividend.amount,
           information: dividend.information,
-          type: DividendType.Cash,
+          type: 'cash',
         }, {
           onConflict: 'isin_ex_date',
         })

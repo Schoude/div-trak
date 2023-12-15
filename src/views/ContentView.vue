@@ -1,6 +1,18 @@
 <script setup lang='ts'>
 import AppBar from '@/components/layout/AppBar.vue';
 import BottomBar from '@/components/layout/BottomBar.vue';
+import { useDividendsScrapedStore } from '@/stores/dividends-scraped';
+import { onBeforeMount } from 'vue';
+
+const dividendsScrapedStore = useDividendsScrapedStore();
+
+onBeforeMount(async () => {
+  try {
+    await dividendsScrapedStore.loadScrapedDividends();
+  } catch (error) {
+    console.error(error);
+  }
+});
 </script>
 
 <template>
