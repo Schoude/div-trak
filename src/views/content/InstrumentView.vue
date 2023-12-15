@@ -77,12 +77,12 @@ watch(tickerData, (ticker) => {
 
 onBeforeRouteLeave(() => {
   socket.sendMessage(`unsub ${instrumentData.value?.tickerEventId}`, { updateEventId: false });
+  aggregateHistoryStore.isin = null;
 });
 
 onBeforeRouteUpdate((guard) => {
   startTicker(guard.params.isin as string);
   aggregateHistoryStore.aggregateHistory = null;
-  aggregateHistoryStore.isin = null;
 });
 
 onUnmounted(() => {
