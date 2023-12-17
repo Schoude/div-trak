@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useDividendsScrapedStore } from '@/stores/dividends-scraped';
 import { useInstrumentsStore } from '@/stores/instruments';
 import { usePortfolioStore } from '@/stores/portfolio-store';
 import type { CalendarDividend, Dividend } from '@/types/tr/events/stock-details';
@@ -9,6 +10,7 @@ import ChartDividendsOfYear from './ChartDividendsOfYear.vue';
 
 const instrumentStore = useInstrumentsStore();
 const portfolioStore = usePortfolioStore();
+const dividendsScrapedStore = useDividendsScrapedStore();
 
 const year = ref(new Date().getUTCFullYear());
 const nextYear = computed(() => year.value + 1);
@@ -117,7 +119,22 @@ const dividendsCalendarData = computed(() => {
         // Get complete dividends of STOCK
         const pastDividends = instrument.stockDetails?.dividends;
         const eventDividends = instrument.stockDetails?.events.filter(event => event.dividend);
+        const estimatedDividends = dividendsScrapedStore.getScrapedDividendsByISIN(instrument.instrument?.isin!);
         const dividendMap = new Map<string, Dividend>();
+
+        // Add estimated dividends
+        estimatedDividends.map(estimatedDividend => {
+          dividendMap.set(estimatedDividend.isin_ex_date, {
+            id: estimatedDividend.isin_ex_date,
+            isin: estimatedDividend.isin,
+            paymentDate: estimatedDividend.payment_date,
+            recordDate: null,
+            exDate: estimatedDividend.ex_date,
+            amount: estimatedDividend.amount,
+            information: estimatedDividend.information,
+            type: estimatedDividend.type,
+          });
+        });
 
         // Add newer dividends first
         eventDividends
