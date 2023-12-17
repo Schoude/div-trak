@@ -92,6 +92,7 @@ const dividendsCalendarData = computed(() => {
               exDate: distribution.exDate,
               amount: distribution.amount,
               amountFormatted: formatNumber(distribution.amount, { style: 'currency', currency: 'EUR' }),
+              isEstimation: false,
               // Payments
               paymentDateTimestamp: new Date(distribution.paymentDate).getTime(),
               amountOwned: instrumentAmountAtCurrentMonth.amount,
@@ -103,6 +104,7 @@ const dividendsCalendarData = computed(() => {
               // Instrument
               isin: instrument.instrument?.isin,
               instrumentName: instrument.instrument?.shortName,
+              
             } as CalendarDividend;
           });
 
@@ -202,6 +204,7 @@ const dividendsCalendarData = computed(() => {
               exDate: dividend.exDate,
               amount: dividend.amount,
               amountFormatted: formatNumber(dividend.amount, { style: 'currency', currency: 'EUR' }),
+              isEstimation: dividend.information === 'estimation',
               // Payments
               paymentDateTimestamp: new Date(dividend.paymentDate).getTime(),
               amountOwned: instrumentAmountAtCurrentMonth.amount,

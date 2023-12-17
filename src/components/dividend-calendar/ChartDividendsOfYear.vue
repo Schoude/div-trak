@@ -12,6 +12,24 @@ const props = defineProps<{
 
 const chart = ref<HTMLElement | null>(null);
 
+const getDividendTitle = computed(() => {
+  return (dividend: CalendarDividend) => {
+    if (dividend.isEstimation && dividend.hasForecast) {
+      return 'Includes forecast orders & is an estimation dividend.';
+    }
+
+    if (dividend.isEstimation) {
+      return 'Is an estimation dividend.';
+    }
+
+    if (dividend.hasForecast) {
+      return 'Includes forecast orders';
+    }
+
+    return '';
+  };
+});
+
 const detailMonth = ref<number>(new Date().getUTCMonth());
 const getDetailMonthDividends = computed(() => props.dividends.at(detailMonth.value)?.sort((a, b) => b.payment - a.payment));
 const detailMonthAggregatedDividends = computed(() => formatNumber(getDetailMonthDividends.value?.reduce((acc, d) => {
@@ -212,8 +230,8 @@ watch(() => props.year, () => {
       <h2 class="heading">Month Details ({{ monthNamesMap.get(detailMonth) }})</h2>
       <div class="dividends-aggretated">Aggregated Dividends: {{ detailMonthAggregatedDividends }}</div>
       <ul class="dividends-list">
-        <li class="dividend" :class="{ forecast: dividend.hasForecast }" v-for="dividend of getDetailMonthDividends"
-          :key="dividend.id" :title="dividend.hasForecast ? 'Includes forecast orders' : ''">
+        <li class="dividend" :class="{ forecast: dividend.hasForecast, estimation: dividend.isEstimation }"
+          v-for="dividend of getDetailMonthDividends" :key="dividend.id" :title="getDividendTitle(dividend)">
           <RouterLink class="name" :to="{ name: 'instrument', params: { isin: dividend.isin } }">{{
             dividend.instrumentName }}
           </RouterLink>
@@ -325,6 +343,39 @@ watch(() => props.year, () => {
         width: 8px;
         height: 8px;
         background-color: rgb(253, 185, 68);
+        border-radius: 50%;
+      }
+    }
+
+    &.estimation {
+      position: relative;
+      padding-inline-start: 1.2rem;
+
+      &::after {
+        position: absolute;
+        top: 8px;
+        left: 6px;
+        content: "";
+        width: 8px;
+        height: 8px;
+        background-color: rgb(253, 68, 250);
+        border-radius: 50%;
+      }
+    }
+
+    &.forecast.estimation {
+      &::after {
+        background-color: rgb(253, 185, 68);
+      }
+
+      &::before {
+        position: absolute;
+        top: 20px;
+        left: 6px;
+        content: "";
+        width: 8px;
+        height: 8px;
+        background-color: rgb(253, 68, 250);
         border-radius: 50%;
       }
     }

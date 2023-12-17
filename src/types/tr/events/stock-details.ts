@@ -89,6 +89,7 @@ export interface CalendarDividend extends Pick<Dividend, 'id' | 'paymentDate' | 
   paymentFormatted: string;
   isin: string;
   instrumentName: string;
+  isEstimation: boolean;
 }
 
 export interface Event {
