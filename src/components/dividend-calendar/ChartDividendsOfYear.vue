@@ -58,7 +58,7 @@ function drawChart () {
     const name = (select(this.parentNode).datum() as { key: string }).key;
     const value = formatNumber(d.data[name], { currency: 'EUR', style: 'currency' });
     tooltip
-      .html(`${name} • ${value}`)
+      .html(`${name.split('-')[0]} • ${value}`)
       .style('opacity', 1);
 
     const rect = event.target as SVGRectElement;
@@ -93,9 +93,9 @@ function drawChart () {
         group: monthNamesMap.get(index)!,
       };
 
-      dividendsOfMonth.forEach(dividend => {
-        subgroups.add(dividend.instrumentName);
-        dataPoint[dividend.instrumentName] = dividend.payment;
+      dividendsOfMonth.forEach((dividend, index) => {
+        subgroups.add(`${dividend.instrumentName}-${index}`);
+        dataPoint[`${dividend.instrumentName}-${index}`] = dividend.payment;
       });
 
       return dataPoint;
