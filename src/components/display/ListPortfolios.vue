@@ -1,11 +1,20 @@
 <script setup lang='ts'>
 import { useAuthStore } from '@/stores/auth';
+import ButtonAction from '../buttons/ButtonAction.vue';
+import IconAdd from '../icons/IconAdd.vue';
 
 const authStore = useAuthStore();
 </script>
 
 <template>
   <h1 class="title-portfolios">Your Portfolios</h1>
+  <ButtonAction variant="dawn" class="button-new-portfolio">
+    <div class="content">
+      <IconAdd />
+      <span>New Portfolio</span>
+    </div>
+  </ButtonAction>
+
   <ul class="list">
     <li>
       <RouterLink :to="{ name: 'portfolio', params: { id: portfolio.id } }"
@@ -22,6 +31,23 @@ const authStore = useAuthStore();
 
 .title-portfolios {
   margin-block-end: 1rem;
+}
+
+.button-new-portfolio {
+  margin-block-end: 1rem;
+  block-size: 2.25rem;
+  inline-size: fit-content;
+
+  .content {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    padding-inline: 1rem 1.3rem;
+  }
+
+  .icon-add {
+    fill: currentColor;
+  }
 }
 
 .list {
