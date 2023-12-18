@@ -59,7 +59,6 @@ async function onSaveNewPortfolio () {
     if (addedPortfolio) {
       await authStore.checkSession(authStore.sessionToken!);
     }
-
   } catch (error) {
     console.error(error);
   } finally {
@@ -133,7 +132,7 @@ async function onSaveNewPortfolio () {
   display: grid;
   gap: 1rem;
   list-style: none;
-  
+
   @media only screen and (width >=768px) {
     grid-template-columns: 1fr 1fr;
   }

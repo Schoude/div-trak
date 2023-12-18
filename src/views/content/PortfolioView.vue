@@ -88,7 +88,42 @@ async function onSaveEditedPortfolio () {
     if (updatedPortfolio) {
       await authStore.checkSession(authStore.sessionToken!);
     }
+  } catch (error) {
+    console.error(error);
+  } finally {
+    onModalClose();
+    isLoading.value = true;
+  }
+}
 
+async function onDeletePortfolio () {
+  if (!canSend.value) {
+    return;
+  }
+
+  try {
+    isLoading.value = true;
+
+    const updatePortfolioQuery = supabase
+      .from('portfolios')
+      .delete()
+      .eq('id', portfolioStore.detailPortfolio?.id!)
+      .select()
+      .single();
+
+    const updatePortfolioResult: DbResult<typeof updatePortfolioQuery> =
+      await updatePortfolioQuery;
+
+    if (updatePortfolioResult.error) {
+      console.error(updatePortfolioResult.error);
+    }
+
+    const updatedPortfolio = updatePortfolioResult.data;
+
+    if (updatedPortfolio) {
+      await authStore.checkSession(authStore.sessionToken!);
+      router.push({ name: 'dashboard' });
+    }
   } catch (error) {
     console.error(error);
   } finally {
@@ -152,12 +187,16 @@ onBeforeRouteLeave(() => {
       <template #title>Edit Portfolio {{ portfolioStore.detailPortfolio?.name }}</template>
       <template #content>
         <div v-if="modalIsOpen" class="inner">
-          <LabelFormInput for-input="phone" text="New Portfolio Name">
+          <LabelFormInput for-input="phone" text="Edit Portfolio Name">
             <InputText v-model="newPortfolioName" id="new-name-portfolio" placeholder="My new Portfolio" />
           </LabelFormInput>
 
           <ButtonAction type="button" variant="dawn" class="button-save-portfolio" @click="onSaveEditedPortfolio">
             <span>Save Portfolio</span>
+          </ButtonAction>
+
+          <ButtonAction type="button" variant="dawn" class="button-delete-portfolio" @click="onDeletePortfolio">
+            <span>Delete Portfolio</span>
           </ButtonAction>
         </div>
       </template>
@@ -184,6 +223,12 @@ onBeforeRouteLeave(() => {
     fill: currentColor;
     inline-size: 1.3rem;
   }
+}
+
+.button-delete-portfolio.button-delete-portfolio {
+  background-image: none;
+  margin-block-start: 2.5rem;
+  background-color: var(--color-bearish);
 }
 
 .instruments-list {
