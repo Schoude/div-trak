@@ -76,21 +76,20 @@ router.beforeEach(async (to, _from, next) => {
 
   // Check if the user is not authenticated
   if (!authStore.isAuthenticated) {
-    // Get the session token from local storage
-    const sessionToken = localStorage.getItem('sessionToken');
+    console.log('check session');
 
-    // If no session token is found
-    if (!sessionToken) {
-      // Redirect to the login page if the route is not already the login page
-      to.name !== 'login' ? next({ name: 'login' }) : next();
-    } else {
-      // Check the session using the stored token
-      try {
-        await authStore.checkSession(sessionToken);
-        next();
-      } catch (error) {
-        localStorage.removeItem('sessionToken');
+
+    // Check the session using the stored token
+    try {
+      await authStore.checkSession();
+      next();
+    } catch (error) {
+
+      // Prevents infinite redirect loop
+      if (to.name !== 'login') {
         next({ name: 'login' });
+      } else {
+        next();
       }
     }
   } else {
@@ -100,9 +99,9 @@ router.beforeEach(async (to, _from, next) => {
 });
 
 // Page View Transitions
-let resolveViewChange: ((value?: unknown) => void)|null = null;
+let resolveViewChange: ((value?: unknown) => void) | null = null;
 
-router.beforeEach((_to,_from, next) => {
+router.beforeEach((_to, _from, next) => {
   // @ts-expect-error bad DOM API types
   document.startViewTransition(async () => {
     next();

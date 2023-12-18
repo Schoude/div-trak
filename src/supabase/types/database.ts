@@ -129,26 +129,26 @@ export interface Database {
         Row: {
           created_at: string
           id: number
-          isins: Json[] | null
+          isins: Json[]
           name: string
           updated_at: string
-          user_id: number
+          user_id: string | null
         }
         Insert: {
           created_at?: string
           id?: number
-          isins?: Json[] | null
+          isins?: Json[]
           name: string
           updated_at?: string
-          user_id: number
+          user_id?: string | null
         }
         Update: {
           created_at?: string
           id?: number
-          isins?: Json[] | null
+          isins?: Json[]
           name?: string
           updated_at?: string
-          user_id?: number
+          user_id?: string | null
         }
         Relationships: [
           {
@@ -158,61 +158,6 @@ export interface Database {
             referencedColumns: ['id']
           }
         ]
-      }
-      sessions: {
-        Row: {
-          created_at: string
-          id: number
-          token: string
-          updated_at: string
-          user_id: number
-        }
-        Insert: {
-          created_at?: string
-          id?: number
-          token?: string
-          updated_at?: string
-          user_id: number
-        }
-        Update: {
-          created_at?: string
-          id?: number
-          token?: string
-          updated_at?: string
-          user_id?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: 'sessions_user_id_fkey'
-            columns: ['user_id']
-            referencedRelation: 'users'
-            referencedColumns: ['id']
-          }
-        ]
-      }
-      users: {
-        Row: {
-          created_at: string
-          id: number
-          phone: string
-          pin: number
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          id?: number
-          phone: string
-          pin: number
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          id?: number
-          phone?: string
-          pin?: number
-          updated_at?: string
-        }
-        Relationships: []
       }
     }
     Views: {

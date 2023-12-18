@@ -53,7 +53,6 @@ async function onDeletionConfirmClick () {
   try {
     const deleteOrderResponse = await supabase.functions.invoke<{ user: User }>('order-delete', {
       body: {
-        token: authStore.sessionToken,
         isLastOrderInPortfolio: isLastOrderInPortfolio.value,
         orderToDelete: {
           id: orderToDelete.value?.id,

@@ -8,7 +8,7 @@ import { reactive } from 'vue';
 
 const authStore = useAuthStore();
 
-const loginData = reactive({ phone: '', pin: '' });
+const loginData = reactive({ email: '', password: '' });
 
 function onSubmit () {
   authStore.login(loginData);
@@ -16,21 +16,22 @@ function onSubmit () {
 </script>
 
 <template>
-<div class="form-login">
-  <LogoDivTrak :width="250" />
-  <p class="cta text-l">Enter your credentials</p>
-  <form @submit.prevent="onSubmit">
-    <LabelFormInput for-input="phone" text="Phone">
-      <InputText v-model="loginData.phone" id="phone" placeholder="+49123456789" />
-    </LabelFormInput>
+  <div class="form-login">
+    <LogoDivTrak :width="250" />
+    <p class="cta text-l">Enter your credentials</p>
+    <form @submit.prevent="onSubmit">
+      <LabelFormInput for-input="email" text="Email">
+        <InputText type="email" v-model="loginData.email" id="email" placeholder="john@doe.com" autocomplete="email" />
+      </LabelFormInput>
 
-    <LabelFormInput for-input="pin" text="PIN">
-      <InputText v-model="loginData.pin" id="pin" placeholder="8888" />
-    </LabelFormInput>
+      <LabelFormInput for-input="password" text="PIN">
+        <InputText type="password" v-model="loginData.password" id="password" placeholder="8888"
+          autocomplete="password" />
+      </LabelFormInput>
 
-    <ButtonAction variant="dawn">Login</ButtonAction>
-  </form>
-</div>
+      <ButtonAction variant="dawn">Login</ButtonAction>
+    </form>
+  </div>
 </template>
 
 <style lang='scss' scoped>

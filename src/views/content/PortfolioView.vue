@@ -86,7 +86,7 @@ async function onSaveEditedPortfolio () {
     const updatedPortfolio = updatePortfolioResult.data;
 
     if (updatedPortfolio) {
-      await authStore.checkSession(authStore.sessionToken!);
+      await authStore.checkSession();
     }
   } catch (error) {
     console.error(error);
@@ -121,7 +121,7 @@ async function onDeletePortfolio () {
     const updatedPortfolio = updatePortfolioResult.data;
 
     if (updatedPortfolio) {
-      await authStore.checkSession(authStore.sessionToken!);
+      await authStore.checkSession();
       router.push({ name: 'dashboard' });
     }
   } catch (error) {

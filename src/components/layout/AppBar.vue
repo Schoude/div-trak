@@ -13,12 +13,8 @@ const route = useRoute();
 const portfolioLinkVisible = computed(() => portfolioStore.detailPortfolio && route.name !== 'dashboard' && route.name !== 'portfolio');
 const portfolioLink = computed(() => `/portfolio/${portfolioStore.detailPortfolio?.id}`);
 
-function onLogoutClick () {
-  const sessionToken = localStorage.getItem('sessionToken');
-
-  if (sessionToken) {
-    authStore.endSession(sessionToken);
-  }
+async function onLogoutClick () {
+  await authStore.endSession();
 }
 </script>
 

@@ -9,8 +9,6 @@ export type DbResultErr = PostgrestError;
 
 export type ORDER_EXECUTION_TYPE = Enums<'order_execution_type'>;
 
-export type Session = Tables<'sessions'>;
-
 export type Portfolio = Pick<Tables<'portfolios'>, 'id' | 'name'> & {
   isins: string[];
   orders: Order[];

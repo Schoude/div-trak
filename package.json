@@ -20,7 +20,7 @@
     "supabase:fn:new": "supabase functions new"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.39.0",
+    "@supabase/supabase-js": "^2.39.1",
     "@vueuse/core": "^10.7.0",
     "d3": "^7.8.5",
     "pinia": "^2.1.7",

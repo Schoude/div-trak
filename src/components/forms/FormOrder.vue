@@ -57,7 +57,6 @@ async function onOrderClick (type: 'sell' | 'buy') {
   try {
     const newOrderRes = await supabase.functions.invoke<{ user: User }>('order-add', {
       body: {
-        token: authStore.sessionToken,
         alreadyInPortfolio: props.isInDetailPortfolio,
         order: newOrder,
       },

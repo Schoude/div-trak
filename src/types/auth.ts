@@ -1,6 +1,9 @@
-import type { Tables } from '@/supabase/types/database';
 import type { Portfolio } from '@/supabase/types/helpers';
 
-export type User = Pick<Tables<'users'>, 'id' | 'phone' | 'pin'> & {
+
+export type User = {
+  id: string | null;
+  email: string | null;
+  access_token: string | null;
   portfolios: Portfolio[];
 };

@@ -1,59 +1,125 @@
 import { supabase } from '@/supabase/client';
-import type { UserDataReturnType } from '@/supabase/types/functions';
+import type { DbResult, Portfolio } from '@/supabase/types/helpers';
 import type { User } from '@/types/auth';
 import { defineStore } from 'pinia';
-import { computed, ref, watchEffect } from 'vue';
+import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 export const useAuthStore = defineStore('auth', () => {
   const router = useRouter();
 
-  const sessionToken = ref(localStorage.getItem('sessionToken'));
   const user = ref<null | User>(null);
 
-  const isAuthenticated = computed(() => sessionToken.value != null && user.value != null);
+  const isAuthenticated = computed(() => user.value?.id != null && user.value?.access_token != null);
 
-  async function login (loginData: {phone: string; pin: string}) {
-    const loginRes = await supabase.functions.invoke<UserDataReturnType>('user-data', { body: loginData });
-    if (loginRes.error) throw loginRes.error;
+  async function login (loginData: { email: string; password: string }) {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: loginData.email,
+      password: loginData.password,
+    });
 
-    if (loginRes.data) {
-      user.value = loginRes.data.user;
-      sessionToken.value = loginRes.data.token;
+    if (error) {
+      throw error;
+    }
+
+    const q = supabase
+      .from('portfolios')
+      .select(`
+        id,
+        name,
+        isins,
+        orders (
+          id,
+          isin,
+          amount,
+          year,
+          month,
+          day,
+          executed_at,
+          execution_type
+        )
+      `)
+      .eq('user_id', data.user.id);
+
+    const userPortfolios: DbResult<typeof q> = await q;
+
+    if (userPortfolios.error) throw userPortfolios.error;
+
+    if (userPortfolios.data) {
+      user.value = {
+        id: data.user.id,
+        email: data.user.email!,
+        access_token: data.session.access_token,
+        portfolios: userPortfolios.data!.map((portfolio) => {
+          return {
+            id: portfolio.id,
+            name: portfolio.name,
+            isins: portfolio.isins,
+            orders: portfolio.orders,
+          } as Portfolio;
+        }),
+      };
 
       router.push({ name: 'dashboard' });
     } else throw new Error('Response has no data: Function: user-data');
   }
 
-  async function checkSession (token: string) {
-    const checkSessionRes = await supabase.functions.invoke('user-auth', { body: { token: token } });
-    if (checkSessionRes.error) throw checkSessionRes.error;
+  async function checkSession () {
+    const { data, error } = await supabase.auth.getSession();
+    if (error) throw error;
 
-    if (checkSessionRes.data) {
-      user.value = checkSessionRes.data.user;
-      sessionToken.value = checkSessionRes.data.token;
+    if (data.session) {
+      const q = supabase
+        .from('portfolios')
+        .select(`
+        id,
+        name,
+        isins,
+        orders (
+          id,
+          isin,
+          amount,
+          year,
+          month,
+          day,
+          executed_at,
+          execution_type
+        )
+      `)
+        .eq('user_id', data.session.user.id);
+
+      const userPortfolios: DbResult<typeof q> = await q;
+
+      if (userPortfolios.error) throw userPortfolios.error;
+
+      if (userPortfolios.data) {
+        user.value = {
+          id: data.session.user.id,
+          email: data.session.user.email!,
+          access_token: data.session.access_token,
+          portfolios: userPortfolios.data!.map((portfolio) => {
+            return {
+              id: portfolio.id,
+              name: portfolio.name,
+              isins: portfolio.isins,
+              orders: portfolio.orders,
+            } as Portfolio;
+          }),
+        };
+      }
+    } else {
+      throw new Error('Session not found.');
     }
   }
 
-  async function endSession (token: string) {
-    const checkSessionRes = await supabase.functions.invoke('user-logout', { body: { token: token } });
-    if (checkSessionRes.error) throw checkSessionRes.error;
+  async function endSession () {
+    const { error } = await supabase.auth.signOut();
+    if (error) throw error;
 
-    
-    sessionToken.value = null;
-
+    user.value!.access_token = null;
     await router.push({ name: 'login' });
-
     user.value = null;
   }
-
-  watchEffect(async () => {
-    if (typeof sessionToken.value === 'string') {
-      localStorage.setItem('sessionToken', sessionToken.value);
-    } else {
-      localStorage.removeItem('sessionToken');
-    }
-  });
 
   return {
     user,
@@ -61,6 +127,5 @@ export const useAuthStore = defineStore('auth', () => {
     login,
     checkSession,
     endSession,
-    sessionToken,
-   };
+  };
 });

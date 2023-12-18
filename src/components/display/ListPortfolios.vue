@@ -57,7 +57,7 @@ async function onSaveNewPortfolio () {
     const addedPortfolio = addPortfolioResult.data;
 
     if (addedPortfolio) {
-      await authStore.checkSession(authStore.sessionToken!);
+      await authStore.checkSession();
     }
   } catch (error) {
     console.error(error);

@@ -1,8 +1,14 @@
 <script setup lang='ts'>
-defineProps<{
-  modelValue: string;
-  id: string;
-}>();
+withDefaults(
+  defineProps<{
+    modelValue: string;
+    id: string;
+    type?: 'text' | 'email' | 'password',
+  }>(),
+  {
+    type: 'text',
+  },
+);
 
 const emit = defineEmits(['update:modelValue']);
 
@@ -14,19 +20,13 @@ function onInput ($event: Event) {
 </script>
 
 <template>
-<input
-  class="input-text"
-  :value="modelValue"
-  :id="id"
-  type="text"
-  @input="onInput"
->
+  <input class="input-text" :value="modelValue" :id="id" :type="type" @input="onInput">
 </template>
 
 <style lang='scss' scoped>
 .input-text {
   block-size: 48px;
-  padding-inline:.75rem;
+  padding-inline: .75rem;
   inline-size: 100%;
   font-size: 1.2rem;
   border: none;
