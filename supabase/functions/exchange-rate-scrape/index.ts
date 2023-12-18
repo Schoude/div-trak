@@ -7,21 +7,54 @@ Deno.serve(async (req) => {
     return new Response('ok', { headers: corsHeaders });
   }
 
-  const url = 'https://www.xe.com/de/currencyconverter/convert/?Amount=1&From=USD&To=EUR';
-  const html = await (await fetch(url)).text();
+  let USD_EUR = 0;
+  let EUR_USD = 0;
 
-  const $ = cheerio.load(html);
-  console.log($('[class*="BigRate"]').text());
+  const urlUSD_EUR =
+    'https://www.xe.com/de/currencyconverter/convert/?Amount=1&From=USD&To=EUR';
+  const urlEUR_USD =
+    'https://www.xe.com/de/currencyconverter/convert/?Amount=1&From=EUR&To=USD';
 
-  return new Response(
-    JSON.stringify({
-      test: 'test',
-    }),
+  try {
+    const [htmlUSD_EUR, htmlEUR_USD] = await Promise.all([
+      (await fetch(urlUSD_EUR)).text(),
+      (await fetch(urlEUR_USD)).text(),
+    ]);
+
     {
-      headers: {
-        ...corsHeaders,
-        'Content-Type': 'application/json',
+      const $ = cheerio.load(htmlUSD_EUR);
+      const rateText = $('[class*="BigRate"]').text();
+      USD_EUR = +(+rateText.split(' ')[0].replace(',', '.')).toFixed(2);
+    }
+
+    {
+      const $ = cheerio.load(htmlEUR_USD);
+      const rateText = $('[class*="BigRate"]').text();
+      EUR_USD = +(+rateText.split(' ')[0].replace(',', '.')).toFixed(2);
+    }
+
+    return new Response(
+      JSON.stringify({
+        USD_EUR,
+        EUR_USD,
+      }),
+      {
+        headers: {
+          ...corsHeaders,
+          'Content-Type': 'application/json',
+        },
       },
-    },
-  );
+    );
+  } catch (error) {
+    return new Response(
+      JSON.stringify(error),
+      {
+        headers: {
+          ...corsHeaders,
+          'Content-Type': 'application/json',
+        },
+        status: 500,
+      },
+    );
+  }
 });
