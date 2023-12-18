@@ -2,19 +2,29 @@
 import ButtonAction from '@/components/buttons/ButtonAction.vue';
 import DividendCalendar from '@/components/dividend-calendar/DividendCalendar.vue';
 import IconEdit from '@/components/icons/IconEdit.vue';
+import InputText from '@/components/inputs/InputText.vue';
+import LabelFormInput from '@/components/inputs/LabelFormInput.vue';
 import InstrumentListItem from '@/components/lists/InstrumentListItem.vue';
+import ModalBase from '@/components/modals/ModalBase.vue';
 import SectorsInPortfolio from '@/components/portfolio/SectorsInPortfolio.vue';
 import { useTRSocket } from '@/composables/useTRSocket';
 import { useInstrumentsStore } from '@/stores/instruments';
 import { usePortfolioStore } from '@/stores/portfolio-store';
 import { formatNumber } from '@/utils/intl/currency';
-import { computed } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { onBeforeRouteLeave, useRouter } from 'vue-router';
 
 const router = useRouter();
 const socket = useTRSocket();
 const instrumentStore = useInstrumentsStore();
 const portfolioStore = usePortfolioStore();
+
+// Portfolio edit
+const editPortfolioModal = ref<typeof ModalBase | null>(null);
+const modalIsOpen = ref(false);
+const newPortfolioName = ref('');
+const isLoading = ref(false);
+const canSend = computed(() => !isLoading.value || newPortfolioName.value !== '');
 
 portfolioStore.selectPortfolio(+router.currentRoute.value.params.id);
 
@@ -28,6 +38,39 @@ const portfolioValue = computed(() => portfolioStore.instruments.reduce((acc, in
   return acc;
 }, 0));
 
+watch(modalIsOpen, (isOpen) => {
+  if (!isOpen) {
+    return;
+  }
+
+  newPortfolioName.value = portfolioStore.detailPortfolio?.name!;
+});
+
+function onModalClose () {
+  editPortfolioModal.value?.$el.close();
+  modalIsOpen.value = false;
+  newPortfolioName.value = '';
+}
+
+function onOpenModalOpen () {
+  editPortfolioModal.value?.$el.showModal();
+  modalIsOpen.value = true;
+}
+
+async function onSaveEditedPortfolio () {
+  if (!canSend.value) {
+    return;
+  }
+
+  try {
+    isLoading.value = true;
+
+  } catch (error) {
+    console.error(error);
+  } finally {
+    isLoading.value = false;
+  }
+}
 
 function startTicker () {
   portfolioStore.detailPortfolio?.isins.forEach(isin => {
@@ -60,7 +103,8 @@ onBeforeRouteLeave(() => {
       <span>
         {{ portfolioStore.detailPortfolio?.name }}
       </span>
-      <ButtonAction type="button" variant="dusk" class="button-portfolio-edit" title="Open portfolio edit modal.">
+      <ButtonAction type="button" variant="dusk" class="button-portfolio-edit" title="Open portfolio edit modal."
+        @click="onOpenModalOpen">
         <IconEdit />
       </ButtonAction>
     </h1>
@@ -78,6 +122,21 @@ onBeforeRouteLeave(() => {
     </div>
 
     <SectorsInPortfolio v-if="portfolioStore.instruments" :instruments="portfolioStore.instruments" />
+
+    <ModalBase class="modal-edit-portfolio" ref="editPortfolioModal" @close="onModalClose">
+      <template #title>Edit Portfolio {{ portfolioStore.detailPortfolio?.name }}</template>
+      <template #content>
+        <div v-if="modalIsOpen" class="inner">
+          <LabelFormInput for-input="phone" text="New Portfolio Name">
+            <InputText v-model="newPortfolioName" id="new-name-portfolio" placeholder="My new Portfolio" />
+          </LabelFormInput>
+
+          <ButtonAction type="button" variant="dawn" class="button-save-portfolio" @click="onSaveEditedPortfolio">
+            <span>Save Portfolio</span>
+          </ButtonAction>
+        </div>
+      </template>
+    </ModalBase>
   </main>
 </template>
 
@@ -114,6 +173,16 @@ onBeforeRouteLeave(() => {
 
   @media only screen and (width >=1280px) {
     grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+.modal-edit-portfolio {
+  max-inline-size: 500px;
+  overflow: hidden;
+  
+  .inner {
+    padding-inline: .5rem;
+    padding-block-end: .5rem;
   }
 }
 </style>
