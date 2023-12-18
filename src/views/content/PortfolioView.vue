@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import ButtonAction from '@/components/buttons/ButtonAction.vue';
 import DividendCalendar from '@/components/dividend-calendar/DividendCalendar.vue';
+import IconEdit from '@/components/icons/IconEdit.vue';
 import InstrumentListItem from '@/components/lists/InstrumentListItem.vue';
 import SectorsInPortfolio from '@/components/portfolio/SectorsInPortfolio.vue';
 import { useTRSocket } from '@/composables/useTRSocket';
@@ -54,7 +56,15 @@ onBeforeRouteLeave(() => {
 
 <template>
   <main class="portfolio-view view">
-    <h1>{{ portfolioStore.detailPortfolio?.name }}</h1>
+    <h1 class="portfolio-name">
+      <span>
+        {{ portfolioStore.detailPortfolio?.name }}
+      </span>
+      <ButtonAction type="button" variant="dusk" class="button-portfolio-edit" title="Open portfolio edit modal.">
+        <IconEdit />
+      </ButtonAction>
+    </h1>
+
     <div class="portfolio-value text-m">{{ formatNumber(portfolioValue, { style: 'currency', currency: 'EUR' }) }}</div>
 
     <DividendCalendar />
@@ -72,6 +82,26 @@ onBeforeRouteLeave(() => {
 </template>
 
 <style scoped lang="scss">
+.portfolio-name {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.button-portfolio-edit {
+  block-size: 2rem;
+  inline-size: 2rem;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .icon-edit {
+    fill: currentColor;
+    inline-size: 1.3rem;
+  }
+}
+
 .instruments-list {
   padding: 0;
   padding-block-start: 1rem;
