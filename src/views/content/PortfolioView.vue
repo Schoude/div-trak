@@ -8,8 +8,11 @@ import InstrumentListItem from '@/components/lists/InstrumentListItem.vue';
 import ModalBase from '@/components/modals/ModalBase.vue';
 import SectorsInPortfolio from '@/components/portfolio/SectorsInPortfolio.vue';
 import { useTRSocket } from '@/composables/useTRSocket';
+import { useAuthStore } from '@/stores/auth';
 import { useInstrumentsStore } from '@/stores/instruments';
 import { usePortfolioStore } from '@/stores/portfolio-store';
+import { supabase } from '@/supabase/client';
+import type { DbResult } from '@/supabase/types/helpers';
 import { formatNumber } from '@/utils/intl/currency';
 import { computed, ref, watch } from 'vue';
 import { onBeforeRouteLeave, useRouter } from 'vue-router';
@@ -18,6 +21,7 @@ const router = useRouter();
 const socket = useTRSocket();
 const instrumentStore = useInstrumentsStore();
 const portfolioStore = usePortfolioStore();
+const authStore = useAuthStore();
 
 // Portfolio edit
 const editPortfolioModal = ref<typeof ModalBase | null>(null);
@@ -65,10 +69,31 @@ async function onSaveEditedPortfolio () {
   try {
     isLoading.value = true;
 
+    const updatePortfolioQuery = supabase
+      .from('portfolios')
+      .update({ name: newPortfolioName.value })
+      .eq('id', portfolioStore.detailPortfolio?.id!)
+      .select()
+      .single();
+
+    const updatePortfolioResult: DbResult<typeof updatePortfolioQuery> =
+      await updatePortfolioQuery;
+
+    if (updatePortfolioResult.error) {
+      console.error(updatePortfolioResult.error);
+    }
+
+    const updatedPortfolio = updatePortfolioResult.data;
+
+    if (updatedPortfolio) {
+      await authStore.checkSession(authStore.sessionToken!);
+    }
+
   } catch (error) {
     console.error(error);
   } finally {
-    isLoading.value = false;
+    onModalClose();
+    isLoading.value = true;
   }
 }
 
@@ -179,7 +204,7 @@ onBeforeRouteLeave(() => {
 .modal-edit-portfolio {
   max-inline-size: 500px;
   overflow: hidden;
-  
+
   .inner {
     padding-inline: .5rem;
     padding-block-end: .5rem;
