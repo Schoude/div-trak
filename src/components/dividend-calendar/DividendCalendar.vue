@@ -1,16 +1,18 @@
 <script setup lang="ts">
+import ButtonAction from '@/components/buttons/ButtonAction.vue';
+import ChartDividendsOfYear from '@/components/dividend-calendar/ChartDividendsOfYear.vue';
 import { useDividendsScrapedStore } from '@/stores/dividends-scraped';
+import { useExchangeRatesStore } from '@/stores/exchange-rates';
 import { useInstrumentsStore } from '@/stores/instruments';
 import { usePortfolioStore } from '@/stores/portfolio-store';
 import type { CalendarDividend, Dividend } from '@/types/tr/events/stock-details';
 import { formatNumber } from '@/utils/intl/currency';
 import { computed, nextTick, ref } from 'vue';
-import ButtonAction from '../buttons/ButtonAction.vue';
-import ChartDividendsOfYear from './ChartDividendsOfYear.vue';
 
 const instrumentStore = useInstrumentsStore();
 const portfolioStore = usePortfolioStore();
 const dividendsScrapedStore = useDividendsScrapedStore();
+const exchangeRateStore = useExchangeRatesStore();
 
 const year = ref(new Date().getUTCFullYear());
 const nextYear = computed(() => year.value + 1);
@@ -126,13 +128,15 @@ const dividendsCalendarData = computed(() => {
 
         // Add estimated dividends
         estimatedDividends.map(estimatedDividend => {
+          const amountInEUR = estimatedDividend.amount * exchangeRateStore.exchangeRates.USD_EUR;
+
           dividendMap.set(estimatedDividend.isin_ex_date, {
             id: estimatedDividend.isin_ex_date,
             isin: estimatedDividend.isin,
             paymentDate: estimatedDividend.payment_date,
             recordDate: null,
             exDate: estimatedDividend.ex_date,
-            amount: estimatedDividend.amount,
+            amount: amountInEUR,
             information: estimatedDividend.information,
             type: estimatedDividend.type,
           });

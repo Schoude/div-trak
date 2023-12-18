@@ -11,6 +11,7 @@ import TRAssetLoader from '@/components/loaders/TRAssetLoader.vue';
 import ModalDividendHistory from '@/components/modals/ModalDividendHistory.vue';
 import { useAggretatesStore } from '@/stores/aggregates';
 import { useDividendsScrapedStore } from '@/stores/dividends-scraped';
+import { useExchangeRatesStore } from '@/stores/exchange-rates';
 import { usePortfolioStore } from '@/stores/portfolio-store';
 import type { AggregateHistoryEvent } from '@/types/tr/events/aggregate-history';
 import type { Dividend, DividendWithPayment } from '@/types/tr/events/stock-details';
@@ -31,6 +32,7 @@ const modalIframe = ref<typeof ModalDividendHistory | null>(null);
 const portfolioStore = usePortfolioStore();
 const aggregateHistoryStore = useAggretatesStore();
 const dividendsScrapedStore = useDividendsScrapedStore();
+const exchangeRateStore = useExchangeRatesStore();
 
 const isUSStock = computed(() => props.stock.instrument.company?.countryOfOrigin === 'US' || props.stock.stockDetails?.company?.countryCode === 'US');
 const dividendYield = computed(() => `${formatNumber(props.stock.stockDetails.company?.dividendYieldSnapshot * 100, { style: 'decimal', roundingMode: 'floor' })} %`);
@@ -43,13 +45,15 @@ const aggregatedDividends = computed(() => {
 
   // Add estimated dividends
   estimatedDividends.map(estimatedDividend => {
+    const amountInEUR = estimatedDividend.amount * exchangeRateStore.exchangeRates.USD_EUR;
+
     dividendMap.set(estimatedDividend.isin_ex_date, {
       id: estimatedDividend.isin_ex_date,
       isin: estimatedDividend.isin,
       paymentDate: estimatedDividend.payment_date,
       recordDate: null,
       exDate: estimatedDividend.ex_date,
-      amount: estimatedDividend.amount,
+      amount: amountInEUR,
       information: estimatedDividend.information,
       type: estimatedDividend.type,
     });
