@@ -166,4 +166,5 @@ ul {
 
 .modal-base {
   max-inline-size: 500px;
-}</style>
+}
+</style>
