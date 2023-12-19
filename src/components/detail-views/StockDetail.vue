@@ -35,7 +35,7 @@ const dividendsScrapedStore = useDividendsScrapedStore();
 const exchangeRateStore = useExchangeRatesStore();
 
 const isUSStock = computed(() => props.stock.instrument.company?.countryOfOrigin === 'US' || props.stock.stockDetails?.company?.countryCode === 'US');
-const dividendYield = computed(() => `${formatNumber(props.stock.stockDetails.company?.dividendYieldSnapshot * 100, { style: 'decimal', roundingMode: 'floor' })} %`);
+const dividendYield = computed(() => `${formatNumber(props.stock.stockDetails?.company?.dividendYieldSnapshot * 100, { style: 'decimal', roundingMode: 'floor' })} %`);
 
 const aggregatedDividends = computed(() => {
   const pastDividends = props.stock.stockDetails?.dividends;

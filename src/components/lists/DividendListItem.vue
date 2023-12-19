@@ -4,9 +4,14 @@ import DividendInfo from '@/components/instrument/DividendInfo.vue';
 import type { Dividend, DividendWithPayment } from '@/types/tr/events/stock-details';
 import { computed } from 'vue';
 
-const props = defineProps<{
-  dividend: Dividend | DividendWithPayment;
-}>();
+const props = withDefaults(
+  defineProps<{
+    dividend: Dividend | DividendWithPayment;
+    showDeleteButton?: boolean;
+  }>(), {
+  showDeleteButton: true,
+},
+);
 
 defineEmits<{
   'delete:estimated-dividend': [estimatedDividend: Dividend],
@@ -19,7 +24,7 @@ const isPastDividend = computed(() => {
   return now >= paymentDate ? 'past' : '';
 });
 
-const isEstimationDividend = computed(() => props.dividend.information === 'estimation');
+const showDeleteButton = computed(() => props.dividend.information === 'estimation' && props.showDeleteButton);
 </script>
 
 <template>
@@ -37,7 +42,7 @@ const isEstimationDividend = computed(() => props.dividend.information === 'esti
       <slot name="action"></slot>
     </div>
 
-    <button v-if="isEstimationDividend" class="button-estimated-dividend-delete" type="button"
+    <button v-if="showDeleteButton" class="button-estimated-dividend-delete" type="button"
       title="Delete estimated dividend" @click="$emit('delete:estimated-dividend', dividend)">
       <IconDelete />
     </button>

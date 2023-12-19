@@ -57,7 +57,8 @@ async function onConfirmDividendClick (dividend: Dividend) {
           Confirm the scraped dividends for instrument {{ isin }}.
         </p>
         <ul>
-          <DividendListItem v-for="dividend of scrapedDividendsSortedByDate" :dividend="dividend" :key="dividend.id">
+          <DividendListItem v-for="dividend of scrapedDividendsSortedByDate" :dividend="dividend" :key="dividend.id"
+            :show-delete-button="false">
             <template #action>
               <div class="confirmation">
                 <ButtonAction class="button-dividend-confirm" variant="dawn" :disabled="!canConfirmDividends"
