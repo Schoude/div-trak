@@ -5,7 +5,6 @@ import type {
   OrderNew,
 } from '../../../src/supabase/types/helpers.ts';
 import { corsHeaders } from '../_shared/cors.ts';
-import { getUserPortfolios, getUserSessionFromToken } from '../_shared/user-data-helper.ts';
 
 Deno.serve(async (req) => {
   // This is needed if you're planning to invoke your function from a browser.
@@ -13,8 +12,7 @@ Deno.serve(async (req) => {
     return new Response('ok', { headers: corsHeaders });
   }
 
-  const { token, order, alreadyInPortfolio } = await req.json() as {
-    token: string;
+  const { order, alreadyInPortfolio } = await req.json() as {
     alreadyInPortfolio: boolean;
     order: OrderNew;
   };
@@ -23,27 +21,6 @@ Deno.serve(async (req) => {
     Deno.env.get('SUPABASE_URL') ?? '',
     Deno.env.get('SUPABASE_ANON_KEY') ?? '',
   );
-
-  let session: Session;
-
-  try {
-    session = await getUserSessionFromToken(token);
-  } catch (error) {
-    console.error(error);
-
-    return new Response(
-      JSON.stringify({
-        error: 'Unauthorized',
-      }),
-      {
-        headers: {
-          ...corsHeaders,
-          'Content-Type': 'application/json',
-        },
-        status: 401,
-      },
-    );
-  }
 
   // Add instrument to portfolio
   if (alreadyInPortfolio === false) {
@@ -125,11 +102,11 @@ Deno.serve(async (req) => {
 
   // Return the portfolios for the user
   try {
-    const user = await getUserPortfolios(session.user_id);
+    // const user = await getUserPortfolios(userId);
 
     return new Response(
       JSON.stringify({
-        user,
+        message: 'Success',
       }),
       {
         headers: {

@@ -3,7 +3,6 @@ import LabelFormInput from '@/components/inputs/LabelFormInput.vue';
 import { useAuthStore } from '@/stores/auth';
 import { supabase } from '@/supabase/client';
 import type { ORDER_EXECUTION_TYPE, OrderNew, Portfolio } from '@/supabase/types/helpers';
-import type { User } from '@/types/auth';
 import type { ETF, Stock } from '@/types/tr/instrument';
 import { computed, ref } from 'vue';
 
@@ -55,7 +54,7 @@ async function onOrderClick (type: 'sell' | 'buy') {
   };
 
   try {
-    const newOrderRes = await supabase.functions.invoke<{ user: User }>('order-add', {
+    const newOrderRes = await supabase.functions.invoke('order-add', {
       body: {
         alreadyInPortfolio: props.isInDetailPortfolio,
         order: newOrder,
@@ -64,18 +63,14 @@ async function onOrderClick (type: 'sell' | 'buy') {
 
     if (newOrderRes.error) throw newOrderRes.error;
 
-    if (newOrderRes.data) {
-      // Set user with new orders of the portfolios
-      authStore.user!.portfolios = newOrderRes.data.user.portfolios;
+    await authStore.checkSession();
 
-      onSuccess();
-      emit('success');
-
-      isSending.value = false;
-    } else throw new Error('Response has no data: Function: order-add');
-
+    onSuccess();
+    emit('success');
   } catch (error) {
     console.log((error as Error).message);
+  } finally {
+    isSending.value = false;
   }
 }
 </script>
