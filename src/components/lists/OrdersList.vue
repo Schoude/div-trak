@@ -6,7 +6,6 @@ import { useAuthStore } from '@/stores/auth';
 import { useInstrumentsStore } from '@/stores/instruments';
 import { supabase } from '@/supabase/client';
 import type { Order, Portfolio } from '@/supabase/types/helpers';
-import type { User } from '@/types/auth';
 import { computed, ref } from 'vue';
 
 const props = defineProps<{
@@ -51,7 +50,7 @@ async function onDeletionConfirmClick () {
   isSending.value = true;
 
   try {
-    const deleteOrderResponse = await supabase.functions.invoke<{ user: User }>('order-delete', {
+    const deleteOrderResponse = await supabase.functions.invoke('order-delete', {
       body: {
         isLastOrderInPortfolio: isLastOrderInPortfolio.value,
         orderToDelete: {
@@ -64,16 +63,12 @@ async function onDeletionConfirmClick () {
 
     if (deleteOrderResponse.error) throw deleteOrderResponse.error;
 
-    if (deleteOrderResponse.data) {
-      // Set user with new orders of the portfolios
-      authStore.user!.portfolios = deleteOrderResponse.data.user.portfolios;
-
-      clearAndClose();
-      isSending.value = false;
-    } else throw new Error('Response has no data: Function: order-delete');
-
+    await authStore.checkSession();
+    clearAndClose();
   } catch (error) {
     console.log((error as Error).message);
+  } finally {
+    isSending.value = false;
   }
 }
 </script>

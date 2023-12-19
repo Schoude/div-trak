@@ -100,10 +100,7 @@ Deno.serve(async (req) => {
     );
   }
 
-  // Return the portfolios for the user
   try {
-    // const user = await getUserPortfolios(userId);
-
     return new Response(
       JSON.stringify({
         message: 'Success',
