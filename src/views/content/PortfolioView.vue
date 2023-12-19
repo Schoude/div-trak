@@ -121,8 +121,8 @@ async function onDeletePortfolio () {
     const updatedPortfolio = updatePortfolioResult.data;
 
     if (updatedPortfolio) {
-      await authStore.checkSession();
       router.push({ name: 'dashboard' });
+      await authStore.checkSession();
     }
   } catch (error) {
     console.error(error);
