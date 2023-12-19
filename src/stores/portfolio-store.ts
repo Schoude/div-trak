@@ -13,7 +13,7 @@ export const usePortfolioStore = defineStore('portfolios', () => {
     return authStore.user?.portfolios.find(p => p.id === selectedPortfolioID.value);
   });
 
-  const instruments = computed(() => instrumentStore.getInstrumentsFilled(detailPortfolio.value!).sort((a, b) => b.value - a.value));
+  const instruments = computed(() => instrumentStore.getInstrumentsFilled(detailPortfolio.value!)?.sort((a, b) => b.value - a.value));
 
   return {
     selectPortfolio (id: number | null) {

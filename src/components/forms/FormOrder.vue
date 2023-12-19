@@ -2,7 +2,7 @@
 import LabelFormInput from '@/components/inputs/LabelFormInput.vue';
 import { useAuthStore } from '@/stores/auth';
 import { supabase } from '@/supabase/client';
-import type { ORDER_EXECUTION_TYPE, OrderNew, Portfolio } from '@/supabase/types/helpers';
+import type { DbResult, ORDER_EXECUTION_TYPE, OrderNew, Portfolio } from '@/supabase/types/helpers';
 import type { ETF, Stock } from '@/types/tr/instrument';
 import { computed, ref } from 'vue';
 
@@ -54,14 +54,40 @@ async function onOrderClick (type: 'sell' | 'buy') {
   };
 
   try {
-    const newOrderRes = await supabase.functions.invoke('order-add', {
-      body: {
-        alreadyInPortfolio: props.isInDetailPortfolio,
-        order: newOrder,
-      },
-    });
+    // Add instrument to portfolio
+    if (props.isInDetailPortfolio === false) {
+      const selectPortfolioQuery = supabase
+        .from('portfolios')
+        .select('isins')
+        .eq('id', newOrder.portfolio_id)
+        .single();
 
-    if (newOrderRes.error) throw newOrderRes.error;
+      const selectPortfolioResult: DbResult<typeof selectPortfolioQuery> =
+        await selectPortfolioQuery;
+
+      if (selectPortfolioResult.error) throw selectPortfolioResult.error;
+
+      const isins = selectPortfolioResult.data.isins;
+
+      isins?.push(newOrder.isin);
+
+      const updatePortfolioQuery = supabase
+        .from('portfolios')
+        .update({ isins })
+        .eq('id', newOrder.portfolio_id)
+        .single();
+      const uptedPortfolioResult: DbResult<typeof updatePortfolioQuery> =
+        await updatePortfolioQuery;
+
+      if (uptedPortfolioResult.error) throw uptedPortfolioResult.error;
+    }
+
+    // Add new order for instrument
+    const createOrderQuery = supabase.from('orders').insert(newOrder);
+    const createOrderResult: DbResult<typeof createOrderQuery> =
+      await createOrderQuery;
+
+    if (createOrderResult.error) throw createOrderResult.error;
 
     await authStore.checkSession();
 

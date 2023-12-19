@@ -5,7 +5,7 @@ import ModalBase from '@/components/modals/ModalBase.vue';
 import { useAuthStore } from '@/stores/auth';
 import { useInstrumentsStore } from '@/stores/instruments';
 import { supabase } from '@/supabase/client';
-import type { Order, Portfolio } from '@/supabase/types/helpers';
+import type { DbResult, Order, Portfolio } from '@/supabase/types/helpers';
 import { computed, ref } from 'vue';
 
 const props = defineProps<{
@@ -50,18 +50,40 @@ async function onDeletionConfirmClick () {
   isSending.value = true;
 
   try {
-    const deleteOrderResponse = await supabase.functions.invoke('order-delete', {
-      body: {
-        isLastOrderInPortfolio: isLastOrderInPortfolio.value,
-        orderToDelete: {
-          id: orderToDelete.value?.id,
-          portfolioId: props.portfolio.id,
-          isin: orderToDelete.value?.isin,
-        },
-      },
-    });
+    // Delete order for instrument
+    const deleteOrderQuery = supabase
+      .from('orders')
+      .delete()
+      .eq('id', orderToDelete.value!.id);
+    const deleteOrderResult: DbResult<typeof deleteOrderQuery> = await deleteOrderQuery;
 
-    if (deleteOrderResponse.error) throw deleteOrderResponse.error;
+    if (deleteOrderResult.error) throw deleteOrderResult.error;
+
+    // Delete instrument from port
+    if (isLastOrderInPortfolio.value) {
+      const selectPortfolioQuery = supabase
+        .from('portfolios')
+        .select('isins')
+        .eq('id', props.portfolio.id)
+        .single();
+
+      const selectPortfolioResult: DbResult<typeof selectPortfolioQuery> =
+        await selectPortfolioQuery;
+
+      if (selectPortfolioResult.error) throw selectPortfolioResult.error;
+
+      const isins = selectPortfolioResult.data.isins.filter(isin => isin !== orderToDelete.value!.isin);
+
+      const updatePortfolioQuery = supabase
+        .from('portfolios')
+        .update({ isins })
+        .eq('id', props.portfolio.id)
+        .single();
+      const uptedPortfolioResult: DbResult<typeof updatePortfolioQuery> =
+        await updatePortfolioQuery;
+
+      if (uptedPortfolioResult.error) throw uptedPortfolioResult.error;
+    }
 
     await authStore.checkSession();
     clearAndClose();

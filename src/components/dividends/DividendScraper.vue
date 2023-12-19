@@ -54,7 +54,7 @@ async function onScrapeSubmit () {
 
         await nextTick();
       });
-    } else throw new Error('Response has no data: Function: order-delete');
+    } else throw new Error('Response has no data: Function: dividends-crawl');
 
     if (!crawlDividendsResponse.data?.estimatedDividends) {
       console.error(`Error crawling the estimated dividends for ${props.stockName} (${symbolToScrape.value})`);
