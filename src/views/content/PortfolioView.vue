@@ -28,7 +28,7 @@ const editPortfolioModal = ref<typeof ModalBase | null>(null);
 const modalIsOpen = ref(false);
 const newPortfolioName = ref('');
 const isLoading = ref(false);
-const canSend = computed(() => !isLoading.value || newPortfolioName.value !== '');
+const canSend = computed(() => !isLoading.value && newPortfolioName.value !== '');
 
 portfolioStore.selectPortfolio(+router.currentRoute.value.params.id);
 
@@ -92,7 +92,7 @@ async function onSaveEditedPortfolio () {
     console.error(error);
   } finally {
     onModalClose();
-    isLoading.value = true;
+    isLoading.value = false;
   }
 }
 
@@ -128,7 +128,7 @@ async function onDeletePortfolio () {
     console.error(error);
   } finally {
     onModalClose();
-    isLoading.value = true;
+    isLoading.value = false;
   }
 }
 

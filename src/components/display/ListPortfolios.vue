@@ -18,7 +18,7 @@ const root = ref<typeof ModalBase | null>(null);
 const modalIsOpen = ref(false);
 const nameNewPortfolio = ref('');
 const isLoading = ref(false);
-const canSend = computed(() => !isLoading.value || nameNewPortfolio.value !== '');
+const canSend = computed(() => !isLoading.value && nameNewPortfolio.value !== '');
 
 function onModalClose () {
   root.value?.$el.close();
@@ -63,7 +63,7 @@ async function onSaveNewPortfolio () {
     console.error(error);
   } finally {
     onModalClose();
-    isLoading.value = true;
+    isLoading.value = false;
   }
 }
 </script>
