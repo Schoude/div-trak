@@ -76,9 +76,6 @@ router.beforeEach(async (to, _from, next) => {
 
   // Check if the user is not authenticated
   if (!authStore.isAuthenticated) {
-    console.log('check session');
-
-
     // Check the session using the stored token
     try {
       await authStore.checkSession();

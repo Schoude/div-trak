@@ -24,8 +24,8 @@ function onSubmit () {
         <InputText type="email" v-model="loginData.email" id="email" placeholder="john@doe.com" autocomplete="email" />
       </LabelFormInput>
 
-      <LabelFormInput for-input="password" text="PIN">
-        <InputText type="password" v-model="loginData.password" id="password" placeholder="8888"
+      <LabelFormInput for-input="password" text="Password">
+        <InputText type="password" v-model="loginData.password" id="password" placeholder="U;A~PaX9j7"
           autocomplete="password" />
       </LabelFormInput>
 
