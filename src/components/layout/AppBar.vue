@@ -1,13 +1,17 @@
 <script setup lang='ts'>
+import TagText from '@/components/display/TagText.vue';
 import IconLogout from '@/components/icons/IconLogout.vue';
 import LogoDivTrak from '@/components/logos/LogoDivTrak.vue';
 import { useAuthStore } from '@/stores/auth';
+import { useExchangeRatesStore } from '@/stores/exchange-rates';
 import { usePortfolioStore } from '@/stores/portfolio-store';
+import { formatNumber } from '@/utils/intl/currency';
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 
 const authStore = useAuthStore();
 const portfolioStore = usePortfolioStore();
+const exchangeRateStore = useExchangeRatesStore();
 const route = useRoute();
 
 const portfolioLinkVisible = computed(() => portfolioStore.detailPortfolio && route.name !== 'dashboard' && route.name !== 'portfolio');
@@ -29,9 +33,19 @@ async function onLogoutClick () {
       </RouterLink>
     </nav>
 
-    <button type="button" class="btn-logout" @click="onLogoutClick" title="Log out from Div-Trak">
-      <IconLogout />
-    </button>
+    <div class="column">
+      <div class="exchange-rates">
+        <TagText>
+          USD | EUR: {{ formatNumber(exchangeRateStore.exchangeRates.USD_EUR, {currency: 'EUR', style: 'currency'}) }}
+        </TagText>
+        <TagText>
+          EUR | USD: {{ formatNumber(exchangeRateStore.exchangeRates.EUR_USD, {style: 'currency', currency: 'USD'}) }}
+        </TagText>
+      </div>
+      <button type="button" class="btn-logout" @click="onLogoutClick" title="Log out from Div-Trak">
+        <IconLogout />
+      </button>
+    </div>
   </header>
 </template>
 
@@ -59,6 +73,17 @@ nav {
   a {
     font-weight: 700;
   }
+}
+
+.exchange-rates,
+.column {
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+}
+
+.exchange-rates {
+  flex-wrap: wrap;
 }
 
 .btn-logout {
