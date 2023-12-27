@@ -8,8 +8,10 @@ const props = withDefaults(
   defineProps<{
     dividend: Dividend | DividendWithPayment;
     showDeleteButton?: boolean;
+    currency?: 'EUR' | 'USD';
   }>(), {
   showDeleteButton: true,
+  currency: 'EUR',
 },
 );
 
@@ -37,7 +39,7 @@ const showDeleteButton = computed(() => props.dividend.information === 'estimati
         </template>
       </template>
 
-      <DividendInfo v-if="dividend" :dividend="dividend" />
+      <DividendInfo v-if="dividend" :dividend="dividend" :currency="currency" />
 
       <slot name="action"></slot>
     </div>
