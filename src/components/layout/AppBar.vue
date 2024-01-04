@@ -36,10 +36,10 @@ async function onLogoutClick () {
     <div class="column">
       <div class="exchange-rates">
         <TagText>
-          USD | EUR: {{ formatNumber(exchangeRateStore.exchangeRates.USD_EUR, {currency: 'EUR', style: 'currency'}) }}
+          USD | EUR: {{ formatNumber(exchangeRateStore.exchangeRates.USD_EUR, { currency: 'EUR', style: 'currency' }) }}
         </TagText>
         <TagText>
-          EUR | USD: {{ formatNumber(exchangeRateStore.exchangeRates.EUR_USD, {style: 'currency', currency: 'USD'}) }}
+          EUR | USD: {{ formatNumber(exchangeRateStore.exchangeRates.EUR_USD, { style: 'currency', currency: 'USD' }) }}
         </TagText>
       </div>
       <button type="button" class="btn-logout" @click="onLogoutClick" title="Log out from Div-Trak">
@@ -53,10 +53,9 @@ async function onLogoutClick () {
 @use '@/styles/mixins';
 
 .app-bar {
-  display: flex;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   padding-inline: .5rem;
-  justify-content: space-between;
   inline-size: 100%;
 
   @media only screen and (width >=1440px) {
@@ -67,11 +66,16 @@ async function onLogoutClick () {
 
 nav {
   display: flex;
-  gap: 2rem;
+  gap: .75rem;
   align-items: center;
+
+  @media only screen and (width >=1440px) {
+    gap: 2rem;
+  }
 
   a {
     font-weight: 700;
+    flex: none;
   }
 }
 
@@ -80,6 +84,7 @@ nav {
   display: flex;
   align-items: center;
   gap: .35rem;
+  justify-content: end;
 }
 
 .exchange-rates {

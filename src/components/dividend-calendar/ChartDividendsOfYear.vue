@@ -308,10 +308,17 @@ watch(() => props.year, () => {
 .dividends-list {
   padding: 0;
   list-style: none;
-  display: flex;
-  gap: .75rem;
-  flex-wrap: wrap;
   block-size: max-content;
+  overflow: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .75rem;
+
+  @media screen and (width >=768px) {
+    flex-wrap: wrap;
+    display: flex;
+    overflow: none;
+  }
 
   .dividend {
     block-size: max-content;
@@ -320,6 +327,10 @@ watch(() => props.year, () => {
     padding: 0.35rem .75rem;
     line-height: 1;
     border-radius: 8px;
+
+    @media screen and (width >=768px) {
+      min-inline-size: max-content;
+    }
 
     .name {
       &:hover {

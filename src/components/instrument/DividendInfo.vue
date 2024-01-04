@@ -2,16 +2,19 @@
 import type { Dividend, DividendWithPayment } from '@/types/tr/events/stock-details';
 import { formatNumber } from '@/utils/intl/currency';
 
-defineProps<{
+withDefaults(defineProps<{
   dividend: Dividend | DividendWithPayment;
-}>();
+  currency?: 'EUR' | 'USD';
+}>(), {
+  currency: 'EUR',
+});
 </script>
 
 <template>
   <div class="dividend-info text-xs">
     <div class="grid">
       <div class="text-s"><b>{{ formatNumber(dividend.amount, {
-        style: 'currency', currency: 'EUR', roundingMode: 'ceil'
+        style: 'currency', currency: currency, roundingMode: 'ceil'
       }) }}</b></div>
       <div v-if="dividend.type">Type: {{ dividend.type }}</div>
     </div>
