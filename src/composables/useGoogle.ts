@@ -1,23 +1,28 @@
 import type { CalendarDividend } from '@/types/tr/events/stock-details';
 import { useScriptTag } from '@vueuse/core';
+import { ref } from 'vue';
+
+interface Calendar {
+  id: string;
+  summary: string;
+  description: string;
+}
 
 // TODO:
-// 2) Check if user already has a "Dividenden" calendar, if not create it
 // 2.1) If present get all events in that calendar for the current month
 // 3) Delete all present dividend events
 // 4) Add all new dividend events
 export function useGoogle () {
+  const loading = ref(false);
   let tokenClient: { callback: (req: unknown) => Promise<void> };
 
   useScriptTag(
     'https://accounts.google.com/gsi/client',
-    // on script tag loaded.
     () => {
-      // do something
       tokenClient = google.accounts.oauth2.initTokenClient({
         client_id: import.meta.env.VITE_OAUTH_CLIENT_ID,
         scope:
-          'https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/calendar.events',
+          'https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.events',
         callback: '', // defined later
       });
     },
@@ -38,65 +43,79 @@ export function useGoogle () {
   );
 
   function addToCalendar (dividends: CalendarDividend[]) {
-    tokenClient.callback = async (req: unknown) => {
-      console.log(req);
+    if (loading.value) {
+      return;
+    }
 
-      // const request = {
-      //   'calendarId': 'primary',
-      //   'timeMin': (new Date('2024-01-01')).toISOString(),
-      //   'showDeleted': false,
-      //   'singleEvents': true,
-      //   'maxResults': 10,
-      //   'orderBy': 'startTime',
-      // };
-      // const response = await gapi.client.calendar.events.list(request);
-      // console.log(response);
+    tokenClient.callback = async () => {
+      loading.value = true;
 
-      dividends.forEach((dividend) => {
-        const startDate = new Date(dividend.paymentDateTimestamp);
-        const endDate = new Date(dividend.paymentDateTimestamp);
-        startDate.setHours(10);
-        endDate.setHours(11);
+      // Check if user already has a "Dividenden" calendar, if not create it.
+      const calendarListRequest = gapi.client.calendar.calendarList.list();
+      calendarListRequest.execute(function (val: { items: Calendar[] }) {
+        let dividendCalendar = val.items.find((calendar) =>
+          calendar.summary === 'Dividenden',
+        );
 
-        const event = {
-          'summary':
-            `${dividend.instrumentName} | ${dividend.paymentFormatted}`,
-          // 'location': '800 Howard St., San Francisco, CA 94103',
-          'description': `${dividend.paymentFormatted}${
-            dividend.isEstimation ? ' | Is Estimation' : ''
-          }${dividend.hasForecast ? ' | Has Forecast Orders' : ''}`,
-          'start': {
-            'dateTime': startDate.toISOString(),
+        if (!dividendCalendar) {
+          const calendarListRequest = gapi.client.calendar.calendars.insert({
+            summary: 'Dividenden',
+            description: 'Dividendenkalender von Div Trak',
             'timeZone': 'Europe/Berlin',
-          },
-          'end': {
-            'dateTime': endDate.toISOString(),
-            'timeZone': 'Europe/Berlin',
-          },
-          // 'recurrence': [
-          //   'RRULE:FREQ=DAILY;COUNT=2',
-          // ],
-          // 'attendees': [
-          //   { 'email': 'marcbaque1311@gmail.com' },
-          // ],
-          // 'reminders': {
-          //   'useDefault': false,
-          //   'overrides': [
-          //     { 'method': 'email', 'minutes': 24 * 60 },
-          //     { 'method': 'popup', 'minutes': 10 },
-          //   ],
-          // },
-        };
+          });
 
-        const request = gapi.client.calendar.events.insert({
-          'calendarId': 'primary',
-          'resource': event,
-        });
+          calendarListRequest.execute(function (val: Calendar) {
+            dividendCalendar = val;
+          });
+        }
 
-        request.execute(function (event) {
-          console.log(event);
+        // Get the events of the dividend calendar of the current month.
+        // const request = {
+        //   'calendarId': 'primary',
+        //   'timeMin': (new Date('2024-01-01')).toISOString(),
+        //   'showDeleted': false,
+        //   'singleEvents': true,
+        //   'maxResults': 10,
+        //   'orderBy': 'startTime',
+        // };
+        // const response = await gapi.client.calendar.events.list(request);
+        // console.log(response);
+
+        // Delete all events present for that month
+
+        // Add all new events
+        dividends.forEach((dividend) => {
+          const startDate = new Date(dividend.paymentDateTimestamp);
+          const endDate = new Date(dividend.paymentDateTimestamp);
+          startDate.setHours(10);
+          endDate.setHours(11);
+
+          const event = {
+            'summary':
+              `${dividend.instrumentName} | ${dividend.paymentFormatted}`,
+            'description': `${dividend.paymentFormatted}${
+              dividend.isEstimation ? ' | Is Estimation' : ''
+            }${dividend.hasForecast ? ' | Has Forecast Orders' : ''}`,
+            'start': {
+              'dateTime': startDate.toISOString(),
+              'timeZone': 'Europe/Berlin',
+            },
+            'end': {
+              'dateTime': endDate.toISOString(),
+              'timeZone': 'Europe/Berlin',
+            },
+          };
+
+          const request = gapi.client.calendar.events.insert({
+            'calendarId': dividendCalendar?.id,
+            'resource': event,
+          });
+
+          request.execute();
         });
       });
+
+      loading.value = false;
     };
 
     if (gapi.client.getToken() == null) {
