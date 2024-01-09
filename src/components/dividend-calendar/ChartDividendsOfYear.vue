@@ -1,10 +1,13 @@
 <script setup lang="ts">
+import { useGoogle } from '@/composables/useGoogle';
 import type { CalendarDividend } from '@/types/tr/events/stock-details';
 import { formatNumber } from '@/utils/intl/currency';
 import { defaultFormat, monthIndicesMap, monthNamesMap } from '@/utils/visus';
 import { axisBottom, axisLeft, max, scaleBand, scaleLinear, scaleOrdinal, select, stack } from 'd3';
 import { computed, nextTick, onMounted, ref, watch } from 'vue';
+import ButtonAction from '../buttons/ButtonAction.vue';
 
+const google = useGoogle();
 const props = defineProps<{
   year: number;
   dividends: CalendarDividend[][];
@@ -30,6 +33,9 @@ const getDividendTitle = computed(() => {
   };
 });
 
+const currentYear = ref<number>(new Date().getUTCFullYear());
+const currentMonth = ref<number>(new Date().getUTCMonth());
+const showGoogleCalendarButton = computed(() => currentYear.value === props.year && currentMonth.value === detailMonth.value);
 const detailMonth = ref<number>(new Date().getUTCMonth());
 const getDetailMonthDividends = computed(() => props.dividends.at(detailMonth.value)?.sort((a, b) => b.payment - a.payment));
 const detailMonthAggregatedDividends = computed(() => formatNumber(getDetailMonthDividends.value?.reduce((acc, d) => {
@@ -214,6 +220,14 @@ onMounted(() => {
   drawChart();
 });
 
+async function onAddToCalendarClick (dividends: CalendarDividend[] | undefined) {
+  if (dividends == null) {
+    return;
+  }
+
+  google.addToCalendar(dividends);
+}
+
 watch(() => props.year, () => {
   drawChart();
 });
@@ -241,6 +255,11 @@ watch(() => props.year, () => {
           </div>
         </li>
       </ul>
+
+      <ButtonAction v-if="showGoogleCalendarButton" :variant="'dawn'" class="button-add-calendar text-xs"
+        @click="onAddToCalendarClick(getDetailMonthDividends)">
+        Add to Google Calendar
+      </ButtonAction>
     </div>
   </div>
 </template>
@@ -391,5 +410,12 @@ watch(() => props.year, () => {
       }
     }
   }
+}
+
+.button-add-calendar {
+  block-size: 1.75rem;
+  padding-inline: 0.75rem;
+  margin-block-start: .75rem;
+  inline-size: fit-content;
 }
 </style>
