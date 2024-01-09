@@ -7,6 +7,25 @@ interface TokenClient {
   requestAccessToken: (options: { prompt: string }) => void;
 }
 
+interface Calendar {
+  id: string;
+  summary: string;
+  description: string;
+}
+
+interface CalendarEvent {
+  'summary': string;
+  'description': string;
+  'start': {
+    'dateTime': string;
+    'timeZone': string;
+  };
+  'end': {
+    'dateTime': string;
+    'timeZone': string;
+  };
+}
+
 declare const google: {
   accounts: {
     oauth2: {
@@ -20,21 +39,43 @@ declare const google: {
 };
 
 declare const gapi: {
-  load: (type: string, onLoad: () => Promise<void>) => void,
+  load: (type: string, onLoad: () => Promise<void>) => void;
   client: {
     init: (options: {
       apiKey: string;
       discoveryDocs: string[];
     }) => Promise<void>;
     getToken: () => undefined | string;
-  }
+    calendar: {
+      calendarList: {
+        list: () => Promise<{ body: string }>;
+      };
+      calendars: {
+        insert: (options: {
+          summary: string;
+          description: string;
+          timeZone: string;
+        }) => Promise<{ body: string }>;
+      };
+      events: {
+        list: (options: {
+          calendarId: string;
+          timeMin: string;
+          timeMax: string;
+          showDeleted: boolean;
+        }) => Promise<{ body: string }>;
+        delete: (options: {
+          calendarId: string;
+          eventId: string;
+        }) => Promise<{ body: string }>;
+        insert: (options: {
+          calendarId: string;
+          resource: CalendarEvent;
+        }) => Promise<{ body: string }>;
+      };
+    };
+  };
 };
-
-interface Calendar {
-  id: string;
-  summary: string;
-  description: string;
-}
 
 export function useGoogle () {
   const loading = ref(false);
@@ -89,15 +130,15 @@ export function useGoogle () {
       ) => calendar.summary === 'Dividenden');
 
       if (!dividendCalendar) {
-        const calendarListRequest = gapi.client.calendar.calendars.insert({
-          summary: 'Dividenden',
-          description: 'Dividendenkalender von Div Trak',
-          'timeZone': 'Europe/Berlin',
-        });
+        const calendarListRequest = await gapi.client.calendar.calendars.insert(
+          {
+            summary: 'Dividenden',
+            description: 'Dividendenkalender von Div Trak',
+            'timeZone': 'Europe/Berlin',
+          },
+        );
 
-        calendarListRequest.execute(function (val: Calendar) {
-          dividendCalendar = val;
-        });
+        dividendCalendar = JSON.parse(calendarListRequest.body);
       }
 
       // Get the events of the dividend calendar of the current month.
