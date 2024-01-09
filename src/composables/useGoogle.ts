@@ -19,6 +19,17 @@ declare const google: {
   };
 };
 
+declare const gapi: {
+  load: (type: string, onLoad: () => Promise<void>) => void,
+  client: {
+    init: (options: {
+      apiKey: string;
+      discoveryDocs: string[];
+    }) => Promise<void>;
+    getToken: () => undefined | string;
+  }
+};
+
 interface Calendar {
   id: string;
   summary: string;
