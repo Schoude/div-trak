@@ -101,35 +101,35 @@ export function useGoogle () {
         }
 
         // Add all new events
-        // dividends.forEach((dividend) => {
-        //   const startDate = new Date(dividend.paymentDateTimestamp);
-        //   const endDate = new Date(dividend.paymentDateTimestamp);
-        //   startDate.setHours(10);
-        //   endDate.setHours(11);
+        const toAdd = dividends.map((dividend) => {
+          const startDate = new Date(dividend.paymentDateTimestamp);
+          const endDate = new Date(dividend.paymentDateTimestamp);
+          startDate.setHours(10);
+          endDate.setHours(11);
 
-        //   const event = {
-        //     'summary':
-        //       `${dividend.instrumentName} | ${dividend.paymentFormatted}`,
-        //     'description': `${dividend.paymentFormatted}${
-        //       dividend.isEstimation ? ' | Is Estimation' : ''
-        //     }${dividend.hasForecast ? ' | Has Forecast Orders' : ''}`,
-        //     'start': {
-        //       'dateTime': startDate.toISOString(),
-        //       'timeZone': 'Europe/Berlin',
-        //     },
-        //     'end': {
-        //       'dateTime': endDate.toISOString(),
-        //       'timeZone': 'Europe/Berlin',
-        //     },
-        //   };
+          const event = {
+            'summary':
+              `${dividend.instrumentName} | ${dividend.paymentFormatted}`,
+            'description': `${dividend.paymentFormatted}${
+              dividend.isEstimation ? ' | Is Estimation' : ''
+            }${dividend.hasForecast ? ' | Has Forecast Orders' : ''}`,
+            'start': {
+              'dateTime': startDate.toISOString(),
+              'timeZone': 'Europe/Berlin',
+            },
+            'end': {
+              'dateTime': endDate.toISOString(),
+              'timeZone': 'Europe/Berlin',
+            },
+          };
 
-        //   const request = gapi.client.calendar.events.insert({
-        //     'calendarId': dividendCalendar?.id,
-        //     'resource': event,
-        //   });
+          return gapi.client.calendar.events.insert({
+            'calendarId': dividendCalendar?.id,
+            'resource': event,
+          });
+        });
 
-        //   request.execute();
-        // });
+        await Promise.all(toAdd);
       });
 
       loading.value = false;
