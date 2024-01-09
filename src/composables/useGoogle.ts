@@ -2,6 +2,23 @@ import type { CalendarDividend } from '@/types/tr/events/stock-details';
 import { useScriptTag } from '@vueuse/core';
 import { ref } from 'vue';
 
+interface TokenClient {
+  callback: (req: unknown) => Promise<void>;
+  requestAccessToken: (options: { prompt: string }) => void;
+}
+
+declare const google: {
+  accounts: {
+    oauth2: {
+      initTokenClient: (options: {
+        client_id: string;
+        scope: string;
+        callback: string;
+      }) => TokenClient;
+    };
+  };
+};
+
 interface Calendar {
   id: string;
   summary: string;
@@ -91,7 +108,7 @@ export function useGoogle () {
       const presentEvents = JSON.parse(response.body).items;
 
       if (presentEvents && presentEvents.length > 0) {
-        const toDelete = presentEvents.map((event: {id: string}) => {
+        const toDelete = presentEvents.map((event: { id: string }) => {
           const request = {
             'calendarId': dividendCalendar?.id,
             'eventId': event.id,
