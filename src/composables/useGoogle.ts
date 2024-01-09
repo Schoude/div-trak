@@ -8,13 +8,12 @@ interface Calendar {
   description: string;
 }
 
-// TODO:
-// 2.1) If present get all events in that calendar for the current month
-// 3) Delete all present dividend events
-// 4) Add all new dividend events
 export function useGoogle () {
   const loading = ref(false);
-  let tokenClient: { callback: (req: unknown) => Promise<void> };
+  let tokenClient: {
+    callback: (req: unknown) => Promise<void>;
+    requestAccessToken: (options: { prompt: string }) => void;
+  };
 
   useScriptTag(
     'https://accounts.google.com/gsi/client',
