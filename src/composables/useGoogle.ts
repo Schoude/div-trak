@@ -88,8 +88,16 @@ export function useGoogle () {
         const presentEvents = JSON.parse(response.body).items;
 
         if (presentEvents && presentEvents.length > 0) {
-          console.log('delete all present events');
+          const toDelete = presentEvents.map(event => {
+            const request = {
+              'calendarId': dividendCalendar?.id,
+              'eventId': event.id,
+            };
 
+            return gapi.client.calendar.events.delete(request);
+          });
+
+          await Promise.all(toDelete);
         }
 
         // Add all new events
