@@ -41,7 +41,11 @@ export function useGoogle () {
     },
   );
 
-  function addToCalendar (year: number, month: number, dividends: CalendarDividend[]) {
+  function addToCalendar (
+    year: number,
+    month: number,
+    dividends: CalendarDividend[],
+  ) {
     if (loading.value) {
       return;
     }
@@ -50,86 +54,85 @@ export function useGoogle () {
       loading.value = true;
 
       // Check if user already has a "Dividenden" calendar, if not create it.
-      const calendarListRequest = gapi.client.calendar.calendarList.list();
-      calendarListRequest.execute(async function (val: { items: Calendar[] }) {
-        let dividendCalendar = val.items.find((calendar) =>
-          calendar.summary === 'Dividenden',
-        );
+      const calendarListRequest = await gapi.client.calendar.calendarList
+        .list();
+      let dividendCalendar = JSON.parse(calendarListRequest.body).items.find((
+        calendar: Calendar,
+      ) => calendar.summary === 'Dividenden');
 
-        if (!dividendCalendar) {
-          const calendarListRequest = gapi.client.calendar.calendars.insert({
-            summary: 'Dividenden',
-            description: 'Dividendenkalender von Div Trak',
-            'timeZone': 'Europe/Berlin',
-          });
-
-          calendarListRequest.execute(function (val: Calendar) {
-            dividendCalendar = val;
-          });
-        }
-
-        // Get the events of the dividend calendar of the current month.
-        month = month + 1;
-        const timeMin = (new Date(`${year}-${String(month).padStart(2, '0')}-01`));
-        timeMin.setHours(6);
-        const timeMax = (new Date(`${year}-${String(month).padStart(2, '0')}-31`));
-        timeMax.setHours(23);
-
-        const request = {
-          'calendarId': dividendCalendar?.id,
-          'timeMin': timeMin.toISOString(),
-          'timeMax': timeMax.toISOString(),
-          'showDeleted': false,
-        };
-
-        // Delete all events present for that month
-        const response = await gapi.client.calendar.events.list(request);
-        const presentEvents = JSON.parse(response.body).items;
-
-        if (presentEvents && presentEvents.length > 0) {
-          const toDelete = presentEvents.map(event => {
-            const request = {
-              'calendarId': dividendCalendar?.id,
-              'eventId': event.id,
-            };
-
-            return gapi.client.calendar.events.delete(request);
-          });
-
-          await Promise.all(toDelete);
-        }
-
-        // Add all new events
-        const toAdd = dividends.map((dividend) => {
-          const startDate = new Date(dividend.paymentDateTimestamp);
-          const endDate = new Date(dividend.paymentDateTimestamp);
-          startDate.setHours(10);
-          endDate.setHours(11);
-
-          const event = {
-            'summary':
-              `${dividend.instrumentName} | ${dividend.paymentFormatted}`,
-            'description': `${dividend.paymentFormatted}${
-              dividend.isEstimation ? ' | Is Estimation' : ''
-            }${dividend.hasForecast ? ' | Has Forecast Orders' : ''}`,
-            'start': {
-              'dateTime': startDate.toISOString(),
-              'timeZone': 'Europe/Berlin',
-            },
-            'end': {
-              'dateTime': endDate.toISOString(),
-              'timeZone': 'Europe/Berlin',
-            },
-          };
-
-          return gapi.client.calendar.events.insert({
-            'calendarId': dividendCalendar?.id,
-            'resource': event,
-          });
+      if (!dividendCalendar) {
+        const calendarListRequest = gapi.client.calendar.calendars.insert({
+          summary: 'Dividenden',
+          description: 'Dividendenkalender von Div Trak',
+          'timeZone': 'Europe/Berlin',
         });
 
-        await Promise.all(toAdd);
+        calendarListRequest.execute(function (val: Calendar) {
+          dividendCalendar = val;
+        });
+      }
+
+      // Get the events of the dividend calendar of the current month.
+      month = month + 1;
+      const timeMin = new Date(`${year}-${String(month).padStart(2, '0')}-01`);
+      timeMin.setHours(6);
+      const timeMax = new Date(`${year}-${String(month).padStart(2, '0')}-31`);
+      timeMax.setHours(23);
+
+      const request = {
+        'calendarId': dividendCalendar?.id,
+        'timeMin': timeMin.toISOString(),
+        'timeMax': timeMax.toISOString(),
+        'showDeleted': false,
+      };
+
+      // Delete all events present for that month
+      const response = await gapi.client.calendar.events.list(request);
+      const presentEvents = JSON.parse(response.body).items;
+
+      if (presentEvents && presentEvents.length > 0) {
+        const toDelete = presentEvents.map((event: {id: string}) => {
+          const request = {
+            'calendarId': dividendCalendar?.id,
+            'eventId': event.id,
+          };
+
+          return gapi.client.calendar.events.delete(request);
+        });
+
+        await Promise.all(toDelete);
+      }
+
+      // Add all new events
+      const toAdd = dividends.map((dividend) => {
+        const startDate = new Date(dividend.paymentDateTimestamp);
+        const endDate = new Date(dividend.paymentDateTimestamp);
+        startDate.setHours(10);
+        endDate.setHours(11);
+
+        const event = {
+          'summary':
+            `${dividend.instrumentName} | ${dividend.paymentFormatted}`,
+          'description': `${dividend.paymentFormatted}${
+            dividend.isEstimation ? ' | Is Estimation' : ''
+          }${dividend.hasForecast ? ' | Has Forecast Orders' : ''}`,
+          'start': {
+            'dateTime': startDate.toISOString(),
+            'timeZone': 'Europe/Berlin',
+          },
+          'end': {
+            'dateTime': endDate.toISOString(),
+            'timeZone': 'Europe/Berlin',
+          },
+        };
+
+        return gapi.client.calendar.events.insert({
+          'calendarId': dividendCalendar?.id,
+          'resource': event,
+        });
       });
+
+      await Promise.all(toAdd);
 
       loading.value = false;
     };
@@ -146,5 +149,6 @@ export function useGoogle () {
 
   return {
     addToCalendar,
+    loading,
   };
 }

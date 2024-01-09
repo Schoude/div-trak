@@ -256,8 +256,9 @@ watch(() => props.year, () => {
         </li>
       </ul>
 
-      <ButtonAction v-if="showGoogleCalendarButton" :variant="'dawn'" class="button-add-calendar text-xs"
-        @click="onAddToCalendarClick(getDetailMonthDividends)">
+      <ButtonAction
+      v-if="showGoogleCalendarButton" :variant="'dawn'" class="button-add-calendar text-xs"
+        :disabled="google.loading.value" @click="onAddToCalendarClick(getDetailMonthDividends)">
         Add to Google Calendar
       </ButtonAction>
     </div>
