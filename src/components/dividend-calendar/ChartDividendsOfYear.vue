@@ -225,7 +225,7 @@ async function onAddToCalendarClick (dividends: CalendarDividend[] | undefined) 
     return;
   }
 
-  google.addToCalendar(dividends);
+  google.addToCalendar(currentYear.value, currentMonth.value, dividends);
 }
 
 watch(() => props.year, () => {

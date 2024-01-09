@@ -42,7 +42,7 @@ export function useGoogle () {
     },
   );
 
-  function addToCalendar (dividends: CalendarDividend[]) {
+  function addToCalendar (year: number, month: number, dividends: CalendarDividend[]) {
     if (loading.value) {
       return;
     }
@@ -52,7 +52,7 @@ export function useGoogle () {
 
       // Check if user already has a "Dividenden" calendar, if not create it.
       const calendarListRequest = gapi.client.calendar.calendarList.list();
-      calendarListRequest.execute(function (val: { items: Calendar[] }) {
+      calendarListRequest.execute(async function (val: { items: Calendar[] }) {
         let dividendCalendar = val.items.find((calendar) =>
           calendar.summary === 'Dividenden',
         );
@@ -70,49 +70,58 @@ export function useGoogle () {
         }
 
         // Get the events of the dividend calendar of the current month.
-        // const request = {
-        //   'calendarId': 'primary',
-        //   'timeMin': (new Date('2024-01-01')).toISOString(),
-        //   'showDeleted': false,
-        //   'singleEvents': true,
-        //   'maxResults': 10,
-        //   'orderBy': 'startTime',
-        // };
-        // const response = await gapi.client.calendar.events.list(request);
-        // console.log(response);
+        month = month + 1;
+        const timeMin = (new Date(`${year}-${String(month).padStart(2, '0')}-01`));
+        timeMin.setHours(6);
+        const timeMax = (new Date(`${year}-${String(month).padStart(2, '0')}-31`));
+        timeMax.setHours(23);
+
+        const request = {
+          'calendarId': dividendCalendar?.id,
+          'timeMin': timeMin.toISOString(),
+          'timeMax': timeMax.toISOString(),
+          'showDeleted': false,
+        };
 
         // Delete all events present for that month
+        const response = await gapi.client.calendar.events.list(request);
+        const presentEvents = JSON.parse(response.body).items;
+
+        if (presentEvents && presentEvents.length > 0) {
+          console.log('delete all present events');
+
+        }
 
         // Add all new events
-        dividends.forEach((dividend) => {
-          const startDate = new Date(dividend.paymentDateTimestamp);
-          const endDate = new Date(dividend.paymentDateTimestamp);
-          startDate.setHours(10);
-          endDate.setHours(11);
+        // dividends.forEach((dividend) => {
+        //   const startDate = new Date(dividend.paymentDateTimestamp);
+        //   const endDate = new Date(dividend.paymentDateTimestamp);
+        //   startDate.setHours(10);
+        //   endDate.setHours(11);
 
-          const event = {
-            'summary':
-              `${dividend.instrumentName} | ${dividend.paymentFormatted}`,
-            'description': `${dividend.paymentFormatted}${
-              dividend.isEstimation ? ' | Is Estimation' : ''
-            }${dividend.hasForecast ? ' | Has Forecast Orders' : ''}`,
-            'start': {
-              'dateTime': startDate.toISOString(),
-              'timeZone': 'Europe/Berlin',
-            },
-            'end': {
-              'dateTime': endDate.toISOString(),
-              'timeZone': 'Europe/Berlin',
-            },
-          };
+        //   const event = {
+        //     'summary':
+        //       `${dividend.instrumentName} | ${dividend.paymentFormatted}`,
+        //     'description': `${dividend.paymentFormatted}${
+        //       dividend.isEstimation ? ' | Is Estimation' : ''
+        //     }${dividend.hasForecast ? ' | Has Forecast Orders' : ''}`,
+        //     'start': {
+        //       'dateTime': startDate.toISOString(),
+        //       'timeZone': 'Europe/Berlin',
+        //     },
+        //     'end': {
+        //       'dateTime': endDate.toISOString(),
+        //       'timeZone': 'Europe/Berlin',
+        //     },
+        //   };
 
-          const request = gapi.client.calendar.events.insert({
-            'calendarId': dividendCalendar?.id,
-            'resource': event,
-          });
+        //   const request = gapi.client.calendar.events.insert({
+        //     'calendarId': dividendCalendar?.id,
+        //     'resource': event,
+        //   });
 
-          request.execute();
-        });
+        //   request.execute();
+        // });
       });
 
       loading.value = false;
