@@ -51,7 +51,6 @@ async function onNavigateToTRAuth () {
 
 <style scoped lang="scss">
 .button-link-tr-auth {
-  display: inline-block;
   margin-block-start: 2rem;
   inline-size: fit-content;
   padding-inline: 1rem 1rem;
