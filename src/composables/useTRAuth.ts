@@ -10,7 +10,7 @@
  * -> Sets the headers from TR (hopefully) -> remove domain field on cookies
  */
 
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 interface TRCredentials {
   phoneNumber: string;
@@ -71,5 +71,6 @@ export function useTRAuth () {
   return {
     login,
     confirm2FA,
+    show2FAForm: computed(() => processId.value != null),
   };
 }
