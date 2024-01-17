@@ -64,6 +64,17 @@ const router = createRouter({
       ],
     },
     {
+      path: '/tr-auth',
+      component: () => import('../views/ContentView.vue'),
+      children: [
+        {
+          path: '',
+          name: 'tr-auth',
+          component: () => import('../views/content/TRAuthView.vue'),
+        },
+      ],
+    },
+    {
       path: '/:pathMatch(.*)*',
       name: 'NotFound',
       redirect: 'login',
