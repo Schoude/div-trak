@@ -18,7 +18,7 @@ interface TRCredentials {
 }
 
 export function useTRAuth () {
-  const processId = ref();
+  const processId = ref<string | null>();
 
   async function login (credentials: TRCredentials) {
     const res = await fetch('https://tr-auth.deno.dev/api/v1/auth/web/login',
@@ -40,7 +40,36 @@ export function useTRAuth () {
     processId.value = data.processId;
   }
 
+  async function confirm2FA (pin: string) {
+    if (!processId.value) {
+      throw new Error('No process id present. Call `login` first.');
+    }
+
+    const res = await fetch(`https://tr-auth.deno.dev/api/v1/auth/web/login/${processId.value}/${pin}`,
+      {
+        method: 'POST',
+      },
+    );
+
+    if (!res.ok) {
+      throw new Error('Error 2FA confirmation');
+    }
+
+    processId.value = null;
+  }
+
+  // ### Renew session
+  // GET {{baseUrl}}/v1/auth/web/session
+
+  // ### Account
+  // GET {{baseUrl}}/v2/data/account
+
+  // ### Trending Stocks
+  // GET {{baseUrl}}/v1/ranking/trendingStocks
+
+
   return {
     login,
+    confirm2FA,
   };
 }
