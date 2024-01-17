@@ -3,7 +3,7 @@ import ButtonAction from '@/components/buttons/ButtonAction.vue';
 import InputText from '@/components/inputs/InputText.vue';
 import LabelFormInput from '@/components/inputs/LabelFormInput.vue';
 import { useTRAuth } from '@/composables/useTRAuth';
-import { reactive } from 'vue';
+import { computed, reactive } from 'vue';
 
 const trAuth = useTRAuth();
 
@@ -12,7 +12,17 @@ const trCredentials = reactive({
   pin: '',
 });
 
+const canSendCredentials = computed(() =>
+  trCredentials.phoneNumber != '' &&
+  trCredentials.phoneNumber != '+49' &&
+  trCredentials.pin != '' &&
+  trCredentials.pin.length === 4);
+
 async function onTRLoginClick () {
+  if (!canSendCredentials.value) {
+    return;
+  }
+
   await trAuth.login(trCredentials);
 }
 </script>
