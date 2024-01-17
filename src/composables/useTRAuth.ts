@@ -12,16 +12,18 @@
 
 import { computed, ref } from 'vue';
 
+const rootURL = 'https://tr-auth.deno.dev';
+
 interface TRCredentials {
   phoneNumber: string;
   pin: string;
 }
 
 export function useTRAuth () {
-  const processId = ref<string | null>();
+  const processId = ref<string | null>(null);
 
   async function login (credentials: TRCredentials) {
-    const res = await fetch('https://tr-auth.deno.dev/api/v1/auth/web/login',
+    const res = await fetch(`${rootURL}/api/v1/auth/web/login`,
       {
         method: 'POST',
         headers: {
@@ -40,12 +42,12 @@ export function useTRAuth () {
     processId.value = data.processId;
   }
 
-  async function confirm2FA (pin: string) {
+  async function confirm2FA (pin: string, userId: string) {
     if (!processId.value) {
       throw new Error('No process id present. Call `login` first.');
     }
 
-    const res = await fetch(`https://tr-auth.deno.dev/api/v1/auth/web/login/${processId.value}/${pin}`,
+    const res = await fetch(`${rootURL}/api/v1/auth/web/login/${processId.value}/${pin}/${userId}`,
       {
         method: 'POST',
       },
