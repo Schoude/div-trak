@@ -75,6 +75,17 @@ const router = createRouter({
       ],
     },
     {
+      path: '/market-insights',
+      component: () => import('../views/ContentView.vue'),
+      children: [
+        {
+          path: '',
+          name: 'market-insights',
+          component: () => import('../views/content/MarketInsightsView.vue'),
+        },
+      ],
+    },
+    {
       path: '/:pathMatch(.*)*',
       name: 'NotFound',
       redirect: 'login',

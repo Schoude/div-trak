@@ -40,18 +40,31 @@ onBeforeRouteLeave(() => {
 async function onNavigateToTRAuth () {
   router.push({ name: 'tr-auth' });
 }
+
+async function onNavigateToMarketInsights () {
+  router.push({ name: 'market-insights' });
+}
 </script>
 
 <template>
   <main class="dashboard-view view">
     <ListPortfolios />
-    <ButtonAction variant="dusk" class="button-link-tr-auth" @click="onNavigateToTRAuth">Login to TR</ButtonAction>
+    <nav class="nav-secondary">
+      <ButtonAction variant="dusk" class="button-link button-link-tr-auth" @click="onNavigateToTRAuth">Login to TR</ButtonAction>
+      <ButtonAction variant="dawn" class="button-link button-market-insights" @click="onNavigateToMarketInsights">Market Insights</ButtonAction>
+    </nav>
   </main>
 </template>
 
 <style scoped lang="scss">
-.button-link-tr-auth {
+.nav-secondary {
   margin-block-start: 2rem;
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.button-link {
   inline-size: fit-content;
   padding-inline: 1rem 1rem;
   block-size: 2.25rem;
