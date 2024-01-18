@@ -1,15 +1,3 @@
-/**
- * Steps to login into TR
- *
- * Login Request
- * 1. First login request with Phone Number and PIN
- * 1.1 Save the `processId` from the response
- * 1.2 Triggers the 2FA from the app
- *
- * 2FA confirmation
- * -> Sets the headers from TR (hopefully) -> remove domain field on cookies
- */
-
 import { computed, ref } from 'vue';
 
 const rootURL = 'https://tr-auth.deno.dev';
@@ -60,19 +48,22 @@ export function useTRAuth () {
     processId.value = null;
   }
 
-  // ### Renew session
-  // GET {{baseUrl}}/v1/auth/web/session
+  async function trendingStocks (userId: string) {
+    const res = await fetch(`${rootURL}/api/v1/data/ranking/trendingStocks/${userId}`);
 
-  // ### Account
-  // GET {{baseUrl}}/v2/data/account
+    console.log(res.status);
 
-  // ### Trending Stocks
-  // GET {{baseUrl}}/v1/ranking/trendingStocks
+    if (!res.ok) {
+      throw new Error('Error 2FA confirmation');
+    }
 
+    console.log(await res.json());
+  }
 
   return {
     login,
     confirm2FA,
+    trendingStocks,
     show2FAForm: computed(() => processId.value != null),
   };
 }
