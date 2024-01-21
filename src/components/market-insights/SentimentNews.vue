@@ -2,7 +2,7 @@
 import { useAlphaVantageStore } from '@/stores/alphavantage';
 const alphaVantage = useAlphaVantageStore();
 
-const news = await alphaVantage.getSentimenNews();
+const news = await alphaVantage.getSentimentNews();
 </script>
 
 <template>

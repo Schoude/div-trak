@@ -30,7 +30,7 @@ export function useAlphaVantageStore () {
     return formattedDate;
   }
 
-  async function getSentimenNews () {
+  async function getSentimentNews () {
     const topics = 'earnings,finance,manufacturing,technology';
     const topicsQuery = `&topics=${topics}`;
     const sorting = 'LATEST';
@@ -69,6 +69,6 @@ export function useAlphaVantageStore () {
   }
 
   return {
-    getSentimenNews,
+    getSentimentNews,
   };
 }
