@@ -1,5 +1,17 @@
 import { computed, ref } from 'vue';
 
+export interface TrendingStocks {
+  items: TrendingInstrument[];
+}
+
+interface TrendingInstrument {
+  isin: string;
+  shortName: string;
+  instrumentType: InstrumentType;
+}
+
+type InstrumentType = 'stock';
+
 const rootURL = 'https://tr-auth.deno.dev';
 
 interface TRCredentials {
@@ -48,16 +60,14 @@ export function useTRAuth () {
     processId.value = null;
   }
 
-  async function trendingStocks (userId: string) {
+  async function trendingStocks (userId: string): Promise<TrendingStocks> {
     const res = await fetch(`${rootURL}/api/v1/data/ranking/trendingStocks/${userId}`);
-
-    console.log(res.status);
 
     if (!res.ok) {
       throw new Error('Error 2FA confirmation');
     }
 
-    console.log(await res.json());
+    return await res.json();
   }
 
   return {

@@ -62,6 +62,29 @@ export const useInstrumentsStore = defineStore('instruments', () => {
   return {
     instruments,
     getInstrument,
+    getInstrumentWithTicker (isin: string) {
+      const ticker = useTickerStore();
+
+      const instrument = getInstrument.value(isin);
+
+      if (!instrument) {
+        return;
+      }
+
+      const instrumentTicker = ticker.getTicker(instrument!.tickerEventId!);
+
+      // if (!instrumentTicker) {
+      //   return;
+      // }
+
+      // console.log(instrument.instrument?.isin);
+      console.log(instrumentTicker);
+
+      return {
+        ...instrument,
+        ticker: instrumentTicker,
+      };
+    },
     upsertInstrument (isin: string, updateData: Partial<Instrument>) {
       const toUpdate = getInstrument.value(isin);
 

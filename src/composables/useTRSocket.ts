@@ -71,6 +71,8 @@ export function useTRSocket () {
 
     // 2) Details of instrument | "type":"instrument"
     if (isInstrumentEvent(eventData)) {
+      console.log('instrument event id ', eventData.eventId);
+
       instruments.upsertInstrument(eventData.jsonObject.isin, {
         instrument: eventData.jsonObject,
         tickerEventId: eventData.eventId + 3,
@@ -92,6 +94,8 @@ export function useTRSocket () {
       }
 
       runningEventId.value = runningEventId.value + 1;
+      console.log('tickerEvent', runningEventId.value);
+
       sendMessage(
         `sub ${runningEventId.value} {"type":"ticker","id":"${eventData.jsonObject.isin}.LSX","jurisdiction":"DE"}`,
         { updateEventId: false },
