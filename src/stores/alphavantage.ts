@@ -2,16 +2,16 @@ import { ALPHA_VANTAGE_FUNCTIONS, NewsSentimentFeedSchema } from '@/types/alphav
 import { parse } from 'valibot';
 
 export function useAlphaVantageStore () {
-  // function getAlphavantageDate (date: string) {
-  //   const parts = date.split('');
-  //   parts.splice(4, 0, '-');
-  //   parts.splice(7, 0, '-');
-  //   parts.splice(13, 0, ':');
-  //   parts.splice(16, 0, ':');
-  //   parts.push('.540Z');
+  function getAlphavantageDate (date: string) {
+    const parts = date.split('');
+    parts.splice(4, 0, '-');
+    parts.splice(7, 0, '-');
+    parts.splice(13, 0, ':');
+    parts.splice(16, 0, ':');
+    parts.push('.540Z');
 
-  //   return new Date(parts.join(''));
-  // }
+    return new Date(parts.join(''));
+  }
 
   function createAlphavantageDate (monthsAgo: number): string {
     const currentDate = new Date();
@@ -70,5 +70,6 @@ export function useAlphaVantageStore () {
 
   return {
     getSentimentNews,
+    getAlphavantageDate,
   };
 }
