@@ -1,15 +1,16 @@
 <script setup lang='ts'>
-import TrendingStocksLoader from '@/components/market-insights/TrendingStocksLoader.vue';
+import StockMovers from '@/components/market-insights/StockMovers.vue';
+// import TrendingStocksLoader from '@/components/market-insights/TrendingStocksLoader.vue';
 </script>
 
 <template>
   <main class="market-insights-view view">
     <h1>Market Insights</h1>
 
-    <TrendingStocksLoader />
+    <!-- <TrendingStocksLoader /> -->
 
-    <p>TODO: Load Top Gainers</p>
-    <p>TODO: Load Top Losers</p>
+    <StockMovers />
+
     <p>TODO: Load Sentiment News</p>
   </main>
 </template>
