@@ -45,7 +45,7 @@
     "jsdom": "^24.0.0",
     "npm-run-all2": "^6.1.1",
     "sass": "^1.70.0",
-    "supabase": "^1.136.0",
+    "supabase": "^1.136.1",
     "typescript": "~5.3.3",
     "vite": "^5.0.12",
     "vitest": "^1.2.1",
