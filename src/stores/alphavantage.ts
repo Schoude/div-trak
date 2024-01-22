@@ -1,7 +1,14 @@
-import { ALPHA_VANTAGE_FUNCTIONS, NewsSentimentFeedSchema } from '@/types/alphavantage';
+import { ALPHA_VANTAGE_FUNCTIONS, NewsSentimentFeedSchema, type ArticleNewsSentiment } from '@/types/alphavantage';
+import { defineStore } from 'pinia';
 import { parse } from 'valibot';
+import { ref } from 'vue';
 
-export function useAlphaVantageStore () {
+export const useAlphaVantageStore = defineStore('alphavantage', () => {
+  const sentimentNews = ref<{
+    articlesBullish: ArticleNewsSentiment[];
+    articlesBearish: ArticleNewsSentiment[];
+  } | null>(null);
+
   function getAlphavantageDate (date: string) {
     const parts = date.split('');
     parts.splice(4, 0, '-');
@@ -31,6 +38,10 @@ export function useAlphaVantageStore () {
   }
 
   async function getSentimentNews () {
+    if (sentimentNews.value) {
+      return sentimentNews.value;
+    }
+
     const topics = 'earnings,finance,manufacturing,technology';
     const topicsQuery = `&topics=${topics}`;
     const sorting = 'LATEST';
@@ -59,10 +70,12 @@ export function useAlphaVantageStore () {
         .filter(article => article.overall_sentiment_score <= -.15)
         .sort((a, b) => a.overall_sentiment_score - b.overall_sentiment_score);
 
-      return {
+      sentimentNews.value = {
         articlesBullish,
         articlesBearish,
       };
+
+      return sentimentNews.value;
     } catch (error) {
       console.error(error);
     }
@@ -72,4 +85,4 @@ export function useAlphaVantageStore () {
     getSentimentNews,
     getAlphavantageDate,
   };
-}
+});
