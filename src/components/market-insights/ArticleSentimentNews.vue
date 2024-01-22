@@ -70,17 +70,12 @@ defineProps<{
 }
 
 article {
-  border: 1px solid rgb(53, 53, 53);
-  background-color: hsl(0, 0%, 4%);
+  border: 1px solid rgb(48, 48, 48);
+  background-color: rgba(0, 0, 0, 0.6);
   border-radius: 4px;
   transition:
     background-color 260ms ease-out,
     box-shadow 260ms ease-out;
-
-  &:hover {
-    background-color: hsl(0, 0%, 5%);
-    box-shadow: 0 10px 12px -8px hsl(0, 0%, 4%);
-  }
 }
 
 header {
