@@ -65,41 +65,46 @@ export function useTRSocket () {
     // 1) Neon Search Results
     if (isNeonSearchEvent(eventData)) {
       const marketInsights = useMarketInsights();
+
       // Daily Best
       if (eventData.eventId === 1000) {
-        const resulstWithTickerId = eventData.jsonObject.results.map((instrument, index) => {
-          const tickerId = index + 2000;
-          sendMessage(
-            `sub ${tickerId} {"type":"ticker","id":"${instrument.isin}.LSX","jurisdiction":"DE"}`,
-            { updateEventId: false },
-          );
+        const resulstWithTickerId = eventData.jsonObject.results
+          .filter(instrument => !instrument.isin.startsWith('XF'))
+          .map((instrument, index) => {
+            const tickerId = index + 2000;
+            sendMessage(
+              `sub ${tickerId} {"type":"ticker","id":"${instrument.isin}.LSX","jurisdiction":"DE"}`,
+              { updateEventId: false },
+            );
 
-          return {
-            name: instrument.name,
-            isin: instrument.isin,
-            imageId: instrument.imageId,
-            tickerId: tickerId,
-          };
-        });
+            return {
+              name: instrument.name,
+              isin: instrument.isin,
+              imageId: instrument.imageId,
+              tickerId: tickerId,
+            };
+          });
         marketInsights.dailyBest = resulstWithTickerId;
       }
       // Daily Worst
       else if (eventData.eventId === 1010) {
-        const resulstWithTickerId = eventData.jsonObject.results.map((instrument, index) => {
-          const tickerId = index + 3000;
+        const resulstWithTickerId = eventData.jsonObject.results
+          .filter(instrument => !instrument.isin.startsWith('XF'))
+          .map((instrument, index) => {
+            const tickerId = index + 3000;
 
-          sendMessage(
-            `sub ${tickerId} {"type":"ticker","id":"${instrument.isin}.LSX","jurisdiction":"DE"}`,
-            { updateEventId: false },
-          );
+            sendMessage(
+              `sub ${tickerId} {"type":"ticker","id":"${instrument.isin}.LSX","jurisdiction":"DE"}`,
+              { updateEventId: false },
+            );
 
-          return {
-            name: instrument.name,
-            isin: instrument.isin,
-            imageId: instrument.imageId,
-            tickerId: tickerId,
-          };
-        });
+            return {
+              name: instrument.name,
+              isin: instrument.isin,
+              imageId: instrument.imageId,
+              tickerId: tickerId,
+            };
+          });
         marketInsights.dailyWorst = resulstWithTickerId;
       }
       // Regular Search results

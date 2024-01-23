@@ -1,6 +1,7 @@
 <script setup lang='ts'>
 import { useTRSocket } from '@/composables/useTRSocket';
 import { useMarketInsights } from '@/stores/market-insights';
+import MoverInstrument from './MoverInstrument.vue';
 
 const socket = useTRSocket();
 const marketInsights = useMarketInsights();
@@ -15,27 +16,20 @@ socket.sendMessage('sub 1010 {"type":"neonSearch","data":{"q":"","page":1,"pageS
 <template>
   <div class="stock-movers">
     <h2>Stock Movers</h2>
+
     <section class="movers">
       <h3>Daily Best</h3>
       <div class="instruments">
-        <div class="mover-instrument" v-for="instrument of marketInsights.dailyBestComplete" :key="instrument.isin">
-          <RouterLink :to="`/instrument/${instrument.isin}`">
-            <div class="name">{{ instrument.name }}</div>
-          </RouterLink>
-          <div class="change" :class="instrument.sentiment">{{ instrument.changePercent }}</div>
-        </div>
+        <MoverInstrument v-for="instrument of marketInsights.dailyBestComplete" :key="instrument.isin"
+          :instrument="instrument" />
       </div>
     </section>
 
     <section class="movers">
       <h3>Daily Worst</h3>
       <div class="instruments">
-        <div class="mover-instrument" v-for="instrument of marketInsights.dailyWorstComplete" :key="instrument.isin">
-          <RouterLink :to="`/instrument/${instrument.isin}`">
-            <div class="name">{{ instrument.name }}</div>
-          </RouterLink>
-          <div class="change" :class="instrument.sentiment">{{ instrument.changePercent }}</div>
-        </div>
+        <MoverInstrument v-for="instrument of marketInsights.dailyWorstComplete" :key="instrument.isin"
+          :instrument="instrument" />
       </div>
     </section>
   </div>
@@ -45,6 +39,6 @@ socket.sendMessage('sub 1010 {"type":"neonSearch","data":{"q":"","page":1,"pageS
 .instruments {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: .5rem;
 }
 </style>

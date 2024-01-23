@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import SentimentNewsLoader from '@/components/market-insights/SentimentNewsLoader.vue';
+// import SentimentNewsLoader from '@/components/market-insights/SentimentNewsLoader.vue';
 import StockMovers from '@/components/market-insights/StockMovers.vue';
 // import TrendingStocksLoader from '@/components/market-insights/TrendingStocksLoader.vue';
 </script>
@@ -11,9 +11,8 @@ import StockMovers from '@/components/market-insights/StockMovers.vue';
     <!-- <TrendingStocksLoader /> -->
 
     <StockMovers />
-    <SentimentNewsLoader />
 
-    <p>TODO: Load Sentiment News</p>
+    <!-- <SentimentNewsLoader /> -->
   </main>
 </template>
 
