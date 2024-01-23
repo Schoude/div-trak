@@ -1,5 +1,6 @@
 import { useAggretatesStore } from '@/stores/aggregates';
 import { useInstrumentsStore } from '@/stores/instruments';
+import { useMarketInsights } from '@/stores/market-insights';
 import { useNeonSearchStore } from '@/stores/neon-search';
 import { useTickerStore } from '@/stores/ticker';
 import {
@@ -63,10 +64,51 @@ export function useTRSocket () {
 
     // 1) Neon Search Results
     if (isNeonSearchEvent(eventData)) {
-      neonSearch.handleSearchEvent(
-        eventData.jsonObject.results,
-        eventData.eventId,
-      );
+      const marketInsights = useMarketInsights();
+      // Daily Best
+      if (eventData.eventId === 1000) {
+        const resulstWithTickerId = eventData.jsonObject.results.map((instrument, index) => {
+          const tickerId = index + 2000;
+          sendMessage(
+            `sub ${tickerId} {"type":"ticker","id":"${instrument.isin}.LSX","jurisdiction":"DE"}`,
+            { updateEventId: false },
+          );
+
+          return {
+            name: instrument.name,
+            isin: instrument.isin,
+            imageId: instrument.imageId,
+            tickerId: tickerId,
+          };
+        });
+        marketInsights.dailyBest = resulstWithTickerId;
+      }
+      // Daily Worst
+      else if (eventData.eventId === 1010) {
+        const resulstWithTickerId = eventData.jsonObject.results.map((instrument, index) => {
+          const tickerId = index + 3000;
+
+          sendMessage(
+            `sub ${tickerId} {"type":"ticker","id":"${instrument.isin}.LSX","jurisdiction":"DE"}`,
+            { updateEventId: false },
+          );
+
+          return {
+            name: instrument.name,
+            isin: instrument.isin,
+            imageId: instrument.imageId,
+            tickerId: tickerId,
+          };
+        });
+        marketInsights.dailyWorst = resulstWithTickerId;
+      }
+      // Regular Search results
+      else {
+        neonSearch.handleSearchEvent(
+          eventData.jsonObject.results,
+          eventData.eventId,
+        );
+      }
     }
 
     // 2) Details of instrument | "type":"instrument"
