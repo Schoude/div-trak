@@ -13,14 +13,14 @@ defineProps<{
     <header>
       <img v-if="article.banner_image" class="image-article" :src="article.banner_image" :alt="article.title" />
       <a class="link-article" :href="article.url" target="_blank" rel="noopener">
-        <h3>{{ article.title }}</h3>
+        <h3 class="title">{{ article.title }}</h3>
       </a>
     </header>
 
     <div class="body">
       <div class="meta-data">
         <i class="date">
-          Am {{ alphaVantage.getAlphavantageDate(article.time_published).toLocaleString() }}
+          At {{ alphaVantage.getAlphavantageDate(article.time_published).toLocaleString() }}
         </i>
         <div class="sentiment-data">
           <span class="sentiment-label" :class="article.overall_sentiment_label.toLowerCase()">{{
@@ -34,7 +34,7 @@ defineProps<{
       <hr />
 
       <div class="box">
-        <h3>Themen</h3>
+        <h3 class="sub-headline">Topics</h3>
         <div class="inner">
           <div class="topic" v-for="topic of article.topics" :key="topic.topic">
             <p class="topic-label">{{ topic.topic }}</p>
@@ -44,12 +44,10 @@ defineProps<{
       </div>
 
       <div class="box">
-        <h3>Ticker Sentiments</h3>
+        <h3 class="sub-headline">Ticker Sentiments</h3>
         <div class="inner">
           <div class="ticker" v-for="ticker of article.ticker_sentiment" :key="ticker.ticker">
-            <a class="sentiment-news-ticker" :href="`/insights/ticker/${ticker.ticker}`" target="_blank" rel="noopener">
-              <p class="ticker-label">{{ ticker.ticker }}</p>
-            </a>
+            <p class="ticker-label">{{ ticker.ticker }}</p>
             <p class="relevance-score">Relevance: {{ ticker.relevance_score }}</p>
             <p class="sentiment-score">
               Sentiment: {{ ticker.ticker_sentiment_score }}
@@ -71,11 +69,10 @@ defineProps<{
 
 article {
   border: 1px solid rgb(48, 48, 48);
-  background-color: rgba(0, 0, 0, 0.6);
-  border-radius: 4px;
-  transition:
-    background-color 260ms ease-out,
-    box-shadow 260ms ease-out;
+  transition: background-color 150ms ease-out;
+  box-shadow: var(--shadow);
+  background-image: var(--gradient-sky-transparent);
+  background-repeat: no-repeat;
 }
 
 header {
@@ -106,8 +103,7 @@ header {
   }
 }
 
-.link-article,
-.sentiment-news-ticker {
+.link-article {
   &:hover {
     text-decoration: underline;
   }
@@ -133,6 +129,11 @@ header {
 
 .summary {
   text-align: justify;
+}
+
+.sub-headline,
+hr {
+  margin-block: .75rem;
 }
 
 .box {

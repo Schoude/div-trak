@@ -15,10 +15,8 @@ socket.sendMessage('sub 1010 {"type":"neonSearch","data":{"q":"","page":1,"pageS
 
 <template>
   <div class="stock-movers">
-    <h2>Stock Movers</h2>
-
     <section class="movers">
-      <h3>Daily Best</h3>
+      <h2>Daily Best</h2>
       <div class="instruments">
         <MoverInstrument v-for="instrument of marketInsights.dailyBestComplete" :key="instrument.isin"
           :instrument="instrument" />
@@ -26,7 +24,7 @@ socket.sendMessage('sub 1010 {"type":"neonSearch","data":{"q":"","page":1,"pageS
     </section>
 
     <section class="movers">
-      <h3>Daily Worst</h3>
+      <h2>Daily Worst</h2>
       <div class="instruments">
         <MoverInstrument v-for="instrument of marketInsights.dailyWorstComplete" :key="instrument.isin"
           :instrument="instrument" />
@@ -36,6 +34,11 @@ socket.sendMessage('sub 1010 {"type":"neonSearch","data":{"q":"","page":1,"pageS
 </template>
 
 <style lang='scss' scoped>
+h2 {
+  margin-block-start: 1.5rem;
+  margin-block-end: .5rem;
+}
+
 .instruments {
   display: flex;
   flex-wrap: wrap;
