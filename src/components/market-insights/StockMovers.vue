@@ -7,10 +7,9 @@ const socket = useTRSocket();
 const marketInsights = useMarketInsights();
 
 // Daily best
-socket.sendMessage('sub 1000 {"type":"neonSearch","data":{"q":"","page":1,"pageSize":10,"filter":[{"key":"type","value":"stock"},{"key":"jurisdiction","value":"DE"},{"key":"relativePerformance","value":"dailyBest"}]}}');
+socket.sendMessage('sub 1000 {"type":"neonSearch","data":{"q":"","page":1,"pageSize":15,"filter":[{"key":"type","value":"stock"},{"key":"jurisdiction","value":"DE"},{"key":"relativePerformance","value":"dailyBest"}]}}');
 // Daily worst
-socket.sendMessage('sub 1010 {"type":"neonSearch","data":{"q":"","page":1,"pageSize":10,"filter":[{"key":"type","value":"stock"},{"key":"jurisdiction","value":"DE"},{"key":"relativePerformance","value":"dailyWorst"}]}}');
-
+socket.sendMessage('sub 1010 {"type":"neonSearch","data":{"q":"","page":1,"pageSize":15,"filter":[{"key":"type","value":"stock"},{"key":"jurisdiction","value":"DE"},{"key":"relativePerformance","value":"dailyWorst"}]}}');
 </script>
 
 <template>
@@ -43,5 +42,9 @@ h2 {
   display: flex;
   flex-wrap: wrap;
   gap: .5rem;
+}
+
+.mover-instrument {
+  inline-size: 15ch;
 }
 </style>

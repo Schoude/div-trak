@@ -43,6 +43,6 @@ onMounted(() => {
   display: block;
   margin: auto;
   fill: white;
-  inline-size: 20px;
+  inline-size: 25px;
 }
 </style>
