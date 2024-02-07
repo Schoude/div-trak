@@ -104,6 +104,10 @@ header {
 }
 
 .link-article {
+  .title {
+    text-wrap: balance;
+  }
+
   &:hover {
     text-decoration: underline;
   }
@@ -129,6 +133,7 @@ header {
 
 .summary {
   text-align: justify;
+  text-wrap: pretty;
 }
 
 .sub-headline,
