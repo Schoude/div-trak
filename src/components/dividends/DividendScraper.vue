@@ -17,7 +17,7 @@ const emit = defineEmits<{
   scrapeCompleted: [boolean];
 }>();
 
-const baseUrl = 'https://dividendhistory.org/payout';
+const baseUrl = 'https://dividendhistory.org';
 const symbolToScrape = ref('');
 
 const canScrapeDividends = computed(() => !props.isLoading && symbolToScrape.value !== '');
