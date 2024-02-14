@@ -21,7 +21,7 @@ const baseUrl = 'https://dividendhistory.org';
 const symbolToScrape = ref('');
 
 const canScrapeDividends = computed(() => !props.isLoading && symbolToScrape.value !== '');
-const urlToScrape = computed(() => `${baseUrl}/${symbolToScrape.value}`);
+const urlToScrape = computed(() => `${baseUrl}/payout/${symbolToScrape.value}`);
 
 watch(symbolToScrape, () => {
   symbolToScrape.value = symbolToScrape.value.toUpperCase();
