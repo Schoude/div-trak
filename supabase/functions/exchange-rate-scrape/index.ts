@@ -23,13 +23,19 @@ Deno.serve(async (req) => {
 
     {
       const $ = cheerio.load(htmlUSD_EUR);
-      const rateText = $('.faded-digits').parent().text();
+      const rateText = $('.faded-digits')
+        .parent()
+        .first()
+        .text();
       USD_EUR = +(+rateText.split(' ')[0].replace(',', '.')).toFixed(2);
     }
 
     {
       const $ = cheerio.load(htmlEUR_USD);
-      const rateText = $('.faded-digits').parent().text();
+      const rateText = $('.faded-digits')
+        .parent()
+        .first()
+        .text();
       EUR_USD = +(+rateText.split(' ')[0].replace(',', '.')).toFixed(2);
     }
 
