@@ -37,7 +37,7 @@ const currentYear = ref<number>(new Date().getUTCFullYear());
 const currentMonth = ref<number>(new Date().getUTCMonth());
 const showGoogleCalendarButton = computed(() => currentYear.value === props.year && currentMonth.value === detailMonth.value);
 const detailMonth = ref<number>(new Date().getUTCMonth());
-const getDetailMonthDividends = computed(() => props.dividends.at(detailMonth.value)?.sort((a, b) => b.payment - a.payment));
+const getDetailMonthDividends = computed(() => props.dividends.at(detailMonth.value)?.sort((a, b) => a.paymentDateTimestamp - b.paymentDateTimestamp));
 const detailMonthAggregatedDividends = computed(() => formatNumber(getDetailMonthDividends.value?.reduce((acc, d) => {
   acc += d.payment;
 
@@ -249,7 +249,7 @@ watch(() => props.year, () => {
           <RouterLink class="name" :to="{ name: 'instrument', params: { isin: dividend.isin } }">{{
             dividend.instrumentName }}
           </RouterLink>
-          <div class="metadata">
+          <div class="metadata" :class="{received: dividend.paymentDateTimestamp < Date.now()}">
             <span class="payment"><b>{{ dividend.paymentFormatted }}</b> • </span>
             <span class="date text-s">@ {{ new Date(dividend.paymentDate).toLocaleDateString() }}</span>
           </div>
@@ -360,6 +360,10 @@ watch(() => props.year, () => {
 
     .metadata {
       margin-block-start: .25rem;
+
+      &.received {
+        text-decoration: line-through;
+      }
     }
 
     &.forecast {
