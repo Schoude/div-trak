@@ -22,7 +22,11 @@ export const usePortfolioStore = defineStore('portfolios', () => {
     },
     yieldAverage: computed(() => {
       const summedYields = instruments.value.reduce((acc, instrument) => {
-        acc += instrument.stockDetails.company.dividendYieldSnapshot ?? 0;
+        if (instrument.stockDetails) {
+          acc += instrument.stockDetails?.company?.dividendYieldSnapshot ?? 0;
+        } else {
+          acc += instrument.etfDetails?.metrics?.yield ?? 0;
+        }
 
         return acc;
       }, 0);
