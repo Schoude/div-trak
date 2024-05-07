@@ -1,4 +1,6 @@
-import { array, enumType, nullType, number, object, string, union, type Output } from 'valibot';
+import { array, nullable, number, object, picklist, string, type Output } from 'valibot';
+
+const Sentiment = ['Bearish', 'Bullish', 'Neutral', 'Somewhat-Bearish', 'Somewhat-Bullish'];
 
 // START Sentiment News
 const ArticleNewsSentimentSchema = object({
@@ -6,16 +8,16 @@ const ArticleNewsSentimentSchema = object({
   url: string(),
   time_published: string(),
   summary: string(),
-  banner_image: union([string(), nullType()]),
+  banner_image: nullable(string()),
   source: string(),
   source_domain: string(),
   overall_sentiment_score: number(),
-  overall_sentiment_label: enumType(['Bearish', 'Bullish', 'Neutral', 'Somewhat-Bearish', 'Somewhat-Bullish']),
+  overall_sentiment_label: picklist(Sentiment),
   ticker_sentiment: array(object({
     ticker: string(),
     relevance_score: string(),
     ticker_sentiment_score: string(),
-    ticker_sentiment_label: enumType(['Bearish', 'Bullish', 'Neutral', 'Somewhat-Bearish', 'Somewhat-Bullish']),
+    ticker_sentiment_label: picklist(Sentiment),
   })),
   topics: array(object({
     topic: string(),
