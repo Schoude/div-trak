@@ -169,7 +169,10 @@ onBeforeRouteLeave(() => {
       </ButtonAction>
     </h1>
 
-    <div class="portfolio-value text-m">{{ formatNumber(portfolioValue, { style: 'currency', currency: 'EUR' }) }}</div>
+    <div class="portfolio-value text-m">
+      <div>{{ formatNumber(portfolioValue, { style: 'currency', currency: 'EUR' }) }}</div>
+      <small>Portfolio Yield: {{ portfolioStore.yieldAverage }}</small>
+    </div>
 
     <DividendCalendar />
 
