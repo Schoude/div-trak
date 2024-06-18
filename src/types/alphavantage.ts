@@ -1,4 +1,4 @@
-import { array, nullable, number, object, picklist, string, type Output } from 'valibot';
+import { array, nullable, number, object, picklist, string, type InferOutput } from 'valibot';
 
 const Sentiment = ['Bearish', 'Bullish', 'Neutral', 'Somewhat-Bearish', 'Somewhat-Bullish'];
 
@@ -27,7 +27,7 @@ const ArticleNewsSentimentSchema = object({
 
 export const NewsSentimentFeedSchema = array(ArticleNewsSentimentSchema);
 
-export type ArticleNewsSentiment = Output<typeof ArticleNewsSentimentSchema>;
+export type ArticleNewsSentiment = InferOutput<typeof ArticleNewsSentimentSchema>;
 // END Sentiment News
 
 // START Top Gainers / Losers
@@ -44,7 +44,7 @@ export const TopGainersLosersSchema = object({
   top_losers: array(GainerOrLoser),
 });
 
-export type TopGainersLosers = Output<typeof TopGainersLosersSchema>;
+export type TopGainersLosers = InferOutput<typeof TopGainersLosersSchema>;
 // END Top Gainers / Losers
 
 // START Overview Ticker
@@ -94,7 +94,7 @@ export const OverviewTickerSchema = object({
   ExDividendDate: string(),
 });
 
-export type OverviewTickerSchema = Output<typeof OverviewTickerSchema>;
+export type OverviewTickerSchema = InferOutput<typeof OverviewTickerSchema>;
 // END Overview Ticker
 
 export const ALPHA_VANTAGE_FUNCTIONS = {
