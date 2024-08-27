@@ -50,10 +50,6 @@ defineEmits([
   inset-inline-start: 50%;
   translate: -50%;
 
-  @media only screen and (width >=768px) {
-    inline-size: 690px;
-  }
-
   // Appearance
   border: 1px solid rgb(48, 48, 48);
   border-radius: 8px;
@@ -61,6 +57,10 @@ defineEmits([
   background-color: rgb(10, 10, 10);
   background-image: var(--gradient-page);
   background-repeat: no-repeat;
+
+  @media only screen and (width >=768px) {
+    inline-size: 690px;
+  }
 }
 
 // Children positioning
