@@ -21,6 +21,10 @@ socket.value.onopen = () => {
   socket.value?.send(
     `connect 29 {"locale":"de","platformId":"webtrading","platformVersion":"chrome - 119.0.0","clientId":"${import.meta.env.VITE_TR_CLIENT_ID}","clientVersion":"1.27.5"}`,
   );
+
+  setInterval(() => {
+    socket.value.send(`echo ${Date.now()}`);
+  }, 3000);
 };
 
 socket.value.onerror = (error) => {
