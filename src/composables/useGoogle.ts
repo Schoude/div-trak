@@ -173,7 +173,33 @@ export function useGoogle () {
       }
 
       // Add all new events
-      const toAdd = dividends.map((dividend) => {
+      const toAddExDate = dividends.map((dividend) => {
+        const startDate = new Date(dividend.exDate);
+        const endDate = new Date(dividend.exDate);
+        startDate.setHours(10);
+        endDate.setHours(11);
+
+        const event = {
+          'summary':
+            `Ex-Date: ${dividend.instrumentName}`,
+          'description': `${dividend.instrumentName} is traded ex-dividend.`,
+          'start': {
+            'dateTime': startDate.toISOString(),
+            'timeZone': 'Europe/Berlin',
+          },
+          'end': {
+            'dateTime': endDate.toISOString(),
+            'timeZone': 'Europe/Berlin',
+          },
+        };
+
+        return gapi.client.calendar.events.insert({
+          'calendarId': dividendCalendar?.id,
+          'resource': event,
+        });
+      });
+
+      const toAddPaymentDate = dividends.map((dividend) => {
         const startDate = new Date(dividend.paymentDateTimestamp);
         const endDate = new Date(dividend.paymentDateTimestamp);
         startDate.setHours(10);
@@ -201,7 +227,10 @@ export function useGoogle () {
         });
       });
 
-      await Promise.all(toAdd);
+      await Promise.all([
+        ...toAddPaymentDate,
+        ...toAddExDate,
+      ]);
 
       loading.value = false;
     };
