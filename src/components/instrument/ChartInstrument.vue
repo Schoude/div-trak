@@ -4,20 +4,20 @@ import type { AggregateHistoryEvent, RangeHistory, Ticker } from '@/types/tr/eve
 import type { TickerEvent } from '@/types/tr/events/ticker';
 import { defaultFormat, timeformat } from '@/utils/visus';
 import {
-axisBottom,
-axisLeft,
-format,
-max,
-min,
-scaleBand,
-scaleLinear,
-scaleLog,
-scaleTime,
-schemeSet1,
-select,
-utcDays,
-utcHours,
-utcMinutes,
+  axisBottom,
+  axisLeft,
+  format,
+  max,
+  min,
+  scaleBand,
+  scaleLinear,
+  scaleLog,
+  scaleTime,
+  schemeSet1,
+  select,
+  utcDays,
+  utcHours,
+  utcMinutes,
 } from 'd3';
 import { computed, nextTick, onMounted, ref, watch } from 'vue';
 
@@ -87,7 +87,7 @@ const xTime = computed(() => {
     .nice();
 });
 
-function drawChart () {
+function drawChart() {
   const svgEl = chart.value?.querySelector('svg');
 
   if (svgEl) {
@@ -211,8 +211,7 @@ function drawChart () {
     .on('mouseleave', mouseleave);
 }
 
-function onSetRangeClick (newRange: RangeHistory) {
-  // @ts-expect-error bad dom api
+function onSetRangeClick(newRange: RangeHistory) {
   document.startViewTransition(async () => {
     aggregatesStore.setRange(newRange);
     await nextTick();

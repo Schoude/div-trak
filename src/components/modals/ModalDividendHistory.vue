@@ -43,7 +43,6 @@ function resetValues () {
 }
 
 function onUpdateScrapedDividendAdded (addedDividendExDate: string) {
-  // @ts-expect-error bad dom types
   document.startViewTransition(async () => {
     scrapedDividends.value = scrapedDividends.value.filter(dividend => dividend.exDate !== addedDividendExDate);
     await nextTick();

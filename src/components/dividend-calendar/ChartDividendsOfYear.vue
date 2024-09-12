@@ -101,7 +101,6 @@ function drawChart () {
 
   const onBarClick = function (_e: MouseEvent, d: unknown) {
     const monthIndex = monthIndicesMap.get((d as { data: { group: string } }).data.group);
-    // @ts-expect-error bad dom types
     document.startViewTransition(async () => {
       detailMonth.value = monthIndex!;
       await nextTick();

@@ -89,7 +89,6 @@ export const useDividendsScrapedStore = defineStore('dividends-scraped', () => {
         throw deleteEstimatedDividendQueryResult.error;
       }
 
-      // @ts-expect-error bad dom types
       document.startViewTransition(async () => {
         scrapedDividends.delete(isinExDate);
         await nextTick();

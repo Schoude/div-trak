@@ -19,7 +19,6 @@ const nextYear = computed(() => year.value + 1);
 const selectedYear = ref(year.value);
 
 function onYearSelectClick (year: number) {
-  // @ts-expect-error krigt amal eure DOM API types auf die kedde
   document.startViewTransition(async () => {
     selectedYear.value = year;
     await nextTick();
@@ -106,7 +105,7 @@ const dividendsCalendarData = computed(() => {
               // Instrument
               isin: instrument.instrument?.isin,
               instrumentName: instrument.instrument?.shortName,
-              
+
             } as CalendarDividend;
           });
 

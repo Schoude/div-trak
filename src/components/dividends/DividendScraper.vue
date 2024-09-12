@@ -46,7 +46,6 @@ async function onScrapeSubmit () {
     if (crawlDividendsResponse.error) throw crawlDividendsResponse.error;
 
     if (crawlDividendsResponse.data) {
-      // @ts-expect-error bad DOM types
       document.startViewTransition(async () => {
         // Emit values for successful crawl
         emit('update:scraped-dividends', crawlDividendsResponse.data.estimatedDividends);

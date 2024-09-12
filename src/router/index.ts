@@ -121,7 +121,6 @@ router.beforeEach(async (to, _from, next) => {
 let resolveViewChange: ((value?: unknown) => void) | null = null;
 
 router.beforeEach((_to, _from, next) => {
-  // @ts-expect-error bad DOM API types
   document.startViewTransition(async () => {
     next();
     await new Promise((resolve) => resolveViewChange = resolve);
