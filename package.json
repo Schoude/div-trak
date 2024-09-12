@@ -24,7 +24,7 @@
     "@supabase/supabase-js": "^2.45.4",
     "@vueuse/core": "^11.0.3",
     "d3": "^7.9.0",
-    "googleapis": "^142.0.0",
+    "googleapis": "^144.0.0",
     "pinia": "^2.2.2",
     "valibot": "^0.41.0",
     "vue": "^3.5.4",
