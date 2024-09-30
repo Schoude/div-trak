@@ -1,13 +1,17 @@
 <script setup lang="ts">
 import TRAssetLoader from '@/components/loaders/TRAssetLoader.vue';
 import type { InstrumentFilled } from '@/types/tr/instrument';
+import { formatNumber } from '@/utils/intl/currency';
+import { computed } from 'vue';
 import { useRouter } from 'vue-router';
 
 const props = defineProps<{
   instrument: InstrumentFilled;
+  portfolioValue: number;
 }>();
 
 const router = useRouter();
+const percentageInPortfolio = computed(() => `${formatNumber(props.instrument.value / props.portfolioValue * 100, { style: 'decimal', roundingMode: 'floor' })} %`);
 
 async function onNavigateClick () {
   await router.push({ name: 'instrument', params: { isin: props.instrument.instrument.isin } });
@@ -27,6 +31,8 @@ async function onNavigateClick () {
           <div class="value">{{ instrument.valueFormatted }}</div>
           <span>•</span>
           <div class="amount">{{ instrument.amount }} pcs.</div>
+          <span>•</span>
+          <div class="amount">{{ percentageInPortfolio }}</div>
         </div>
       </div>
 
