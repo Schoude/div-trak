@@ -113,7 +113,7 @@ const calculatedDividendPayments = computed<DividendWithPayment[]>(() => aggrega
     paymentAmount = paymentAmount - sourceTax;
   }
 
-  let formattedSourceTax = sourceTax != null
+  const formattedSourceTax = sourceTax != null
     ? formatNumber(sourceTax, { style: 'currency', currency: 'EUR' })
     : sourceTax;
 

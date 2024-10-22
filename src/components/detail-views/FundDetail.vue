@@ -52,7 +52,7 @@ const calculatedDividendPayments = computed<DividendWithPayment[]>(() => props.e
       }
     });
 
-  let paymentAmount = distribution.amount * orderAmountExDate;
+  const paymentAmount = distribution.amount * orderAmountExDate;
 
   return {
     ...distribution,

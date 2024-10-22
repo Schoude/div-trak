@@ -1,6 +1,6 @@
 export interface InstrumentEvent {
   exchangeIds: string[];
-  dividends: any[];
+  dividends: unknown[];
   splits: Split[];
   name: string;
   typeId: 'stock' | 'fund';

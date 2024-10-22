@@ -102,8 +102,7 @@ router.beforeEach(async (to, _from, next) => {
     try {
       await authStore.checkSession();
       next();
-    } catch (error) {
-
+    } catch {
       // Prevents infinite redirect loop
       if (to.name !== 'login') {
         next({ name: 'login' });

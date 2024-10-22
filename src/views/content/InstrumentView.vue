@@ -33,7 +33,7 @@ watch(tickerData, (ticker) => {
     return;
   }
 
-  let lastCandle = aggregateHistoryStore.aggregateHistory.aggregates.at(-1);
+  const lastCandle = aggregateHistoryStore.aggregateHistory.aggregates.at(-1);
 
   if (!lastCandle || !ticker) {
     return;
