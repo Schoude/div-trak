@@ -87,7 +87,7 @@ const xTime = computed(() => {
     .nice();
 });
 
-function drawChart() {
+function drawChart () {
   const svgEl = chart.value?.querySelector('svg');
 
   if (svgEl) {
@@ -211,7 +211,7 @@ function drawChart() {
     .on('mouseleave', mouseleave);
 }
 
-function onSetRangeClick(newRange: RangeHistory) {
+function onSetRangeClick (newRange: RangeHistory) {
   document.startViewTransition(async () => {
     aggregatesStore.setRange(newRange);
     await nextTick();
