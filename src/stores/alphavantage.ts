@@ -1,7 +1,7 @@
-import { ALPHA_VANTAGE_FUNCTIONS, NewsSentimentFeedSchema, type ArticleNewsSentiment } from '@/types/alphavantage';
-import { defineStore } from 'pinia';
-import { parse } from 'valibot';
-import { ref } from 'vue';
+import {ALPHA_VANTAGE_FUNCTIONS, type ArticleNewsSentiment, NewsSentimentFeedSchema} from '@/types/alphavantage';
+import {defineStore} from 'pinia';
+import {parse} from 'valibot';
+import {ref} from 'vue';
 
 export const useAlphaVantageStore = defineStore('alphavantage', () => {
   const sentimentNews = ref<{
@@ -32,9 +32,7 @@ export const useAlphaVantageStore = defineStore('alphavantage', () => {
     const day = currentDate.getDate().toString().padStart(2, '0');
 
     // Format the date as 'YYYYMMDDTHHMM'
-    const formattedDate = `${year}${month}${day}T0000`;
-
-    return formattedDate;
+    return `${year}${month}${day}T0000`;
   }
 
   async function getSentimentNews () {
@@ -56,7 +54,7 @@ export const useAlphaVantageStore = defineStore('alphavantage', () => {
     const json = await res.json();
 
     if ('Note' in json || 'Information' in json) {
-      throw new Error(`API Quote Reached: ${json['Note'] ?? json['Information']}`);
+      throw new Error(`API Quota Reached: ${json.Note ?? json.Information}`);
     }
 
     try {

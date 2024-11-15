@@ -5,12 +5,23 @@ import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
   eslint.configs.recommended,
-  ...tseslint.configs.recommended,
+  tseslint.configs.eslintRecommended,
+  ...tseslint.configs.recommendedTypeChecked,
+  ...tseslint.configs.stylisticTypeChecked,
   ...pluginVue.configs["flat/essential"],
   ...vueTsEslintConfig(),
   {
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+  },
+  {
     ignores: [
       'dist',
+      'supabase',
       "*.html"
     ],
   },
