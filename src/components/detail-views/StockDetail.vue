@@ -25,6 +25,7 @@ const props = defineProps<{
   ticker: TickerEvent;
   isInDetailPortfolio: boolean;
   history: AggregateHistoryEvent | null;
+  valueOwnedFormatted: string;
 }>();
 
 const modalIframe = ref<typeof ModalDividendHistory | null>(null);
@@ -134,6 +135,7 @@ function onOpenIframeModalClick () {
   <section class="stock-detail">
     <TRAssetLoader class="image" asset-type="image" :image-id="stock.instrument.imageId" />
     <h1 class="text-l">{{ stock.instrument.shortName }}</h1>
+    <h2 v-if="isInDetailPortfolio">{{ valueOwnedFormatted }}</h2>
 
     <InstrumentPriceInfo :ticker="ticker" />
 

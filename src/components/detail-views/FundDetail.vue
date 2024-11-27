@@ -19,6 +19,7 @@ const props = defineProps<{
   ticker: TickerEvent;
   isInDetailPortfolio: boolean;
   history: AggregateHistoryEvent | null;
+  valueOwnedFormatted: string;
 }>();
 
 const portfolioStore = usePortfolioStore();
@@ -68,6 +69,7 @@ const calculatedDividendPayments = computed<DividendWithPayment[]>(() => props.e
   <section class="fund-detail">
     <TRAssetLoader class="image" asset-type="image" :image-id="etf.instrument.imageId" />
     <h1 class="text-l">{{ etf.instrument.shortName }}</h1>
+    <h2 v-if="isInDetailPortfolio">{{ valueOwnedFormatted }}</h2>
 
     <InstrumentPriceInfo :ticker="ticker" />
 

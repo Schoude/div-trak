@@ -22,6 +22,8 @@ const instrumentData = computed(() => instruments.getInstrument(isin.value));
 const tickerData = computed(() => ticker.getTicker(instrumentData.value?.tickerEventId!));
 const isInDetailPortfolio = computed(() => portfolioStore.detailPortfolio?.isins.includes(isin.value) ?? false);
 const aggregateHistoryStore = useAggretatesStore();
+const valueOwnedFormatted = computed(() => portfolioStore.instruments
+  .find(instrument => instrument.instrument.isin === isin.value)?.valueFormatted ?? '');
 
 watchEffect(() => {
   isin.value = router.currentRoute.value.params.isin as string;
@@ -90,7 +92,7 @@ onUnmounted(() => {
   aggregateHistoryStore.isin = null;
 });
 
-function startTicker (isin: string) {
+function startTicker(isin: string) {
   if (instruments.getInstrument(isin)) {
     // Re-sub for existing ticker of the instrument
     socket.sendMessage(`sub ${instrumentData.value?.tickerEventId} {"type":"ticker","id":"${isin}.LSX","jurisdiction":"DE"}`, { updateEventId: false });
@@ -113,11 +115,11 @@ startTicker(isin.value);
     <template v-else>
       <template v-if="isStock(instrumentData) && tickerData">
         <StockDetail :stock="instrumentData" :ticker="tickerData" :is-in-detail-portfolio="isInDetailPortfolio"
-          :history="aggregateHistoryStore.aggregateHistory" />
+          :history="aggregateHistoryStore.aggregateHistory" :value-owned-formatted="valueOwnedFormatted" />
       </template>
       <template v-if="isETF(instrumentData) && tickerData">
         <FundDetail :etf="instrumentData" :ticker="tickerData" :is-in-detail-portfolio="isInDetailPortfolio"
-          :history="aggregateHistoryStore.aggregateHistory" />
+          :history="aggregateHistoryStore.aggregateHistory" :value-owned-formatted="valueOwnedFormatted" />
       </template>
     </template>
   </main>
