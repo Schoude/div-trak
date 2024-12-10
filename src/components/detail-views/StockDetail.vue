@@ -26,6 +26,7 @@ const props = defineProps<{
   isInDetailPortfolio: boolean;
   history: AggregateHistoryEvent | null;
   valueOwnedFormatted: string;
+  amountOwned: number;
 }>();
 
 const modalIframe = ref<typeof ModalDividendHistory | null>(null);
@@ -126,7 +127,7 @@ const calculatedDividendPayments = computed<DividendWithPayment[]>(() => aggrega
   };
 }));
 
-function onOpenIframeModalClick () {
+function onOpenIframeModalClick() {
   modalIframe.value?.onOpenIframeModalOpen();
 }
 </script>
@@ -135,7 +136,7 @@ function onOpenIframeModalClick () {
   <section class="stock-detail">
     <TRAssetLoader class="image" asset-type="image" :image-id="stock.instrument.imageId" />
     <h1 class="text-l">{{ stock.instrument.shortName }}</h1>
-    <h2 v-if="isInDetailPortfolio">{{ valueOwnedFormatted }}</h2>
+    <h2 v-if="isInDetailPortfolio">{{ valueOwnedFormatted }} • <small>({{ amountOwned }})</small></h2>
 
     <InstrumentPriceInfo :ticker="ticker" />
 
@@ -179,7 +180,8 @@ function onOpenIframeModalClick () {
 
     <EventsList v-if="stock.stockDetails?.events" :events="stock.stockDetails.events" />
 
-    <CompanyInfo v-if="stock.stockDetails?.company" :company="stock.stockDetails.company" :tags="stock.instrument.tags" />
+    <CompanyInfo v-if="stock.stockDetails?.company" :company="stock.stockDetails.company"
+      :tags="stock.instrument.tags" />
   </section>
 </template>
 
